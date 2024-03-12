@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.dao;
+package com.moz1mozi.mybatis.dao.board;
 
 import com.moz1mozi.mybatis.dto.BoardDto;
 import lombok.RequiredArgsConstructor;
