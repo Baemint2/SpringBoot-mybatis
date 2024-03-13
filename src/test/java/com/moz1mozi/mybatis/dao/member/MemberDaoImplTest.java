@@ -19,6 +19,7 @@ class MemberDaoImplTest {
                 .username("tester")
                 .password("1234")
                 .email("test@test.com")
+                .role(Role.BUYER)
                 .build();
         int result = memberDao.insertBoard(member);
         assertEquals(1, result);

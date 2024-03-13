@@ -11,8 +11,9 @@
         INSERT INTO MEMBER_T (
         USERNAME,
         PASSWORD,
-        email
-        ) VALUES (#{username}, #{password}, #{email})
+        EMAIL,
+        ROLE
+        ) VALUES (#{username}, #{password}, #{email}, #{role, typeHandler=com.moz1mozi.mybatis.typehandler.RoleTypeHandler})
     </insert>
 
     <delete id="deleteMember">

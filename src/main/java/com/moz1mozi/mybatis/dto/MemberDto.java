@@ -1,5 +1,6 @@
 package com.moz1mozi.mybatis.dto;
 
+import com.moz1mozi.mybatis.dao.member.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,5 @@ public class MemberDto {
         private String address1;
         private String address2;
         private String address3;
+        private Role role;
  }
