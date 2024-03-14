@@ -1,10 +1,12 @@
-package com.moz1mozi.mybatis.dto;
+package com.moz1mozi.mybatis.member;
 
-import com.moz1mozi.mybatis.dao.member.Role;
+import com.moz1mozi.mybatis.member.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Builder
 @Getter
@@ -20,5 +22,7 @@ public class MemberDto {
         private String address1;
         private String address2;
         private String address3;
+        private Date created_at;
+        private Date modified_at;
         private Role role;
  }

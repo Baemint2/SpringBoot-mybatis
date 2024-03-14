@@ -1,6 +1,5 @@
-package com.moz1mozi.mybatis.dao.member;
+package com.moz1mozi.mybatis.member;
 
-import com.moz1mozi.mybatis.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -13,4 +12,7 @@ public interface MemberDao {
     void updateMember(MemberDto memberDto);
 
     Long deleteMember(Long memberId);
+
+
+    MemberDto findByUsername(String username);
 }

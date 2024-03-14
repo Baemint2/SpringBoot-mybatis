@@ -1,0 +1,62 @@
+package com.moz1mozi.mybatis.member;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+
+    private final MemberDao memberDao;
+    private final PasswordEncoder passwordEncoder;
+
+
+    @Transactional
+    public Long insertMember(MemberDto member) {
+        Role role = mapStringToRole(member.getRole().getDisplayName());
+        log.info("role ={}", role);
+        MemberDto siteUser = MemberDto.builder()
+                .username(member.getUsername())
+                .password(passwordEncoder.encode(member.getPassword()))
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .address1(member.getAddress1())
+                .address2(member.getAddress2())
+                .address3(member.getAddress3())
+                .created_at(Date.from(Instant.now()))
+                .role(role)
+                .build();
+
+        memberDao.insertMember(siteUser);
+        return siteUser.getMember_id();
+    }
+
+    private Role mapStringToRole(String roleString) {
+        for(Role role : Role.values()) {
+            if(role.getDisplayName().equals(roleString)) {
+                return role;
+            }
+        }
+        return Role.BUYER;
+    }
+
+    public long deleteMember(Long memberId) {
+        return memberDao.deleteMember(memberId);
+    }
+
+
+    public MemberDto findByUsername(String username) {
+        String name = Optional.ofNullable(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
+        return memberDao.findByUsername(name);
+    }
+}
