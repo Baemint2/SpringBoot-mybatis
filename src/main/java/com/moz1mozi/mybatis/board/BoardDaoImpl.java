@@ -1,6 +1,5 @@
-package com.moz1mozi.mybatis.dao.board;
+package com.moz1mozi.mybatis.board;
 
-import com.moz1mozi.mybatis.dto.BoardDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 @RequiredArgsConstructor

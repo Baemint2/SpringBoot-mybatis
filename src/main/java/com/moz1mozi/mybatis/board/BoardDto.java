@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.dto;
+package com.moz1mozi.mybatis.board;
 
 
 import lombok.*;
@@ -15,5 +15,4 @@ public class BoardDto {
     private String contents;
     private Date modified_et;
     private Date created_at;
-
 }
