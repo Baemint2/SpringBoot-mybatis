@@ -19,9 +19,9 @@ public class MemberDto {
         private String confirmPassword;
         private String email;
         private String nickname;
-        private String address1;
-        private String address2;
-        private String address3;
+        private String zipcode;
+        private String streetAddress;
+        private String detailAddress;
         private Date created_at;
         private Date modified_at;
         private Role role;

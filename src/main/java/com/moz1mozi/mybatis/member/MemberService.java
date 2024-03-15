@@ -29,9 +29,9 @@ public class MemberService {
                 .password(passwordEncoder.encode(member.getPassword()))
                 .nickname(member.getNickname())
                 .email(member.getEmail())
-                .address1(member.getAddress1())
-                .address2(member.getAddress2())
-                .address3(member.getAddress3())
+                .zipcode(member.getZipcode())
+                .streetAddress(member.getStreetAddress())
+                .detailAddress(member.getDetailAddress())
                 .created_at(Date.from(Instant.now()))
                 .role(role)
                 .build();
