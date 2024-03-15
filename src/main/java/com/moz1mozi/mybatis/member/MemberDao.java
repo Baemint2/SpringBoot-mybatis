@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MemberDao {
-    int insertMember(MemberDto member);
+    Long insertMember(MemberDto member);
 
     // 회원 정보 조회
     MemberDto selectMember(Long memberId);
@@ -15,4 +15,6 @@ public interface MemberDao {
 
 
     MemberDto findByUsername(String username);
+
+    MemberDto findByRoleWithUsername(String username);
 }

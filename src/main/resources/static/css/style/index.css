@@ -1,0 +1,23 @@
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.signup-container {
+    display: flex;
+    justify-content: center;
+}
+
+.signup-form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 600px;
+    height: 600px;
+}
+
+#address1 {
+    width: 200px;
+    align-items: flex-start;
+}

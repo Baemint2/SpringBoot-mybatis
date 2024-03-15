@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.typehandler;
 
-import com.moz1mozi.mybatis.dao.member.Role;
+import com.moz1mozi.mybatis.member.Role;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
@@ -14,28 +14,33 @@ import java.sql.SQLException;
 public class RoleTypeHandler implements TypeHandler<Role> {
     @Override
     public void setParameter(PreparedStatement ps, int i, Role parameter, JdbcType jdbcType) throws SQLException {
-        if(parameter != null) {
-            ps.setString(i, parameter.getDisplayName());
-        } else {
-            ps.setNull(i, jdbcType.TYPE_CODE);
-        }
+        ps.setString(i, parameter.getDisplayName());
     }
 
     @Override
     public Role getResult(ResultSet rs, String columnName) throws SQLException {
-        String name = rs.getString(columnName);
-        return name == null ? null : Role.valueOf(name);
+        String displayName = rs.getString(columnName);
+        return displayNameToRole(displayName);
     }
 
     @Override
     public Role getResult(ResultSet rs, int columnIndex) throws SQLException {
-        String name = rs.getString(columnIndex);
-        return name == null ? null : Role.valueOf(name);
+        String displayName = rs.getString(columnIndex);
+        return displayNameToRole(displayName);
     }
 
     @Override
     public Role getResult(CallableStatement cs, int columnIndex) throws SQLException {
-        String name = cs.getString(columnIndex);
-        return name == null ? null : Role.valueOf(name);
+        String displayName = cs.getString(columnIndex);
+        return displayNameToRole(displayName);
+    }
+
+    private Role displayNameToRole(String displayName) {
+        for (Role role : Role.values()) {
+            if (role.getDisplayName().equals(displayName)) {
+                return role;
+            }
+        }
+        throw new IllegalArgumentException("Unknown displayName: " + displayName);
     }
 }

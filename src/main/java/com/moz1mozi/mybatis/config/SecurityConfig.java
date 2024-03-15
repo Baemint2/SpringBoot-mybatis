@@ -47,12 +47,20 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(config -> config
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll())
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                                .anyRequest().permitAll())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**")));
-//                .formLogin(login -> login
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/"));
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**"))
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/user/**"))
+                )
+                .formLogin(login -> login
+                        .loginPage("/user/login")
+                        .defaultSuccessUrl("/"))
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true));
         return http.build();
     }
 

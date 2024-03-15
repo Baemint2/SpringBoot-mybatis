@@ -16,7 +16,7 @@ public class MemberApiController {
 
     private final MemberService memberService;
 
-    @PostMapping("/api/v1/member")
+    @PostMapping("/api/v1/member/signup")
     public ResponseEntity<?> signup(@RequestBody MemberDto memberDto) {
         Long memberId = memberService.insertMember(memberDto);
         log.info("회원가입 = {}", memberId);

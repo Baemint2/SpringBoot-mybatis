@@ -13,13 +13,13 @@
         PASSWORD,
         EMAIL,
         NICKNAME,
-        ADDRESS1,
-        ADDRESS2,
-        ADDRESS3,
+        ZIPCODE,
+        STREETADDRESS,
+        DETAILADDRESS,
         ROLE,
         CREATED_AT,
         MODIFIED_AT
-        ) VALUES (#{username}, #{password}, #{email}, #{nickname}, #{address1}, #{address2}, #{address3}, #{role, typeHandler=com.moz1mozi.mybatis.typehandler.RoleTypeHandler}, now(), now())
+        ) VALUES (#{username}, #{password}, #{email}, #{nickname}, #{zipcode}, #{streetAddress}, #{detailAddress}, #{role, typeHandler=com.moz1mozi.mybatis.typehandler.RoleTypeHandler}, now(), now())
     </insert>
 
     <delete id="deleteMember">
@@ -31,6 +31,13 @@
     <select id="findByUsername"
             parameterType="com.moz1mozi.mybatis.member.MemberDto">
         SELECT USERNAME
+          FROM MEMBER_T
+         WHERE USERNAME = #{username}
+    </select>
+
+    <select id="findByRoleWithUsername"
+            parameterType="com.moz1mozi.mybatis.member.MemberDto">
+        SELECT USERNAME, PASSWORD, ROLE
           FROM MEMBER_T
          WHERE USERNAME = #{username}
     </select>
