@@ -1,5 +1,6 @@
-package com.moz1mozi.mybatis.member;
+package com.moz1mozi.mybatis.member.dao;
 
+import com.moz1mozi.mybatis.member.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -15,6 +16,8 @@ public interface MemberDao {
 
 
     MemberDto findByUsername(String username);
+
+    Long findByMemberIdByUsername(String username);
 
     MemberDto findByRoleWithUsername(String username);
 }

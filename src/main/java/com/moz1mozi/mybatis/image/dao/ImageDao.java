@@ -1,6 +1,6 @@
-package com.moz1mozi.mybatis.image;
+package com.moz1mozi.mybatis.image.dao;
 
-import com.moz1mozi.mybatis.product.ProductDto;
+import com.moz1mozi.mybatis.image.dto.ImageDto;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

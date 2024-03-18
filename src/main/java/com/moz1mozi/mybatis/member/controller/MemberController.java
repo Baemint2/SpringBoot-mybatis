@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.member;
+package com.moz1mozi.mybatis.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

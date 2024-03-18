@@ -1,15 +1,13 @@
-package com.moz1mozi.mybatis.image;
+package com.moz1mozi.mybatis.image.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @Builder
 public class ImageDto {
     private long imageId;

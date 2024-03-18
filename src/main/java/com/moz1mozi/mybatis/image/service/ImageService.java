@@ -1,5 +1,7 @@
-package com.moz1mozi.mybatis.image;
+package com.moz1mozi.mybatis.image.service;
 
+import com.moz1mozi.mybatis.image.dao.ImageDao;
+import com.moz1mozi.mybatis.image.dto.ImageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

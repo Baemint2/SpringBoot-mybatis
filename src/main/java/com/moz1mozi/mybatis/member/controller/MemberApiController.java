@@ -1,5 +1,7 @@
-package com.moz1mozi.mybatis.member;
+package com.moz1mozi.mybatis.member.controller;
 
+import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

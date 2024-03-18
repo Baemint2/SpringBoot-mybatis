@@ -1,6 +1,5 @@
-package com.moz1mozi.mybatis.member;
+package com.moz1mozi.mybatis.member.dto;
 
-import com.moz1mozi.mybatis.member.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

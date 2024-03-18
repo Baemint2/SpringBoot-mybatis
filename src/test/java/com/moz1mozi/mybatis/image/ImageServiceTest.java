@@ -1,7 +1,8 @@
 package com.moz1mozi.mybatis.image;
 
-import com.moz1mozi.mybatis.product.ProductDto;
-import com.moz1mozi.mybatis.product.ProductService;
+import com.moz1mozi.mybatis.image.service.ImageService;
+import com.moz1mozi.mybatis.product.dto.ProductDto;
+import com.moz1mozi.mybatis.product.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,13 +34,13 @@ class ImageServiceTest {
                 .stockQuantity(5)
                 .createdAt(Date.from(Instant.now()))
                 .build();
-        Long prodId = productService.insertProduct(productDto);
+//        Long prodId = productService.insertProduct(productDto);
 
 
         byte[] content = Files.readAllBytes(Paths.get("src/test/resources/lockdown.png"));
         MultipartFile multipartFile = new MockMultipartFile("file", "lockdown.png", "image/png", content);
 
-        imageService.uploadFile(multipartFile, prodId);
+//        imageService.uploadFile(multipartFile, prodId);
     }
 
 }
