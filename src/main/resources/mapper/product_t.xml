@@ -2,20 +2,41 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moz1mozi.mybatis.product.ProductDao">
+<mapper namespace="com.moz1mozi.mybatis.product.dao.ProductDao">
     <insert id="insertProduct"
-            parameterType="com.moz1mozi.mybatis.product.ProductDto">
+            parameterType="com.moz1mozi.mybatis.product.dto.ProductDto">
         <selectKey keyProperty="productId" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO PRODUCT_T (PROD_NAME, DESCRIPTION, PROD_PRICE, STOCK_QUANTITY, CREATED_AT, MODIFIED_AT)
-        VALUES( #{prodName}, #{description}, #{prodPrice}, #{stockQuantity}, NOW(), NOW())
+        INSERT INTO PRODUCT_T (PROD_NAME, DESCRIPTION, PROD_PRICE, STOCK_QUANTITY, SELLER_ID ,CREATED_AT, MODIFIED_AT)
+        VALUES( #{prodName}, #{description}, #{prodPrice}, #{stockQuantity}, #{sellerId}, NOW(), NOW())
+    </insert>
+
+    <insert id="insertProductImage"
+            parameterType="com.moz1mozi.mybatis.image.dto.ImageDto">
+        INSERT INTO PRODUCT_IMAGE (PRODUCT_ID, ORIGINAL_FILE_NAME, STORED_FILE_NAME, STORED_URL, CREATED_AT, MODIFIED_AT)
+        VALUES (#{productId}, #{originalFileName}, #{storedFileName}, #{storedUrl}, now(), now())
     </insert>
 
     <delete id="deleteProduct"
-            parameterType="com.moz1mozi.mybatis.product.ProductDto">
+            parameterType="com.moz1mozi.mybatis.product.dto.ProductDto">
         DELETE
           FROM PRODUCT_T
          WHERE PRODUCT_ID = #{productId}
     </delete>
+
+    <select id="findAllWithImage"
+            parameterType="com.moz1mozi.mybatis.product.dto.ProductDto">
+        SELECT P.PROD_NAME, P.PROD_PRICE, i.original_file_name
+          FROM PRODUCT P
+          LEFT JOIN product_image i ON p.post_id = i.post_id
+    </select>
+
+    <select id="findAllProducts"
+            resultType="com.moz1mozi.mybatis.product.dto.ProductListDto">
+        SELECT P.PROD_NAME as prodName, P.PROD_PRICE as prodPrice, I.STORED_URL as storedUrl, MT.USERNAME as username
+        FROM PRODUCT_T P
+        LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
+        LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
+    </select>
 </mapper>
