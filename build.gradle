@@ -22,12 +22,26 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.2.3'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.3'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
+
+    implementation 'org.springframework.data:spring-data-commons:3.2.3'
+//    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+//    implementation 'jakarta.servlet:jakarta.servlet-api' //스프링부트 3.0 이상
+//    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api' //스프링부트3.0 이상
+//    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl' //스프링부트 3.0 이상
+//    //JSP 추가 끝
+
 }
 
 tasks.named('test') {
