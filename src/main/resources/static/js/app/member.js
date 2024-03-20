@@ -1,3 +1,5 @@
+import {validator} from "./validator.js";
+
 let globalAddressData = {};
 
 const member = {
@@ -18,7 +20,7 @@ const member = {
             zipcode: globalAddressData.zipcode || '', // 우편번호
             streetAddress: globalAddressData.streetAddress || '', // 도로명 주소
             detailAddress: document.getElementById("detailAddress").value, // 상세주소
-            role: document.querySelector("input[name='role']:checked").value
+            role: document.querySelector("input[name='role']:checked")?.value || "BUYER"
         }
 
         fetch("/api/v1/member/signup" , {
@@ -81,4 +83,5 @@ function execPostCode() {
 }
 document.addEventListener("DOMContentLoaded", function () {
     member.init();
+    validator.init();
 })

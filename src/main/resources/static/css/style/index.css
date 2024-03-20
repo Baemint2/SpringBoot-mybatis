@@ -13,8 +13,7 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width: 600px;
-    height: 600px;
+    width: 500px;
 }
 
 #address1 {
@@ -22,10 +21,58 @@
     align-items: flex-start;
 }
 
+
 .product-form {
     display: flex;
     justify-content: center;
     flex-direction: column;
     width: 600px;
     height: 600px;
+
+}
+.find-text {
+    display: inline-block;
+    font-size: 15px;
+    line-height: 17px;
+    text-decoration: none;
+    color: #888;
+}
+
+.find-wrap{
+    padding: 20px 0 35px;
+    text-align: center;
+}
+
+.find-wrap li {
+    position: relative;
+    display: inline-block;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+}
+.login-form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 500px;
+    height: 500px;
+}
+
+.nav-header {
+    color: black;
+    text-decoration: none;
+}
+
+.navbar-collapse {
+ justify-content: end;
+}
+
+.error-message {
+    color: #dc3545; /* 빨간색 텍스트 색상 */
+    font-size: 0.875em; /* 글씨 크기 */
+    margin-top: 0.25rem; /* 필드 위에 조금의 여백을 제공 */
 }
