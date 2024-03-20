@@ -30,7 +30,7 @@
 
     <select id="findByUsername"
             parameterType="com.moz1mozi.mybatis.member.dto.MemberDto">
-        SELECT USERNAME
+        SELECT USERNAME, NICKNAME, PASSWORD
           FROM MEMBER_T
          WHERE USERNAME = #{username}
     </select>
@@ -47,5 +47,44 @@
         SELECT MEMBER_ID
           FROM MEMBER_T
          WHERE USERNAME = #{username}
+    </select>
+
+    <!-- 중복 검사 -->
+    <select id="existsByEmail"
+            resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+          FROM MEMBER_T
+         WHERE EMAIL = #{email}
+    </select>
+    <select id="existsByUsername"
+            resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+          FROM MEMBER_T
+         WHERE USERNAME = #{username}
+    </select>
+
+    <select id="existsByNickname"
+            resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+          FROM MEMBER_T
+         WHERE NICKNAME = #{nickname}
+    </select>
+
+    <update id="updatePassword">
+        UPDATE MEMBER_T
+           SET PASSWORD = #{password}
+         WHERE USERNAME = #{username}
+    </update>
+
+    <update id="updateNickname">
+        UPDATE MEMBER_T
+        SET NICKNAME = #{nickname}
+        WHERE USERNAME = #{username}
+    </update>
+    <select id="findUsernameByEmail"
+            resultType="String">
+        SELECT USERNAME
+        FROM MEMBER_T
+        WHERE email = #{email};
     </select>
 </mapper>
