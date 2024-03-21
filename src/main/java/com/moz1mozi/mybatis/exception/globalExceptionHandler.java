@@ -16,4 +16,13 @@ public class globalExceptionHandler {
         errors.put(ex.getField(), ex.getMessage());
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handlerIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("error", "Bad Request");
+        errors.put("message", ex.getMessage());
+
+        return ResponseEntity.badRequest().body(errors);
+    }
 }
