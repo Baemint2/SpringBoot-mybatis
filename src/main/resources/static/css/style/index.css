@@ -30,6 +30,23 @@
     height: 600px;
 
 }
+
+.card-link {
+    text-decoration: none;
+}
+.card-link:hover,
+.card-link:focus {
+    text-decoration: none;
+}
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.card:hover {
+    transform: scale(1.05); /* 카드를 약간 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+}
+
 .find-text {
     display: inline-block;
     font-size: 15px;
