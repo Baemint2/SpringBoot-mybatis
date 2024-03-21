@@ -1,5 +1,8 @@
 package com.moz1mozi.mybatis.member.service;
 
+import com.moz1mozi.mybatis.exception.CustomException;
+import com.moz1mozi.mybatis.member.dto.FindMemberDto;
+import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.dto.Role;
 import com.moz1mozi.mybatis.member.dao.MemberDao;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
@@ -25,6 +28,23 @@ public class MemberService {
 
     @Transactional
     public Long insertMember(MemberDto member) {
+
+       if(!member.getPassword().equals(member.getConfirmPassword())) {
+           throw new CustomException("confirmPassword", "비밀번호가 일치하지 않습니다");
+       }
+
+       if(memberDao.existsByEmail(member.getEmail())) {
+           throw new CustomException("email", "이미 등록된 이메일입니다.");
+       }
+
+       if(memberDao.existsByUsername(member.getUsername())) {
+           throw new CustomException("username", "이미 등록된 사용자명입니다.");
+       }
+
+       if(memberDao.existsByNickname(member.getNickname())) {
+           throw new CustomException("nickname", "이미 등록된 닉네임입니다.");
+       }
+
         Role role = mapStringToRole(member.getRole().getDisplayName());
         log.info("role ={}", role);
         MemberDto siteUser = MemberDto.builder()
@@ -56,10 +76,64 @@ public class MemberService {
         return memberDao.deleteMember(memberId);
     }
 
-
+    @Transactional
     public MemberDto findByUsername(String username) {
         String name = Optional.ofNullable(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
         return memberDao.findByUsername(name);
     }
+
+    // 비밀번호 변경
+    @Transactional
+    public boolean changePassword(PasswordChangeDto passwordChangeDto) {
+        MemberDto member = memberDao.findByUsername(passwordChangeDto.getUsername());
+        if(member == null || !passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getPassword())) {
+            return false;
+        }
+        if(!passwordChangeDto.getNewPassword().equals(passwordChangeDto.getConfirmPassword())) {
+            return false;
+        }
+
+        String encodedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
+        memberDao.updatePassword(passwordChangeDto.getUsername(), encodedPassword);
+        return true;
+    }
+
+    //아이디 찾기
+    @Transactional(readOnly = true)
+    public String findByUsernameEmail(FindMemberDto findMemberDto) {
+        return Optional.ofNullable(memberDao.findUsernameByEmail(findMemberDto.getEmail()))
+                                .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
+
+    }
+
+    //닉네임 변경
+    @Transactional
+    public void updateNickname(String username, String nickname) {
+        if(memberDao.findByUsername(username) == null) {
+            throw new UsernameNotFoundException("사용자가 존재하지 않습니다.");
+        }
+        //중복 검사
+        if(nicknameDuplicate(nickname)) {
+            throw new CustomException("isNicknameDuplicate","이미 사용중인 닉네임입니다.");
+        }
+
+        memberDao.updateNickname(username, nickname);
+    }
+
+    //사용자명 중복 검사
+    public boolean usernameDuplicate(String username) {
+        return memberDao.existsByUsername(username);
+    }
+
+    //이메일 중복 검사
+    public boolean emailDuplicate(String email) {
+        return memberDao.existsByEmail(email);
+    }
+
+    //닉네임 중복 검사
+    public boolean nicknameDuplicate(String nickname) {
+        return memberDao.existsByNickname(nickname);
+    }
+
 }
