@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Builder
-public class ProductListDto {
-    private int productId;
-    private String nickname;
-    private String prodName;
-    private int prodPrice;
+public class ProductDetailDto {
+    private long productId;
     private String storedUrl;
+    private String prodName;
+    private String description;
+    private int prodPrice;
+    private int stockQuantity;
+    private String nickname;
 }

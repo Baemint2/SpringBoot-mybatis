@@ -5,6 +5,7 @@ import com.moz1mozi.mybatis.image.dto.ImageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -38,19 +39,36 @@ public class ImageService {
         return storedFileName;
     }
 
-    public void saveFileMetaData(String originalFileName, String storedFileName, Long prodId) {
-        ImageDto imageDto = ImageDto.builder()
-                .originalFileName(originalFileName)
-                .storedFileName(storedFileName)
-                .productId(prodId)
-                .storedUrl("/upload/" + storedFileName)
-                .created_at(Date.from(Instant.now()))
-                .build();
-        imageDao.insertProductImage(imageDto);
+    @Transactional
+    public void saveOrUpdateFileMetaData(String originalFileName, String storedFileName, Long prodId) {
+        ImageDto imageDto = imageDao.findByProductId(prodId);
+        String storedUrl = "/upload/" + storedFileName;
+        Date now = Date.from(Instant.now());
+        if(imageDto == null) {
+            imageDto = ImageDto.builder()
+                    .originalFileName(originalFileName)
+                    .storedFileName(storedFileName)
+                    .productId(prodId)
+                    .storedUrl(storedUrl)
+                    .created_at(now)
+                    .build();
+            imageDao.insertProductImage(imageDto);
+        } else {
+            if (!storedUrl.equals(imageDto.getStoredUrl())) {
+                imageDto.setOriginalFileName(originalFileName);
+                imageDto.setStoredFileName(storedFileName);
+                imageDto.setProductId(prodId);
+                imageDto.setStoredUrl(storedUrl);
+                imageDto.setCreated_at(now);
+                imageDao.updateProductImage(imageDto);
+            }
+        }
+
     }
 
+    @Transactional
     public void uploadFile(MultipartFile file, Long prodId) throws IOException {
         String storedFileName = storeFile(file); // 파일 저장
-        saveFileMetaData(file.getOriginalFilename(), storedFileName, prodId); // 메타데이터 저장
+        saveOrUpdateFileMetaData(file.getOriginalFilename(), storedFileName, prodId); // 메타데이터 저장
     }
 }

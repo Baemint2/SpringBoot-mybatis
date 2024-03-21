@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+  <div class="card mb-3">
+    <img th:src="${productByNo.storedUrl}" class="card-img-top" alt="${product.prodName}" style="height: 200px; width: 200px">
+    <div class="card-body">
+      <h5 class="card-title" th:text="${productByNo.prodName}"></h5>
+      <p class="card-text" th:text="${productByNo.nickname}"></p>
+      <p class="card-text" th:text="${productByNo.prodPrice}"></p>
+        <p th:text="${productByNo.description}"></p>
+        <p th:text="${productByNo.stockQuantity}"></p>
+    </div>
+    <a th:href="@{|/product/modify/${productByNo.productId}|}">수정</a>
+  </div>
+</div>
+</body>
+</html>

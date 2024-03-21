@@ -34,9 +34,67 @@
 
     <select id="findAllProducts"
             resultType="com.moz1mozi.mybatis.product.dto.ProductListDto">
-        SELECT P.PROD_NAME as prodName, P.PROD_PRICE as prodPrice, I.STORED_URL as storedUrl, MT.USERNAME as username
+        SELECT P.PROD_NAME as prodName, P.PROD_PRICE as prodPrice,
+               I.STORED_URL as storedUrl, MT.USERNAME as username
         FROM PRODUCT_T P
         LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
         LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
     </select>
+
+    <select id="getProductByNo"
+            resultType="com.moz1mozi.mybatis.product.dto.ProductDetailDto">
+        select P.PRODUCT_ID as productId,
+               I.STORED_URL as storedUrl, P.PROD_NAME as prodName,
+               P.DESCRIPTION as description, P.PROD_PRICE as prodPrice,
+               P.STOCK_QUANTITY as stockQuantity, M.NICKNAME as nickname
+        from PRODUCT_T P
+        LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
+        LEFT JOIN MEMBER_T M ON P.SELLER_ID = M.MEMBER_ID
+        WHERE P.PRODUCT_ID = #{productId};
+    </select>
+
+    <select id="getPagedProducts"
+            resultType="com.moz1mozi.mybatis.product.dto.ProductListDto">
+        SELECT P.PROD_NAME as prodName, P.PROD_PRICE as prodPrice,
+               I.STORED_URL as storedUrl, M.nickname as nickname,
+               P.PRODUCT_ID as productId
+          FROM PRODUCT_T P
+        LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
+        LEFT JOIN MEMBER_T M ON P.SELLER_ID = M.MEMBER_ID
+        ORDER BY P.PRODUCT_ID DESC
+        LIMIT #{size} OFFSET #{offset};
+    </select>
+
+    <resultMap id="ProductWithImage" type="com.moz1mozi.mybatis.product.dto.ProductDto">
+        <id property="productId" column="productId"/>
+        <result property="prodName" column="prodName"/>
+        <result property="prodPrice" column="prodPrice"/>
+        <result property="description" column="description"/>
+        <result property="stockQuantity" column="stockQuantity"/>
+        <result property="modifiedAt" column="modifiedAt"/>
+        <collection property="imageDtoList" ofType="com.moz1mozi.mybatis.image.dto.ImageDto">
+            <id property="imageId" column="imageId"/>
+            <result property="storedUrl" column="storedUrl"/>
+            <result property="originalFileName" column="originalFileName"/>
+            <result property="storedFileName" column="storedFileName"/>
+        </collection>
+    </resultMap>
+    <select id="selectProductById"
+            resultMap="ProductWithImage">
+        SELECT P.PRODUCT_ID as productId, P.PROD_NAME as prodName, P.PROD_PRICE as prodPrice, P.DESCRIPTION as description
+             , P.STOCK_QUANTITY as stockQuantity, P.MODIFIED_AT as modifiedAt
+             , I.IMAGE_ID as imageId, I.STORED_URL as storedUrl, I.ORIGINAL_FILE_NAME as originalFileName, I.STORED_FILE_NAME as storedFileName
+          FROM PRODUCT_T P
+          LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
+         WHERE P.PRODUCT_ID = #{productId};
+    </select>
+    <update id="updateProduct"
+            parameterType="com.moz1mozi.mybatis.product.dto.ProductDto">
+        UPDATE PRODUCT_T P
+           SET PROD_NAME = #{prodName},
+               PROD_PRICE = #{prodPrice},
+               DESCRIPTION = #{description},
+               STOCK_QUANTITY = #{stockQuantity}
+         WHERE P.PRODUCT_ID = #{productId};
+    </update>
 </mapper>

@@ -8,4 +8,19 @@
         INSERT INTO PRODUCT_IMAGE (PRODUCT_ID, ORIGINAL_FILE_NAME, STORED_FILE_NAME, STORED_URL, CREATED_AT, MODIFIED_AT)
         VALUES (#{productId}, #{originalFileName}, #{storedFileName}, #{storedUrl}, now(), now())
     </insert>
+
+    <update id="updateProductImage"
+            parameterType="com.moz1mozi.mybatis.image.dto.ImageDto">
+        UPDATE PRODUCT_IMAGE
+           SET STORED_URL = #{storedUrl}
+         WHERE PRODUCT_ID = #{productId}
+    </update>
+
+    <select id="findByProductId"
+            resultType="com.moz1mozi.mybatis.image.dto.ImageDto">
+        select I.STORED_URL as storedUrl
+        FROM PRODUCT_IMAGE I
+        LEFT JOIN PRODUCT_T P ON P.PRODUCT_ID = I.PRODUCT_ID
+        WHERE I.PRODUCT_ID = #{productId};
+    </select>
 </mapper>

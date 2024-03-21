@@ -9,4 +9,8 @@ public interface ImageDao {
     //이미지 등록
     void insertProductImage(ImageDto imageDto);
 
+    //이미지 수정
+    void updateProductImage(ImageDto imageDto);
+
+    ImageDto findByProductId(Long prodId);
 }
