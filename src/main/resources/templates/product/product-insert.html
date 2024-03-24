@@ -9,16 +9,32 @@
 </head>
 <body>
 <form class="product-form" method="post" enctype="multipart/form-data">
-    <label for="prodName" class="form-label">상품명</label>
-    <input type="text" id="prodName" class="form-control" name="prodName">
-    <label for="description" class="form-label">상품설명</label>
-    <textarea id="description" class="form-control" name="description"></textarea>
-    <label for="prodPrice" class="form-label">상품가격</label>
-    <input type="text" id="prodPrice" name="prodPrice">
-    <label for="stockQuantity" class="form-label">상품수량</label>
-    <input type="text" id="stockQuantity" class="form-control" name="stockQuantity">
-    <label for="files" class="form-label">상품 이미지</label>
-    <input type="file" id="files" class="form-control" name="files" accept="image/*" multiple>
+    <div class="error-message" id="error-error" style="display: none"></div>
+    <div>
+        <label for="prodName" class="form-label">상품명</label>
+        <input type="text" id="prodName" class="form-control" name="prodName">
+        <div class="error-message" id="prodName-error" style="display: none"></div>
+    </div>
+    <div>
+        <label for="description" class="form-label">상품설명</label>
+        <textarea id="description" class="form-control" name="description"></textarea>
+        <div class="error-message" id="description-error" style="display: none"></div>
+    </div>
+    <div>
+        <label for="prodPrice" class="form-label">상품가격</label>
+        <input type="text" id="prodPrice" class="form-control" name="prodPrice">
+        <div class="error-message" id="prodPrice-error" style="display: none"></div>
+    </div>
+    <div>
+        <label for="stockQuantity" class="form-label">상품수량</label>
+        <input type="text" id="stockQuantity" class="form-control" name="stockQuantity">
+        <div class="error-message" id="stockQuantity-error" style="display: none"></div>
+    </div>
+    <div>
+        <label for="files" class="form-label">상품 이미지</label>
+        <input type="file" id="files" class="form-control" name="files" accept="image/*" multiple>
+        <div class="error-message" id="files-error" style="display: none"></div>
+    </div>
 </form>
 <a href="/" role="button" class="btn btn-secondary">취소</a>
 <button type="button" class="btn btn-primary" id="btn-save">등록</button>

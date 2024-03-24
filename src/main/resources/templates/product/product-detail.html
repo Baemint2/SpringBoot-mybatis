@@ -7,15 +7,18 @@
 <body>
 <div>
   <div class="card mb-3">
-    <img th:src="${productByNo.storedUrl}" class="card-img-top" alt="${product.prodName}" style="height: 200px; width: 200px">
+      <div th:each="product: ${productByNo}">
+        <img th:src="${product.storedUrl}" class="card-img-top" alt="${product.prodName}" style="height: 200px; width: 200px">
+      </div>
     <div class="card-body">
-      <h5 class="card-title" th:text="${productByNo.prodName}"></h5>
-      <p class="card-text" th:text="${productByNo.nickname}"></p>
-      <p class="card-text" th:text="${productByNo.prodPrice}"></p>
-        <p th:text="${productByNo.description}"></p>
-        <p th:text="${productByNo.stockQuantity}"></p>
+      <h5 class="card-title" th:text="${productByNo[0].prodName}"></h5>
+      <p class="card-text" th:text="${productByNo[0].nickname}"></p>
+      <p class="card-text" th:text="${productByNo[0].prodPrice}"></p>
+        <p th:text="${productByNo[0].description}"></p>
+        <p th:text="${productByNo[0].stockQuantity}"></p>
     </div>
-    <a th:href="@{|/product/modify/${productByNo.productId}|}">수정</a>
+    <a th:href="@{|/product/modify/${productByNo[0].productId}|}">수정</a>
+    <a href="/">Home</a>
   </div>
 </div>
 </body>
