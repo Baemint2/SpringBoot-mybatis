@@ -3,6 +3,7 @@ package com.moz1mozi.mybatis.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -25,6 +26,7 @@ import java.security.Security;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomSuccessHandler customSuccessHandler;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -42,26 +44,27 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain userFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(config -> config
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/user/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/admin")).hasRole("관리자")
                                 .anyRequest().permitAll())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**"))
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/user/**"))
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/member/**"))
                 )
                 .formLogin(login -> login
-                        .loginPage("/user/login")
-                        .defaultSuccessUrl("/"))
+                        .loginPage("/member/login")
+                        .successHandler(customSuccessHandler))
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true));
+                        .invalidateHttpSession(true))
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/accessDenied"));
         return http.build();
     }
-
 }
