@@ -7,16 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
-public class ProductPageDto {
-    private List<ProductDetailDto> products;
-    private int currentPage;
-    private int totalPages;
-    private long totalProducts;
-    private int pageSize;
-
-
+public class ProductSearchDto {
+    private String prodName;
+    private String nickname;
+    private Integer startPrice;
+    private Integer endPrice;
 }

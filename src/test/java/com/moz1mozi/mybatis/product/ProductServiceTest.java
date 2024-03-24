@@ -21,6 +21,8 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,7 +94,7 @@ class ProductServiceTest {
     @Test
     void 상품조회_테스트_성공() {
         int productId = 18;
-        ProductDetailDto productByNo = productService.getProductByNo(productId);
+        List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
         assertNotNull(productByNo);
     }
 
@@ -137,7 +139,7 @@ class ProductServiceTest {
                 .build();
 
         byte[] content = "example file content".getBytes();
-        MockMultipartFile mockFile = new MockMultipartFile("file", "filename.txt", "text/plain", content);
+        List<MultipartFile> mockFile = List.of(new MockMultipartFile("file", "filename.txt", "text/plain", content));
 
         // 상품 수정 실행
         productService.updateProduct(prodId, productUpdateDto, mockFile);
@@ -149,5 +151,65 @@ class ProductServiceTest {
         assertEquals("진짜진짜 수정된", updatedProduct.getDescription());
         assertEquals(20000, updatedProduct.getProdPrice());
         assertEquals(20, updatedProduct.getStockQuantity());
+    }
+
+    @Test
+    void 상품검색_상품명_테스트() throws ExecutionException, InterruptedException {
+        ProductSearchDto productSearchDto = ProductSearchDto.builder()
+                .prodName("상")
+                .build();
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto, 1, 10); // 페이지와 페이지 크기를 명시적으로 지정
+        ProductPageDto results = futureResults.get();
+        assertTrue(results.getTotalProducts() > 0);
+    }
+
+    @Test
+    void 상품검색_상품명_실패() throws ExecutionException, InterruptedException {
+        ProductSearchDto productSearchDto = ProductSearchDto.builder()
+                .prodName("없음")
+                .build();
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto, 1, 10); // 페이지와 페이지 크기를 명시적으로 지정
+        ProductPageDto results = futureResults.get();
+        assertEquals(0, results.getTotalProducts());
+    }
+
+    @Test
+    void 상품검색_판매자_테스트() throws ExecutionException, InterruptedException {
+        ProductSearchDto productSearchDto = ProductSearchDto.builder()
+                .nickname("마리")
+                .build();
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto, 1, 10); // 페이지와 페이지 크기를 명시적으로 지정
+        ProductPageDto results = futureResults.get();
+        assertTrue(results.getTotalProducts() > 0);
+    }
+
+    @Test
+    void 상품검색_가격대_테스트() throws ExecutionException, InterruptedException {
+        ProductSearchDto productSearchDto = ProductSearchDto.builder()
+                .endPrice(10000)
+                .build();
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto, 1, 10); // 페이지와 페이지 크기를 명시적으로 지정
+        ProductPageDto results = futureResults.get();
+        assertTrue(results.getTotalProducts() > 0);
+    }
+
+    @Test
+    void 상품검색_상품명_가격대_테스트() throws ExecutionException, InterruptedException {
+        ProductSearchDto productSearchDto = ProductSearchDto.builder()
+                .prodName("상")
+                .endPrice(20000)
+                .build();
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto, 1, 10); // 페이지와 페이지 크기를 명시적으로 지정
+        ProductPageDto results = futureResults.get();
+        assertTrue(results.getTotalProducts() > 0);
+    }
+
+    @Test
+    void 전체상품검색() throws ExecutionException, InterruptedException {
+        ProductSearchDto productSearchDto = ProductSearchDto.builder()
+                .build();
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto, 1, 10); // 페이지와 페이지 크기를 명시적으로 지정
+        ProductPageDto results = futureResults.get();
+        assertTrue(results.getTotalProducts() > 0);
     }
 }

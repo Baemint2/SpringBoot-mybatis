@@ -6,13 +6,19 @@
     <insert id="insertProductImage"
             parameterType="com.moz1mozi.mybatis.image.dto.ImageDto">
         INSERT INTO PRODUCT_IMAGE (PRODUCT_ID, ORIGINAL_FILE_NAME, STORED_FILE_NAME, STORED_URL, CREATED_AT, MODIFIED_AT)
-        VALUES (#{productId}, #{originalFileName}, #{storedFileName}, #{storedUrl}, now(), now())
+        VALUES
+        <foreach collection="list" item="image" separator=",">
+            (#{image.productId}, #{image.originalFileName}, #{image.storedFileName}, #{image.storedUrl}, now(), now())
+        </foreach>
     </insert>
 
     <update id="updateProductImage"
             parameterType="com.moz1mozi.mybatis.image.dto.ImageDto">
         UPDATE PRODUCT_IMAGE
-           SET STORED_URL = #{storedUrl}
+           SET STORED_URL = #{storedUrl},
+               ORIGINAL_FILE_NAME = #{originalFileName},
+               STORED_FILE_NAME = #{storedFileName},
+               MODIFIED_AT = now()
          WHERE PRODUCT_ID = #{productId}
     </update>
 
