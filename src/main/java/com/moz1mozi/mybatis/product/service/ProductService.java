@@ -90,21 +90,28 @@ public class ProductService {
 
     // 상품 검색 기능(새로운 클래스 적용해보기)
     @Async
-    public CompletableFuture<ProductPageDto> searchProductsWithPagingAsync(ProductSearchDto searchDto, int page, int pageSize) {
+    public CompletableFuture<ProductPageDto> searchProductsWithPagingAsync(String prodName, String nickname, Integer startPrice, Integer endPrice,
+                                                                           int page, int pageSize) {
+        ProductSearchDto searchDto = ProductSearchDto.builder()
+                .prodName(prodName)
+                .nickname(nickname)
+                .startPrice(startPrice)
+                .endPrice(endPrice)
+                .page(page) // 페이지 번호
+                .pageSize(pageSize) // 페이지 크기
+                .build();
+        int offset = (searchDto.getPage() - 1) * searchDto.getPageSize();
+
+        // 페이징 정보를 설정한 새로운 DTO 인스턴스 생성
+        ProductSearchDto pagedSearchDto = searchDto.withPaging(searchDto.getPage(), searchDto.getPageSize());
+        // 검색 조건을 포함하는 ProductSearchDto 객체 생성
+
         return CompletableFuture.supplyAsync(() -> {
-            int offset = (page - 1) * pageSize;
+            List<ProductDetailDto> products = productDao.findByCondition(pagedSearchDto, pagedSearchDto.getPageSize(), offset);
+            Long totalResults = productDao.countByCondition(pagedSearchDto);
+            int totalPages = (int) Math.ceil((double) totalResults / pagedSearchDto.getPageSize());
 
-            // 검색 조건에 해당하는 상품 목록을 조회
-            List<ProductDetailDto> products = productDao.findByCondition(searchDto, pageSize, offset);
-
-            // 검색 조건에 해당하는 상품의 총 개수를 조회
-            Long totalResults = productDao.countByCondition(searchDto);
-
-            // 총 페이지 수 계산
-            int totalPages = (int) Math.ceil((double) totalResults / pageSize);
-
-            // 검색 결과와 페이징 정보를 포함한 DTO 반환
-            return new ProductPageDto(products, page, totalPages, totalResults, pageSize);
+            return new ProductPageDto(products, pagedSearchDto.getPage(), totalPages, totalResults, pagedSearchDto.getPageSize());
         });
     }
 }

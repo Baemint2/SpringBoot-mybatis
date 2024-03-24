@@ -62,7 +62,7 @@
         LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
         LEFT JOIN MEMBER_T M ON P.SELLER_ID = M.MEMBER_ID
         ORDER BY P.PRODUCT_ID DESC
-        LIMIT #{size} OFFSET #{offset};
+        LIMIT #{pageSize} OFFSET #{offset};
     </select>
 
     <resultMap id="ProductWithImage" type="com.moz1mozi.mybatis.product.dto.ProductDto">
@@ -99,26 +99,24 @@
     </update>
 
     <!--검색 기능 추가-->
-    <select id="findByCondition"
-            parameterType="com.moz1mozi.mybatis.product.dto.ProductSearchDto"
-            resultType="com.moz1mozi.mybatis.product.dto.ProductDetailDto">
+    <select id="findByCondition" parameterType="com.moz1mozi.mybatis.product.dto.ProductSearchDto" resultType="com.moz1mozi.mybatis.product.dto.ProductDetailDto">
         SELECT I.STORED_URL as storedUrl, P.PROD_NAME as prodName, P.DESCRIPTION as description,
-               P.PROD_PRICE as prodPrice, P.STOCK_QUANTITY as stockQuantity, MT.NICKNAME as nickname
-          FROM PRODUCT_T P
-          LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
-          LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
-         WHERE 1=1
-        <if test="prodName != null">
-            AND PROD_NAME LIKE CONCAT('%', #{prodName},'%')
+        P.PROD_PRICE as prodPrice, P.STOCK_QUANTITY as stockQuantity, MT.NICKNAME as nickname
+        FROM PRODUCT_T P
+        LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
+        LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
+        WHERE 1=1
+        <if test="searchDto.prodName != null">
+            AND PROD_NAME LIKE CONCAT('%', #{searchDto.prodName},'%')
         </if>
-        <if test="nickname != null">
-            AND NICKNAME LIKE CONCAT('%', #{nickname}, '%')
+        <if test="searchDto.nickname != null">
+            AND NICKNAME LIKE CONCAT('%', #{searchDto.nickname}, '%')
         </if>
-        <if test="startPrice != null">
-            AND PROD_PRICE &gt;= #{startPrice}
+        <if test="searchDto.startPrice != null">
+            AND PROD_PRICE &gt;= #{searchDto.startPrice}
         </if>
-        <if test="endPrice != null">
-            AND PROD_PRICE &lt;= #{endPrice}
+        <if test="searchDto.endPrice != null">
+            AND PROD_PRICE &lt;= #{searchDto.endPrice}
         </if>
         ORDER BY P.PRODUCT_ID DESC
         LIMIT #{pageSize} OFFSET #{offset}

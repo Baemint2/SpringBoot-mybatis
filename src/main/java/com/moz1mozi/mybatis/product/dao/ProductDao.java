@@ -27,7 +27,7 @@ public interface ProductDao {
     @Select("SELECT COUNT(*) FROM PRODUCT_T")
     Long countAllProducts();
 
-    List<ProductDetailDto> getPagedProducts(@Param("size")int limit, @Param("offset")int offset);
+    List<ProductDetailDto> getPagedProducts(@Param("pageSize")int pageSize, @Param("offset")int offset);
 
     // 상품 상세 조회
     List<ProductDetailDto> getProductByNo(int productId);
@@ -36,8 +36,9 @@ public interface ProductDao {
     List<ProductListDto> findAllProducts();
 
     //상품 검색
-    List<ProductDetailDto> findByCondition(ProductSearchDto productSearchDto, int size, int pageSize);
-
+    List<ProductDetailDto> findByCondition(@Param("searchDto") ProductSearchDto searchDto,
+                                           @Param("pageSize") int pageSize,
+                                           @Param("offset") int offset);
     //상품 검색 개수
     Long countByCondition(ProductSearchDto productSearchDto);
 }

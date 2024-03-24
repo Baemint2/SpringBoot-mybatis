@@ -125,16 +125,16 @@ public class ProductController {
         return productId;
     }
 
-    //상품 검색
-//    @GetMapping("/api/v1/product/search")
-//    public CompletableFuture<ResponseEntity<Page<ProductDetailDto>>> searchProduct(@RequestParam(required = false) String prodName,
-//                                                                                   @RequestParam(required = false) String nickname,
-//                                                                                   @RequestParam(required = false) Integer startPrice,
-//                                                                                   @RequestParam(required = false) Integer endPrice,
-//                                                                                   @RequestParam(value = "page", defaultValue = "1")int page,
-//                                                                                   @RequestParam(value = "pageSize", defaultValue = "6") int pageSize) {
-//        return productService.searchProductAsync(prodName, nickname, startPrice, endPrice)
-//                .thenApply(ResponseEntity::ok);
-//    }
+//    상품 검색
+    @GetMapping("/api/v1/product/search")
+    public CompletableFuture<ResponseEntity<ProductPageDto>> searchProduct(@RequestParam(required = false) String prodName,
+                                                                                   @RequestParam(required = false) String nickname,
+                                                                                   @RequestParam(required = false) Integer startPrice,
+                                                                                   @RequestParam(required = false) Integer endPrice,
+                                                                                   @RequestParam(value = "page", defaultValue = "1")int page,
+                                                                                   @RequestParam(value = "pageSize", defaultValue = "6") int pageSize) {
+        return productService.searchProductsWithPagingAsync(prodName, nickname, startPrice, endPrice, page, pageSize)
+                .thenApply(ResponseEntity::ok);
+    }
 
 }
