@@ -2,14 +2,17 @@ const product = {
     init: function () {
         const _this = this;
         document.getElementById("btn-save")?.addEventListener("click", function () {
-            _this.save();
+            _this.productSave();
         })
         document.getElementById("btn-modify")?.addEventListener('click', function () {
-            _this.update();
+            _this.productUpdate();
+        })
+        document.getElementById("btn-remove")?.addEventListener('click', function () {
+            _this.productDelete();
         })
     },
 
-    save: function () {
+    productSave: function () {
         const data = {
             prodName: document.getElementById("prodName").value,
             description: document.getElementById("description").value,
@@ -29,17 +32,30 @@ const product = {
             body: formData
         }).then(response => {
             if (response.ok) {
-                alert("상품이 등록되었습니다.")
-                location.href = "/"
+                alert("글이 등록되었습니다.")
+                window.location.href = "/"
             } else {
-                return response.json().then(data => {
-                    alert(data.message);
-                })
+                return response.json()
             }
-        }).catch(error =>
-            console.log("Fetch error: ", error));
+        }).then(errorResponse => {
+            console.log(errorResponse)
+            document.querySelectorAll('.error-message').forEach(errorContainer => {
+                errorContainer.style.display = 'none';
+                errorContainer.textContent = '';
+            });
+
+            Object.keys(errorResponse).forEach(field => {
+                console.log(errorResponse[field])
+                const errorContainer = document.getElementById(`${field}-error`);
+                console.log(errorContainer.textContent = errorResponse[field]);
+                if (errorContainer) {
+                    errorContainer.textContent = errorResponse[field];
+                    errorContainer.style.display = 'block';
+                }
+            })
+        }).catch(error => console.log("Fetch error: ", error));
     },
-    update: function () {
+    productUpdate: function () {
         const data = {
             prodName: document.getElementById("prodName").value,
             description: document.getElementById("description").value,
@@ -61,28 +77,44 @@ const product = {
             method: 'PUT',
             body: formData,
         }).then(response => {
-            console.log(response)
-            if (!response.ok)
-                return response.json().then(data => {
-                    // 서버로부터 받은 오류 메시지를 표시
-                    Object.keys(data).forEach(function (field) {
-                        const errorElement = document.getElementById(`${field}-error`);
-                        if (errorElement) {
-                            errorElement.textContent = data[field];
-                            errorElement.style.display = 'block';
-                        }
-                    });
-                    return Promise.reject(new Error("글 수정 중 문제가 발생했습니다."));
-                });
-            return response.json();
-        }).then(() => {
-            // window.location.href = `/product/detail/${productId}`;
-        }).catch(error => {
-            // 네트워크 오류 또는 response.ok가 false 인 경우 여기서 처리
-            console.error('Error : ', error.message)
-        });
+            if (response.ok) {
+                alert("글이 수정되었습니다.")
+                window.location.href = `/product/detail/${productId}`
+            } else {
+                return response.json()
+            }
+        }).then(errorResponse => {
+            console.log(errorResponse)
+            document.querySelectorAll('.error-message').forEach(errorContainer => {
+                errorContainer.style.display = 'none';
+                errorContainer.textContent = '';
+            });
 
+            Object.keys(errorResponse).forEach(field => {
+                console.log(errorResponse[field])
+                const errorContainer = document.getElementById(`${field}-error`);
+                console.log(errorContainer.textContent = errorResponse[field]);
+                if (errorContainer) {
+                    errorContainer.textContent = errorResponse[field];
+                    errorContainer.style.display = 'block';
+                }
+            })
+        }).catch(error => console.log("Fetch error: ", error));
     },
+    productDelete: function () {
+        const prodId = document.getElementById('productId').value;
+        fetch(`/api/v1/product/remove/${prodId}`, {
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'}
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error("네트워크 에러가 발생했습니다.")
+            }
+            alert("상품이 삭제되었습니다.")
+            location.href = "/";
+        }).catch(error =>
+            alert(`오류가 발생했습니다. ${error.message}`));
+    }
 
 }
 
