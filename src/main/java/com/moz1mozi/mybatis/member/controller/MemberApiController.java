@@ -1,10 +1,14 @@
 package com.moz1mozi.mybatis.member.controller;
 
 import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.member.dto.MemberWithdrawalDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,6 +26,27 @@ public class MemberApiController {
         Long memberId = memberService.insertMember(memberDto);
         log.info("회원가입 = {}", memberId);
         return ResponseEntity.ok(Map.of("message", "회원가입이 성공적으료 완료되었습니다."));
+    }
+
+
+    //회원 탈퇴
+    @DeleteMapping("/withdrawal/{username}")
+    public ResponseEntity<?> withdrawal(@PathVariable String username,
+                                        @RequestBody MemberWithdrawalDto withdrawalDto,
+                                        HttpServletRequest request) {
+        boolean withdrawalMember = memberService.deleteMember(withdrawalDto.getUsername(), withdrawalDto.getPassword());
+        if(withdrawalMember) {
+            SecurityContextHolder.clearContext();
+
+            HttpSession session = request.getSession(false);
+            if(session != null) {
+                session.invalidate();
+            }
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("사용자 삭제 실패: 사용자명 또는 비밀번호가 일치하지 않습니다.");
+        }
+
     }
 
     @GetMapping("/username/check")

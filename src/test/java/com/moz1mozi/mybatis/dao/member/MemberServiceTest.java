@@ -53,12 +53,6 @@ class MemberServiceTest {
     }
 
     @Test
-    void 회원삭제테스트() {
-        long deleteCount = memberService.deleteMember(1L);
-        assertEquals(1, deleteCount);
-    }
-
-    @Test
     void 유저찾기() {
         MemberDto member = MemberDto.builder()
                 .username("moz1mozi")
@@ -76,11 +70,11 @@ class MemberServiceTest {
     void 비밀번호변경_테스트() {
         String currentPassword = "1234";
         MemberDto memberDto = MemberDto.builder()
-                .username("tester64")
-                .nickname("테스트64")
+                .username("admin")
+                .nickname("이게모지")
                 .password(passwordEncoder.encode(currentPassword))
-                .email("user64@user.com")
-                .role(Role.SELLER)
+                .email("admin@admin.com")
+                .role(Role.ADMIN)
                 .build();
         memberDao.insertMember(memberDto);
 

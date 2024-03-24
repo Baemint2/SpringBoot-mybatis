@@ -72,8 +72,16 @@ public class MemberService {
         return Role.BUYER;
     }
 
-    public long deleteMember(Long memberId) {
-        return memberDao.deleteMember(memberId);
+    @Transactional
+    public boolean deleteMember(String username, String password) {
+        MemberDto member = Optional.ofNullable(memberDao.findByUsername(username))
+                .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
+       log.info("유저 찾기 = {}", member.getUsername());
+       if(passwordEncoder.matches(password, member.getPassword())) {
+           memberDao.deleteMember(member.getUsername());
+           return true;
+       }
+       return false;
     }
 
     @Transactional
