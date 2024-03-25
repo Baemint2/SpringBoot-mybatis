@@ -1,0 +1,11 @@
+.category-list {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.category-item {
+margin-right: 20px;
+    align-items: center;
+}
