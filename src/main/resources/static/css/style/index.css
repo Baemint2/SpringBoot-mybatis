@@ -93,3 +93,8 @@
     font-size: 0.875em; /* 글씨 크기 */
     margin-top: 0.25rem; /* 필드 위에 조금의 여백을 제공 */
 }
+
+#categoryList {
+    display: flex;
+    flex-direction: column;
+}

@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="/css/style/index.css" rel="stylesheet">
+    <link href="/css/style/category.css" rel="stylesheet">
 </head>
 <body>
 <div th:fragment="header">
@@ -37,10 +38,35 @@
         </div>
     </nav>
     <a href="/product" role="button" class="btn btn-primary">상품등록</a>
+    <div class="d-flex justify-content-end">
+        <select id="searchType" onchange="changeSearchType()">
+            <option value="productName">상품명</option>
+            <option value="seller">판매자</option>
+            <option value="priceRange">가격대별</option>
+        </select>
+
+        <!-- 동적으로 변화할 검색 필드 -->
+        <div id="searchField">
+            <!-- 초기 상태로 상품명 검색 필드를 표시 -->
+            상품명: <input type="text" id="productName"/>
+        </div>
+
+        <!-- 가격대별 검색 필드, 초기에는 숨김 처리 -->
+        <div id="priceRangeInputs" style="display: none;">
+            <input type="number" id="startPrice" placeholder="0"> ~
+            <input type="number" id="endPrice" placeholder="999,999,999">
+        </div>
+
+        <!-- 검색 버튼 -->
+        <button id="searchButton">검색</button>
+    </div>
+    <div id="categoryList"></div>
+
 </div>
 <div id="productList" class="container"></div>
 <div id="pagination-parent"></div>
 
+<script src="/js/app/category.js"></script>
 <script src="/js/app/index.js"> </script>
 </body>
 </html>
