@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberInfoDto {
-    private Long member_id;
+    private Long memberId;
     private String username;
     private String password;
     private String email;
@@ -20,7 +20,7 @@ public class MemberInfoDto {
     private String zipcode;
     private String streetAddress;
     private String detailAddress;
-    private Date created_at;
-    private Date modified_at;
+    private Date createdAt;
+    private Date modifiedAt;
     private Role role;
 }

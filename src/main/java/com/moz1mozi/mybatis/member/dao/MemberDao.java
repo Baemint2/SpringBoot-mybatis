@@ -1,27 +1,26 @@
 package com.moz1mozi.mybatis.member.dao;
 
 import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
 import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface MemberDao {
     Long insertMember(MemberDto member);
 
     // 회원 정보 조회
-    MemberDto selectMember(Long memberId);
+    List<MemberInfoDto> selectMemberInfo();
 
-    void updateMember(MemberDto memberDto);
-
-    Long deleteMember(Long memberId);
+    Long deleteMember(String username);
 
     MemberDto findByUsername(String username);
 
     Long findByMemberIdByUsername(String username);
 
-    // 유저 권한 찾기
-    MemberDto findByRoleWithUsername(String username);
 
     // 이메일로 아이디(username) 찾기
     String findUsernameByEmail(String email);

@@ -25,12 +25,19 @@
     <delete id="deleteMember">
         DELETE
           FROM MEMBER_T
-         WHERE MEMBER_ID = #{MEMBER_ID}
+         WHERE USERNAME = #{username}
     </delete>
+
+    <select id="selectMemberInfo"
+            resultType="com.moz1mozi.mybatis.member.dto.MemberInfoDto">
+        SELECT MEMBER_ID, USERNAME, PASSWORD, EMAIL, NICKNAME, ROLE, ZIPCODE,
+               STREETADDRESS, DETAILADDRESS, CREATED_AT, MODIFIED_AT
+        FROM MEMBER_T;
+    </select>
 
     <select id="findByUsername"
             parameterType="com.moz1mozi.mybatis.member.dto.MemberDto">
-        SELECT USERNAME, NICKNAME, PASSWORD
+        SELECT USERNAME, NICKNAME, PASSWORD, ROLE
           FROM MEMBER_T
          WHERE USERNAME = #{username}
     </select>

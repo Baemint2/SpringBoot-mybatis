@@ -1,25 +1,46 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="/css/style/product.css" rel="stylesheet">
 </head>
 <body>
 <div>
-  <div class="card mb-3">
-      <div th:each="product: ${productByNo}">
-        <img th:src="${product.storedUrl}" class="card-img-top" alt="${product.prodName}" style="height: 200px; width: 200px">
-      </div>
-    <div class="card-body">
-      <h5 class="card-title" th:text="${productByNo[0].prodName}"></h5>
-      <p class="card-text" th:text="${productByNo[0].nickname}"></p>
-      <p class="card-text" th:text="${productByNo[0].prodPrice}"></p>
-        <p th:text="${productByNo[0].description}"></p>
-        <p th:text="${productByNo[0].stockQuantity}"></p>
+    <div class="container product-detail-page">
+        <div class="row">
+            <div class="col-lg-6">
+                <div th:each="product: ${productByNo}">
+                    <img th:src="${product.storedUrl}" class="img-fluid" alt="${product.prodName}" style="height: 200px;width: 200px">
+                </div>
+                <input type="hidden" id="productId" th:value="${productByNo[0].productId}">
+                <div class="col-lg-6">
+                    <h1 th:text="${productByNo[0].prodName}"></h1>
+                    <p class="nickname" th:text="${productByNo[0].nickname}"></p>
+                    <p class="price" th:text="${productByNo[0].prodPrice}"></p>
+                    <p class="description" th:text="${productByNo[0].description}"></p>
+                    <p class="stock" th:text="${productByNo[0].stockQuantity}"></p>
+                    <div class="action-buttons">
+                        <a th:href="@{|/product/modify/${productByNo[0].productId}|}"
+                           sec:authorize="hasRole('ROLE_관리자') or (isAuthenticated() and #authentication.name == #model['productOwner'])"
+                           class="btn btn-sm btn-outline-secondary">수정</a>
+
+                        <button type="button" class="btn btn-sm btn-outline-danger" id="btn-remove"
+                                sec:authorize="hasRole('ROLE_관리자') or (isAuthenticated() and #authentication.name == #model['productOwner'])">
+                            삭제
+                        </button>
+
+                        <a href="/">Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <a th:href="@{|/product/modify/${productByNo[0].productId}|}">수정</a>
-    <a href="/">Home</a>
-  </div>
 </div>
+<script src="/js/app/product.js"></script>
 </body>
 </html>

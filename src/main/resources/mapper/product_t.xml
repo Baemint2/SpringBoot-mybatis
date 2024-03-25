@@ -43,7 +43,7 @@
 
     <select id="getProductByNo"
             resultType="com.moz1mozi.mybatis.product.dto.ProductDetailDto">
-        select P.PRODUCT_ID as productId,
+        select P.PRODUCT_ID as productId, M.USERNAME as username,
                I.STORED_URL as storedUrl, P.PROD_NAME as prodName,
                P.DESCRIPTION as description, P.PROD_PRICE as prodPrice,
                P.STOCK_QUANTITY as stockQuantity, M.NICKNAME as nickname
@@ -57,7 +57,7 @@
             resultType="com.moz1mozi.mybatis.product.dto.ProductDetailDto">
         SELECT P.PROD_NAME as prodName, P.PROD_PRICE as prodPrice,
                I.STORED_URL as storedUrl, M.nickname as nickname,
-               P.PRODUCT_ID as productId
+               P.PRODUCT_ID as productId, P.ROLE as role,
           FROM PRODUCT_T P
         LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
         LEFT JOIN MEMBER_T M ON P.SELLER_ID = M.MEMBER_ID
@@ -100,7 +100,7 @@
 
     <!--검색 기능 추가-->
     <select id="findByCondition" parameterType="com.moz1mozi.mybatis.product.dto.ProductSearchDto" resultType="com.moz1mozi.mybatis.product.dto.ProductDetailDto">
-        SELECT I.STORED_URL as storedUrl, P.PROD_NAME as prodName, P.DESCRIPTION as description,
+        SELECT P.PRODUCT_ID as productId, I.STORED_URL as storedUrl, P.PROD_NAME as prodName, P.DESCRIPTION as description,
         P.PROD_PRICE as prodPrice, P.STOCK_QUANTITY as stockQuantity, MT.NICKNAME as nickname
         FROM PRODUCT_T P
         LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
@@ -125,8 +125,11 @@
     <select id="countByCondition"
             parameterType="com.moz1mozi.mybatis.product.dto.ProductSearchDto"
             resultType="long">
-        SELECT COUNT(*) FROM PRODUCT_T
-        WHERE 1=1
+        SELECT COUNT(*)
+          FROM PRODUCT_T P
+          LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
+          LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
+         WHERE 1=1
         <if test="prodName != null">
             AND PROD_NAME LIKE CONCAT('%', #{prodName}, '%')
         </if>
