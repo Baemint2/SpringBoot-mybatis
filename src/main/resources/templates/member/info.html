@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="/css/style/modal.css" rel="stylesheet"/>
+</head>
+<body>
+<p th:text="${member.username}"></p>
+
+<button type="button" id="btn-withdrawal">회원 탈퇴</button>
+
+<form method="POST">
+    <div class="changeNickname">
+        <label th:for="nickname"></label>
+        <input type="text" id="nickname" name="nickname" th:value="${member.username}" readonly>
+    </div>
+    <button type="button" id="btn-changeNickname">변경</button>
+</form>
+
+<div id="modal-withdrawal-confirm" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close">❌</span>
+        <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+        <div class="modal-footer">
+            <button id="confirm-withdrawal" class="btn btn-primary modal-button">예</button>
+            <button id="cancel-withdrawal" class="btn btn-secondary modal-button">아니오</button>
+        </div>
+    </div>
+</div>
+
+<!-- 회원 정보 확인 -->
+<div id="password-confirmation-form" style="display: none">
+    <span class="close">❌</span>
+    <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+    <div class="modal-footer">
+        <input type="text" id="username" th:value="${member}">
+        <input type="password" id="password" class="password-error" placeholder="비밀번호를 입력해주세요">
+    </div>
+    <div id="password-error" style="display: none"></div>
+    <div id="submit-withdrawal-container">
+        <button id="submit-withdrawal">탈퇴하기</button>
+    </div>
+
+</div>
+
+<script type="module" src="/js/app/member.js"></script>
+</body>
+</html>
