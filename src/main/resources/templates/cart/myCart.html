@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="/css/style/index.css" rel="stylesheet">
+    <link href="/css/style/product.css" rel="stylesheet">
+</head>
+<body>
+<div>
+    <div class="container product-detail-page">
+        <div class="row">
+            <div class="col-lg-6">
+                <div th:each="myItem : ${myItems}" class="productContainer">
+                    <p class="productId" id="productId" th:text="${myItem.productId}"></p>
+                    <img th:src="${myItem.storedUrl}" class="img-fluid" alt="${myItem.prodName}" style="height: 200px;width: 200px">
+                    <h1 th:text="${myItem.prodName}"></h1>
+                    <p class="price" id="prodPrice">가격: <span id="formattedPrice" th:text="${myItem.price}"></span>원</p>
+                    <p class="stock" id="quantity" th:text="'재고: ' + ${myItem.quantity}"></p>
+                </div>
+                <div class="col-lg-6">
+
+                    <!-- Other content remains the same -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/app/cart.js"></script>
+<script src="/js/app/product.js"></script>
+</body>
+</html>
