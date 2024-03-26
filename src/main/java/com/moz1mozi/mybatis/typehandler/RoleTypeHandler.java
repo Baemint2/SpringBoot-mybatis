@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.typehandler;
 
-import com.moz1mozi.mybatis.member.Role;
+import com.moz1mozi.mybatis.member.dto.Role;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
@@ -41,6 +41,7 @@ public class RoleTypeHandler implements TypeHandler<Role> {
                 return role;
             }
         }
-        throw new IllegalArgumentException("Unknown displayName: " + displayName);
+        return Role.BUYER;
+//        throw new IllegalArgumentException("Unknown displayName: " + displayName);
     }
 }

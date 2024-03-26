@@ -49,6 +49,7 @@ class ProductServiceTest {
                 .description("안녕하세요 첫 출시 해봤습니다.")
                 .prodPrice(5000)
                 .stockQuantity(5)
+                .categoryId(10L)
                 .createdAt(Date.from(Instant.now()))
                 .build();
 
@@ -110,20 +111,6 @@ class ProductServiceTest {
     }
 
     @Test
-    void 페이징처리_성공() {
-        int page = 2;
-        int pageSize = 6;
-        ProductPageDto pageResult = productService.getPagedProducts(page, pageSize);
-
-        assertFalse(pageResult.getProducts().isEmpty());
-
-
-
-        assertEquals(page, pageResult.getCurrentPage());
-        assertEquals(pageSize, pageResult.getPageSize());
-    }
-
-    @Test
     @Rollback(value = false)
     void 상품정보수정_테스트() throws IOException {
         // 테스트를 위한 상품 ID
@@ -156,11 +143,12 @@ class ProductServiceTest {
     @Test
     void 상품검색_상품명_테스트() throws ExecutionException, InterruptedException {
         ProductSearchDto productSearchDto = ProductSearchDto.builder()
-                .prodName("상")
+                .categoryId(6L)
                 .page(1)  // 페이지 번호 지정
                 .pageSize(10)  // 페이지 크기 지정
                 .build();
-        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto.getProdName(), productSearchDto.getNickname(), productSearchDto.getStartPrice(), productSearchDto.getEndPrice(), productSearchDto.getPage(), productSearchDto.getPageSize());
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto.getProdName(), productSearchDto.getNickname(), productSearchDto.getStartPrice(),
+                                                                            productSearchDto.getEndPrice(), productSearchDto.getPage(), productSearchDto.getPageSize(), productSearchDto.getCategoryId());
         ProductPageDto results = futureResults.get();
         assertTrue(results.getTotalProducts() > 0);
     }

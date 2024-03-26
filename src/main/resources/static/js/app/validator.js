@@ -1,16 +1,16 @@
 export const validator = {
     init: function () {
         const _this = this;
-        document.getElementById('username').addEventListener('blur', function () {
+        document.getElementById('username')?.addEventListener('blur', function () {
             _this.checkDuplicate('username', this.value, 'username-error', '이미 사용중인 사용자명입니다.');
         });
-        document.getElementById('email').addEventListener('blur', function ()  {
+        document.getElementById('email')?.addEventListener('blur', function ()  {
             _this.checkDuplicate('email', this.value, 'email-error', '이미 사용중인 이메일입니다.');
         });
-        document.getElementById('nickname').addEventListener('blur', function ()  {
+        document.getElementById('nickname')?.addEventListener('blur', function ()  {
             _this.checkDuplicate('nickname', this.value, 'nickname-error', '이미 사용중인 닉네임입니다.');
         });
-        document.getElementById('confirmPassword').addEventListener('blur', () => {
+        document.getElementById('confirmPassword')?.addEventListener('blur', () => {
             _this.passwordMatch();
         });
     },

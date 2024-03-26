@@ -3,14 +3,16 @@ package com.moz1mozi.mybatis.image.dao;
 import com.moz1mozi.mybatis.image.dto.ImageDto;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface ImageDao {
 
     //이미지 등록
-    void insertProductImage(ImageDto imageDto);
+    int insertProductImage(List<ImageDto> imageDto);
 
     //이미지 수정
-    void updateProductImage(ImageDto imageDto);
+    int updateProductImage(List<ImageDto>  imageDto);
 
-    ImageDto findByProductId(Long prodId);
+    List<ImageDto> findByProductId(Long prodId);
 }

@@ -1,4 +1,5 @@
 import {validator} from "./validator.js";
+import {withdrawal} from "./memberWithdrawal.js";
 
 let globalAddressData = {};
 
@@ -84,4 +85,5 @@ function execPostCode() {
 document.addEventListener("DOMContentLoaded", function () {
     member.init();
     validator.init();
+    withdrawal.init();
 })

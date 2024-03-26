@@ -1,7 +1,7 @@
 package com.moz1mozi.mybatis;
 
-import com.moz1mozi.mybatis.dao.BoardDaoImpl;
-import com.moz1mozi.mybatis.dto.BoardDto;
+import com.moz1mozi.mybatis.board.BoardDaoImpl;
+import com.moz1mozi.mybatis.board.BoardDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

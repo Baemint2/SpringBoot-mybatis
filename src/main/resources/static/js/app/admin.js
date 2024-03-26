@@ -29,10 +29,10 @@ const admin = {
             data.forEach(member => {
                 const row = `
                     <tr>
-                        <td>${member.member_id}</td>
+                        <td>${member.memberId}</td>
                         <td>${member.username}</td>
                         <td>${member.email}</td>
-                        <td>${this.formatDate(member.created_at)}</td>
+                        <td>${this.formatDate(member.createdAt)}</td>
                         <td>${member.role}</td>
                         <td><button class="btn-remove" data-username="${member.username}">탈퇴</button></td>
                     </tr>
