@@ -18,7 +18,9 @@ const product = {
             description: document.getElementById("description").value,
             prodPrice: document.getElementById("prodPrice").value,
             stockQuantity: document.getElementById("stockQuantity").value,
+            categoryId: document.getElementById("mediumCategory").value
         }
+        console.log(data)
         const formData = new FormData();
         formData.append('product', new Blob([JSON.stringify(data)], {type: "application/json"}));
 
@@ -61,6 +63,7 @@ const product = {
             description: document.getElementById("description").value,
             prodPrice: document.getElementById("prodPrice").value,
             stockQuantity: document.getElementById("stockQuantity").value,
+            categoryId: document.getElementById("mediumCategory").value
         }
         const formData = new FormData();
         formData.append('product', new Blob([JSON.stringify(data)], {type: "application/json"}));
@@ -103,6 +106,7 @@ const product = {
     },
     productDelete: function () {
         const prodId = document.getElementById('productId').value;
+        console.log(prodId)
         fetch(`/api/v1/product/remove/${prodId}`, {
             method: 'DELETE',
             headers: {'Content-Type': 'application/json'}
@@ -114,10 +118,20 @@ const product = {
             location.href = "/";
         }).catch(error =>
             alert(`오류가 발생했습니다. ${error.message}`));
+    },
+
+    formattedPrice:function () {
+        const priceElement = document.getElementById('formattedPrice')
+        const price = parseInt(priceElement.textContent, 10);
+
+        priceElement.textContent = new Intl.NumberFormat('ko-KR').format(price);
     }
+
+
 
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     product.init();
+    product.formattedPrice();
 })

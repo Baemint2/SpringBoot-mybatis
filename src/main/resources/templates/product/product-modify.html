@@ -12,6 +12,18 @@
         method="post"
         enctype="multipart/form-data">
     <div class="error-message" id="error-error" style="display: none"></div>
+    <div class="category">
+        <div>
+            <select id="majorCategory">
+                <option value="">대분류 선택</option>
+            </select>
+        </div>
+        <div>
+            <select id="mediumCategory">
+                <option value="">중분류 선택</option>
+            </select>
+        </div>
+    </div>
     <div th:each="product: ${productByNo}">
         <input type="hidden" id="productId" th:value="${product.productId}">
         <img th:src="${product.storedUrl}" class="card-img-top" th:alt="${productByNo[0].prodName}" style="width: 200px; height: 200px;">
@@ -45,6 +57,7 @@
 <button type="button" class="btn btn-primary" id="btn-modify">수정완료</button>
 <button type="button" class="btn btn-danger" id="btn-remove">삭제</button>
 <a th:href="@{|/product/detail/${productByNo[0].productId}|}">취소</a>
+<script src="/js/app/category.js"></script>
 <script src="/js/app/product.js"></script>
 </body>
 </html>

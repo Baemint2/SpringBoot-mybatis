@@ -1,5 +1,6 @@
 package com.moz1mozi.mybatis.product.dto;
 
+import com.moz1mozi.mybatis.member.dto.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,8 @@ public class ProductDetailDto {
     private int prodPrice;
     private int stockQuantity;
     private String nickname;
+    private String username;
+    private Role role;
+    private int categoryId;
+    private String categoryName;
 }

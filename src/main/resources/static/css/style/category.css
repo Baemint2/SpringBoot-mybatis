@@ -8,4 +8,30 @@
 .category-item {
 margin-right: 20px;
     align-items: center;
+    list-style-type: none;
+}
+
+#categoryList {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+#categoryList ul li {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+#categoryList a {
+    color: black;
+    text-decoration: none;
+}
+
+.category {
+    display: flex;
 }

@@ -27,6 +27,7 @@ public class ProductDto {
     private int prodPrice;
     @Min(value = 1, message = "재고는 1개 이상이어야합니다.")
     private int stockQuantity;
+    private Long categoryId;
     private Date createdAt;
     private Date modifiedAt;
     private List<ImageDto> imageDtoList;
@@ -37,6 +38,7 @@ public class ProductDto {
         this.description = updateProductDto.getDescription();
         this.prodPrice = updateProductDto.getProdPrice();
         this.stockQuantity = updateProductDto.getStockQuantity();
+        this.categoryId = updateProductDto.getCategoryId();
         this.modifiedAt = Date.from(Instant.now());
         this.imageDtoList =  updateProductDto.getImageDtoList();
         this.storedUrl = updateProductDto.getStoredUrl();

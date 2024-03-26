@@ -25,6 +25,7 @@ public class ProductUpdateDto {
     private int prodPrice;
     @Min(value = 1, message = "재고는 1개 이상이어야합니다.")
     private int stockQuantity;
+    private Long categoryId;
     private Date modifiedAt;
     private List<ImageDto> imageDtoList;
     private String storedUrl;
