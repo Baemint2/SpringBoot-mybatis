@@ -5,6 +5,7 @@ import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
@@ -43,13 +44,20 @@ public class ProductController {
     public String productDetail(@PathVariable int productId,
                                 Model model,
                                 Principal principal) {
-        if(principal != null) {
-            MemberDto member = memberService.findByUsername(principal.getName());
-            model.addAttribute("member", member);
+            String currentUsername = principal.getName();
 
-        }
         List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
         model.addAttribute("productByNo", productByNo);
+
+
+        if(!productByNo.isEmpty()) {
+            boolean isOwner = productService.isUserSellerOfProduct(currentUsername, productId);
+            boolean isAdmin = productService.isCurrentUserAdmin();
+
+            model.addAttribute("isOwner", isOwner);
+            model.addAttribute("isAdmin", isAdmin);
+            log.info("현재 사용자 = {}", isOwner);
+        }
 
         return "product/product-detail";
     }
@@ -72,19 +80,13 @@ public class ProductController {
         if (files == null || files.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("message","상품 이미지는 필수입니다."));
         }
+        log.info("카테고리 ID : {}", productDto.getCategoryId());
         String username = authentication.getName();
         Long productId = productService.insertProduct(productDto, files, username);
         log.info("상품등록 = {}", productId);
         return ResponseEntity.ok(Map.of("productId", productId));
     }
 
-    //페이지 처리
-    @GetMapping("/api/v1/product/list")
-    public ResponseEntity<ProductPageDto> getPageProductList(@RequestParam(value = "page", defaultValue = "1")int page,
-                                                             @RequestParam(value = "pageSize", defaultValue = "6") int pageSize) {
-        ProductPageDto productPage = productService.getPagedProducts(page, pageSize);
-        return ResponseEntity.ok(productPage);
-    }
 
     // 제품 상세
     @GetMapping("/api/v1/product/detail/{productId}")
@@ -127,13 +129,17 @@ public class ProductController {
 
 //    상품 검색
     @GetMapping("/api/v1/product/search")
-    public CompletableFuture<ResponseEntity<ProductPageDto>> searchProduct(@RequestParam(required = false) String prodName,
-                                                                                   @RequestParam(required = false) String nickname,
-                                                                                   @RequestParam(required = false) Integer startPrice,
-                                                                                   @RequestParam(required = false) Integer endPrice,
-                                                                                   @RequestParam(value = "page", defaultValue = "1")int page,
-                                                                                   @RequestParam(value = "pageSize", defaultValue = "6") int pageSize) {
-        return productService.searchProductsWithPagingAsync(prodName, nickname, startPrice, endPrice, page, pageSize)
+    public CompletableFuture<ResponseEntity<ProductPageDto>> searchProduct(
+            @RequestParam(required = false) String prodName,
+            @RequestParam(required = false) String nickname,
+            @RequestParam(required = false) Integer startPrice,
+            @RequestParam(required = false) Integer endPrice,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(value = "page", defaultValue = "1")int page,
+            @RequestParam(value = "pageSize", defaultValue = "6") int pageSize) {
+
+        log.info("설정된 카테고리값 = {}", categoryId);
+        return productService.searchProductsWithPagingAsync(prodName, nickname, startPrice, endPrice, page, pageSize, categoryId)
                 .thenApply(ResponseEntity::ok);
     }
 

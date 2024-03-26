@@ -7,9 +7,10 @@ import com.moz1mozi.mybatis.product.dao.ProductDao;
 import com.moz1mozi.mybatis.product.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,14 +65,14 @@ public class ProductService {
     }
 
     // 페이징 처리
-    public ProductPageDto getPagedProducts(int page, int pageSize) {
-        int offset = (page - 1) * pageSize;
-        List<ProductDetailDto> products = productDao.getPagedProducts(pageSize, offset);
-        Long totalProducts = productDao.countAllProducts();
-        int totalPages = (int)Math.ceil((double) totalProducts / pageSize);
-
-        return new ProductPageDto(products, page, totalPages, totalProducts, pageSize);
-    }
+//    public ProductPageDto getPagedProducts(int page, int pageSize) {
+//        int offset = (page - 1) * pageSize;
+//        List<ProductDetailDto> products = productDao.getPagedProducts(pageSize, offset);
+//        Long totalProducts = productDao.countAllProducts();
+//        int totalPages = (int)Math.ceil((double) totalProducts / pageSize);
+//
+//        return new ProductPageDto(products, page, totalPages, totalProducts, pageSize);
+//    }
 
     public Long updateProduct(Long prodId, ProductUpdateDto productUpdateDto, List<MultipartFile> files) throws IOException {
         ProductDto existingProduct = Optional.ofNullable(productDao.selectProductById(prodId))
@@ -91,7 +92,7 @@ public class ProductService {
     // 상품 검색 기능(새로운 클래스 적용해보기)
     @Async
     public CompletableFuture<ProductPageDto> searchProductsWithPagingAsync(String prodName, String nickname, Integer startPrice, Integer endPrice,
-                                                                           int page, int pageSize) {
+                                                                           int page, int pageSize, Long categoryId) {
         ProductSearchDto searchDto = ProductSearchDto.builder()
                 .prodName(prodName)
                 .nickname(nickname)
@@ -99,6 +100,7 @@ public class ProductService {
                 .endPrice(endPrice)
                 .page(page) // 페이지 번호
                 .pageSize(pageSize) // 페이지 크기
+                .categoryId(categoryId)
                 .build();
         int offset = (searchDto.getPage() - 1) * searchDto.getPageSize();
 
@@ -108,10 +110,24 @@ public class ProductService {
 
         return CompletableFuture.supplyAsync(() -> {
             List<ProductDetailDto> products = productDao.findByCondition(pagedSearchDto, pagedSearchDto.getPageSize(), offset);
-            Long totalResults = productDao.countByCondition(pagedSearchDto);
+            Long totalResultsLong = productDao.countByCondition(pagedSearchDto); // Long 타입으로 받음
+            int totalResults = totalResultsLong.intValue(); // 필요하다면 int 타입으로 변환
             int totalPages = (int) Math.ceil((double) totalResults / pagedSearchDto.getPageSize());
 
-            return new ProductPageDto(products, pagedSearchDto.getPage(), totalPages, totalResults, pagedSearchDto.getPageSize());
+            return new ProductPageDto(products, pagedSearchDto.getPage(), totalPages, totalResults, pagedSearchDto.getPageSize(), categoryId);
         });
+    }
+
+    // 판매자 권한 비교
+    public boolean isUserSellerOfProduct(String username, int productId) {
+        String sellerUsername = productDao.findSellerUsernameByProductId(productId);
+
+        return username.equals(sellerUsername);
+    }
+
+    // 어드민 권한 비교
+    public boolean isCurrentUserAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_관리자"));
     }
 }
