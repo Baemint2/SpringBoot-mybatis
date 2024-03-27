@@ -2,13 +2,16 @@ package com.moz1mozi.mybatis.cart.controller;
 
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
+import com.moz1mozi.mybatis.cart.dto.TotalCartDto;
 import com.moz1mozi.mybatis.cart.service.CartService;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.exception.OutOfStockException;
 import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,24 +27,52 @@ import java.util.Map;
 @Slf4j
 public class CartController {
 
+    private final ProductService productService;
+
     private final CartService cartService;
+
+    private final MemberService memberService;
     @GetMapping("/member/cart")
     public String myCart(Model model) {
-        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Long memberId = memberService.findByUsername(username).getMemberId();
+        log.info("로그인한 멤버 : {}", memberId);
+
+        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
         model.addAttribute("myItems", itemsByMemberId);
         return "cart/myCart";
     }
 
+    // 상품 추가
     @PostMapping("/api/v1/cart/add")
     public ResponseEntity<?> addCartItems(@RequestBody CartDto cartDto) {
-        Long cartItemId = cartService.addCartItem(cartDto);
-        return ResponseEntity.ok().body(Map.of("cartItemId", cartItemId)); // 성공 응답
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            Long memberId = memberService.findByUsername(username).getMemberId();
+            int updateStock = productService.addToCartAndUpdateStockQuantity(cartDto.getProductId(), cartDto.getQuantity());
+
+            Long cartItemId = cartService.addCartItem(cartDto, memberId);
+
+            return ResponseEntity.ok().body(Map.of("cartItemId", cartItemId,
+                    "productId", cartDto.getProductId(),
+                    "updatedStock", updateStock));
+        } catch (OutOfStockException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
     }
 
-    // 남은 재고
-    @GetMapping("/api/v1/product/{productId}/stock")
-    public ResponseEntity<Integer> getStockByProductId(@PathVariable int productId) {
-        int stock = cartService.getStockByProductId(productId);
-        return ResponseEntity.ok(stock);
+    // 총 가격
+    @GetMapping("/api/v1/cart/total")
+    public ResponseEntity<?> getCartTotal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Long memberId = memberService.findByUsername(username).getMemberId();
+
+        TotalCartDto totalPrice = cartService.getTotalPrice(memberId);
+        return ResponseEntity.ok(totalPrice);
     }
+
+
 }

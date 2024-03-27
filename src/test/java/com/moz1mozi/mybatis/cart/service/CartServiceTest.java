@@ -28,51 +28,33 @@ class CartServiceTest {
 
     @Autowired
     private MemberService memberService;
-
-    @BeforeEach
-    void setUp() {
-        // 테스트용 UserDetails 객체 생성
-        UserDetails testUser = User.withUsername("mary")
-                .password("password")
-                .authorities("ROLE_USER")
-                .build();
-
-        // Authentication 객체 생성 및 SecurityContext에 설정
-        Authentication auth = new UsernamePasswordAuthenticationToken(testUser, null, testUser.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(auth);
-    }
-
-    @AfterEach
-    void tearDown() {
-        // SecurityContext 초기화
-        SecurityContextHolder.clearContext();
-    }
-
-
+    public static final Long memberId = 18L;
     @Test
     void 장바구니등록_테스트() {
+
         CartDto cartDto = CartDto.builder()
-                .memberId(18L)
+                .memberId(memberId)
                 .productId(27L)
                 .quantity(3)
                 .price(1000000)
                 .dataAdded(Date.from(Instant.now()))
                 .build();
 
-        Long results = cartService.addCartItem(cartDto);
+        Long results = cartService.addCartItem(cartDto, memberId);
         assertNotNull(results);
     }
 
     @Test
     void 내장바구니() {
+
         memberService.findByUsername("emozi");
-        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId();
+        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
         assertNotNull(itemsByMemberId);
     }
     @Test
     void 내장바구니_실패() {
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> cartService.getCartItemsByMemberId());
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> cartService.getCartItemsByMemberId(memberId));
         String exceptionMessage = "장바구니가 비어 있습니다.";
         String message = exception.getMessage();
         assertTrue(message.contains(exceptionMessage));
@@ -80,7 +62,7 @@ class CartServiceTest {
 
     @Test
     void 내장바구니_실패_() {
-        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId();
+        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
         assertTrue(itemsByMemberId.isEmpty());
     }
 }

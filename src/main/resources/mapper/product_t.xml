@@ -153,4 +153,41 @@
             AND PROD_PRICE BETWEEN #{startPrice} AND #{endPrice}
         </if>
     </select>
+
+    <update id="updateStockQuantity" parameterType="com.moz1mozi.mybatis.product.dto.StockUpdateDto">
+        UPDATE PRODUCT_T
+        SET STOCK_QUANTITY = #{newQuantity}
+        WHERE PRODUCT_ID = #{productId}
+    </update>
+
+    <!-- 재고 계산 -->
+    <select id="getStockByProductId" parameterType="Long" resultType="int">
+        SELECT P.STOCK_QUANTITY
+        FROM PRODUCT_T P
+        LEFT JOIN CART C ON P.PRODUCT_ID = C.PRODUCT_ID
+        WHERE P.PRODUCT_ID = #{productId}
+        GROUP BY P.PRODUCT_ID;
+    </select>
+
+    <select id="getActualStockByProductId"
+            parameterType="long"
+            resultType="int">
+        SELECT STOCK_QUANTITY
+        FROM PRODUCT_T
+        WHERE PRODUCT_ID = #{productId}
+    </select>
+
+    <update id="increaseStockQuantity"
+            parameterType="map">
+    UPDATE PRODUCT_T
+    SET STOCK_QUANTITY = STOCK_QUANTITY + #{quantity}
+    WHERE PRODUCT_ID = #{productId}
+    </update>
+
+    <update id="decreaseStockQuantity"
+            parameterType="map">
+        UPDATE PRODUCT_T
+        SET STOCK_QUANTITY = STOCK_QUANTITY - #{quantity}
+        WHERE PRODUCT_ID = #{productId}
+    </update>
 </mapper>

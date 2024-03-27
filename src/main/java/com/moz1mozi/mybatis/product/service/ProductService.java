@@ -1,5 +1,10 @@
 package com.moz1mozi.mybatis.product.service;
 
+import com.moz1mozi.mybatis.cart.dao.CartDao;
+import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
+import com.moz1mozi.mybatis.cart.service.CartService;
+import com.moz1mozi.mybatis.exception.OutOfStockException;
+import com.moz1mozi.mybatis.product.dto.StockUpdateDto;
 import com.moz1mozi.mybatis.image.service.ImageService;
 import com.moz1mozi.mybatis.member.dao.MemberDao;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
@@ -18,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -26,6 +32,7 @@ import java.util.concurrent.CompletableFuture;
 public class ProductService {
 
     private final ProductDao productDao;
+    private final CartDao cartDao;
     private final MemberDao memberDao;
     private final ImageService imageService;
 
@@ -64,16 +71,6 @@ public class ProductService {
 
     }
 
-    // 페이징 처리
-//    public ProductPageDto getPagedProducts(int page, int pageSize) {
-//        int offset = (page - 1) * pageSize;
-//        List<ProductDetailDto> products = productDao.getPagedProducts(pageSize, offset);
-//        Long totalProducts = productDao.countAllProducts();
-//        int totalPages = (int)Math.ceil((double) totalProducts / pageSize);
-//
-//        return new ProductPageDto(products, page, totalPages, totalProducts, pageSize);
-//    }
-
     public Long updateProduct(Long prodId, ProductUpdateDto productUpdateDto, List<MultipartFile> files) throws IOException {
         ProductDto existingProduct = Optional.ofNullable(productDao.selectProductById(prodId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다. ID = " + prodId));
@@ -104,14 +101,12 @@ public class ProductService {
                 .build();
         int offset = (searchDto.getPage() - 1) * searchDto.getPageSize();
 
-        // 페이징 정보를 설정한 새로운 DTO 인스턴스 생성
         ProductSearchDto pagedSearchDto = searchDto.withPaging(searchDto.getPage(), searchDto.getPageSize());
-        // 검색 조건을 포함하는 ProductSearchDto 객체 생성
 
         return CompletableFuture.supplyAsync(() -> {
             List<ProductDetailDto> products = productDao.findByCondition(pagedSearchDto, pagedSearchDto.getPageSize(), offset);
-            Long totalResultsLong = productDao.countByCondition(pagedSearchDto); // Long 타입으로 받음
-            int totalResults = totalResultsLong.intValue(); // 필요하다면 int 타입으로 변환
+            Long totalResultsLong = productDao.countByCondition(pagedSearchDto);
+            int totalResults = totalResultsLong.intValue();
             int totalPages = (int) Math.ceil((double) totalResults / pagedSearchDto.getPageSize());
 
             return new ProductPageDto(products, pagedSearchDto.getPage(), totalPages, totalResults, pagedSearchDto.getPageSize(), categoryId);
@@ -130,4 +125,80 @@ public class ProductService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_관리자"));
     }
+
+
+
+    @Transactional
+    // 장바구니 제품 추가
+    public int addToCartAndUpdateStockQuantity(Long productId, int quantity) {
+        int stock = productDao.getActualStockByProductId(productId);
+        if(stock >= quantity) {
+            int newStockQuantity = stock - quantity;
+            updateStockQuantity(productId, newStockQuantity);
+            return newStockQuantity;
+        } else {
+            throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
+
+        }
+
+    }
+
+    @Transactional
+    public void completeOrderAndUpdateStockQuantity(Long productId, int quantity) {
+        int stock = productDao.getStockByProductId(productId);
+        if(stock >= quantity) {
+            updateStockQuantity(productId, stock - quantity);
+        } else {
+            throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
+        }
+    }
+
+    @Transactional
+    public int getStockByProductId(Long productId) {
+        return productDao.getStockByProductId(productId);
+    }
+
+    // 상품 재고 증가
+    @Transactional
+    public void increaseStockQuantity(Long productId, int quantity) {
+        int currentStock = productDao.getStockByProductId(productId);
+        int newStockQuantity = currentStock + quantity;
+        updateStockQuantity(productId, newStockQuantity);
+    }
+
+    // 재고 감소
+    @Transactional
+    public void decreaseStockQuantity(Long productId, int quantity) {
+        int currentStock = productDao.getStockByProductId(productId);
+        if(currentStock < quantity) {
+            throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
+        }
+        int newStockQuantity = currentStock - quantity;
+
+        updateStockQuantity(productId, newStockQuantity);
+    }
+
+    @Transactional
+    // 재고 수량 업데이트
+    public void updateStockQuantity(Long productId, int newQuantity) {
+        StockUpdateDto stockUpdateDto = StockUpdateDto.builder()
+                .productId(productId)
+                .newQuantity(newQuantity)
+                .build();
+        productDao.updateStockQuantity(stockUpdateDto);
+    }
+
+
+    @Transactional
+    public void adjustStockQuantity(Long productId, int adjustment, boolean isIncrease) {
+        log.info("{} {} {}", productId, adjustment, isIncrease);
+        if(isIncrease) {
+            cartDao.decreaseCartItemQuantity(productId, adjustment);
+            increaseStockQuantity(productId, adjustment);
+        } else {
+            cartDao.increaseCartItemQuantity(productId, adjustment);
+            decreaseStockQuantity(productId, adjustment);
+        }
+    }
+
 }

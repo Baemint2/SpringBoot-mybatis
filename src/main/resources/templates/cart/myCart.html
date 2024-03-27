@@ -11,26 +11,47 @@
     <link href="/css/style/product.css" rel="stylesheet">
 </head>
 <body>
-<div>
-    <div class="container product-detail-page">
-        <div class="row">
-            <div class="col-lg-6">
-                <div th:each="myItem : ${myItems}" class="productContainer">
-                    <p class="productId" id="productId" th:text="${myItem.productId}"></p>
-                    <img th:src="${myItem.storedUrl}" class="img-fluid" alt="${myItem.prodName}" style="height: 200px;width: 200px">
-                    <h1 th:text="${myItem.prodName}"></h1>
-                    <p class="price" id="prodPrice">가격: <span id="formattedPrice" th:text="${myItem.price}"></span>원</p>
-                    <p class="stock" id="quantity" th:text="'재고: ' + ${myItem.quantity}"></p>
-                </div>
-                <div class="col-lg-6">
+<div class="container mt-4">
+    <h2 class="mb-4">장바구니</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">선택</th>
+            <th scope="col">사진</th>
+            <th scope="col">상품명</th>
+            <th scope="col">수량</th>
+            <th scope="col">상품 금액</th>
+            <th scope="col">삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 서버에서 받은 상품 데이터로 반복 -->
+        <tr th:each="myItem : ${myItems}" th:data-product-id="${myItem.productId}" class="stockContainer">
+            <td><input type="checkbox"></td>
+            <td><img th:src="${myItem.storedUrl}" alt="상품 이미지" class="img-thumbnail" style="width: 60px; height: 60px;"></td>
+            <td th:text="${myItem.prodName}">상품명</td>
+            <td>
+                <button class="btn btn-secondary btn-sm increase-btn">+</button>
+                <span class="quantity" th:data-current-quantity="${myItem.totalQuantity}" th:text="${myItem.totalQuantity}"></span>
+                <button class="btn btn-secondary btn-sm decrease-btn">-</button>
+                <button class="change-stock">변경</button>
+            </td>
+            <td class="price">가격: <span class="formattedPrice" th:text="${myItem.totalPrice}"></span>원</td>
+            <td><button class="btn btn-danger btn-sm">삭제</button></td>
+        </tr>
+        <!-- 상품 데이터 반복 끝 -->
+        </tbody>
+    </table>
 
-                    <!-- Other content remains the same -->
-                </div>
-
-            </div>
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <button class="btn btn-primary">선택 제거하기</button>
+        <div>
+            <span class="font-weight-bold mr-2" id="totalPrice">Total</span>
         </div>
+        <button class="btn btn-success">주문하기</button>
     </div>
 </div>
+
 <script src="/js/app/cart.js"></script>
 <script src="/js/app/product.js"></script>
 </body>

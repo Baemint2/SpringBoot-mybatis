@@ -12,15 +12,17 @@
         </foreach>
     </insert>
 
-    <update id="updateProductImage"
-            parameterType="com.moz1mozi.mybatis.image.dto.ImageDto">
-        UPDATE PRODUCT_IMAGE
-           SET STORED_URL = #{storedUrl},
-               ORIGINAL_FILE_NAME = #{originalFileName},
-               STORED_FILE_NAME = #{storedFileName},
-               MODIFIED_AT = now()
-         WHERE PRODUCT_ID = #{productId}
+    <update id="updateProductImage" parameterType="list">
+        <foreach collection="list" item="imageDto" index="index" separator=";">
+            UPDATE PRODUCT_IMAGE
+            SET STORED_URL = #{imageDto.storedUrl},
+            ORIGINAL_FILE_NAME = #{imageDto.originalFileName},
+            STORED_FILE_NAME = #{imageDto.storedFileName},
+            MODIFIED_AT = now()
+            WHERE PRODUCT_ID = #{imageDto.productId}
+        </foreach>
     </update>
+
 
     <select id="findByProductId"
             resultType="com.moz1mozi.mybatis.image.dto.ImageDto">

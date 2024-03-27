@@ -1,17 +1,16 @@
 package com.moz1mozi.mybatis.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.exception.OutOfStockException;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -44,13 +43,13 @@ public class ProductController {
     public String productDetail(@PathVariable int productId,
                                 Model model,
                                 Principal principal) {
-            String currentUsername = principal.getName();
+        String currentUsername = principal.getName();
 
         List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
         model.addAttribute("productByNo", productByNo);
 
 
-        if(!productByNo.isEmpty()) {
+        if (!productByNo.isEmpty()) {
             boolean isOwner = productService.isUserSellerOfProduct(currentUsername, productId);
             boolean isAdmin = productService.isCurrentUserAdmin();
 
@@ -78,7 +77,7 @@ public class ProductController {
                                             @RequestPart(value = "files", required = false) List<MultipartFile> files,
                                             Authentication authentication) throws IOException {
         if (files == null || files.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("message","상품 이미지는 필수입니다."));
+            return ResponseEntity.badRequest().body(Map.of("message", "상품 이미지는 필수입니다."));
         }
         log.info("카테고리 ID : {}", productDto.getCategoryId());
         String username = authentication.getName();
@@ -106,7 +105,7 @@ public class ProductController {
         ProductUpdateDto productUpdateDto = objectMapper.readValue(productJson, ProductUpdateDto.class);
 
         Set<ConstraintViolation<ProductUpdateDto>> violations = validator.validate(productUpdateDto);
-        if(!violations.isEmpty()) {
+        if (!violations.isEmpty()) {
             Map<String, String> validationErrors = new HashMap<>();
             for (ConstraintViolation<ProductUpdateDto> violation : violations) {
                 validationErrors.put(violation.getPropertyPath().toString(), violation.getMessage());
@@ -127,7 +126,7 @@ public class ProductController {
         return productId;
     }
 
-//    상품 검색
+    //    상품 검색
     @GetMapping("/api/v1/product/search")
     public CompletableFuture<ResponseEntity<ProductPageDto>> searchProduct(
             @RequestParam(required = false) String prodName,
@@ -135,12 +134,33 @@ public class ProductController {
             @RequestParam(required = false) Integer startPrice,
             @RequestParam(required = false) Integer endPrice,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(value = "page", defaultValue = "1")int page,
+            @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "pageSize", defaultValue = "6") int pageSize) {
 
         log.info("설정된 카테고리값 = {}", categoryId);
         return productService.searchProductsWithPagingAsync(prodName, nickname, startPrice, endPrice, page, pageSize, categoryId)
                 .thenApply(ResponseEntity::ok);
+    }
+
+    // 남은 재고
+    @GetMapping("/api/v1/product/{productId}/stock")
+    public ResponseEntity<Integer> getStockByProductId(@PathVariable Long productId) {
+        int stock = productService.getStockByProductId(productId);
+        return ResponseEntity.ok(stock);
+    }
+
+    // 수량 업데이트
+    @PostMapping("/api/v1/product/stock/update")
+    public ResponseEntity<?> adjustStock(@RequestBody StockUpdateDto stockUpdateDto) {
+        log.info("{} {} {}", stockUpdateDto.getProductId(), stockUpdateDto.getNewQuantity(), stockUpdateDto.isIncrease());
+        try {
+            productService.adjustStockQuantity(stockUpdateDto.getProductId(), stockUpdateDto.getNewQuantity(), stockUpdateDto.isIncrease());
+            return ResponseEntity.ok().build();
+        } catch (OutOfStockException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
 }

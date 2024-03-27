@@ -1,5 +1,6 @@
 package com.moz1mozi.mybatis.product.dao;
 
+import com.moz1mozi.mybatis.product.dto.StockUpdateDto;
 import com.moz1mozi.mybatis.product.dto.ProductDetailDto;
 import com.moz1mozi.mybatis.product.dto.ProductDto;
 import com.moz1mozi.mybatis.product.dto.ProductListDto;
@@ -7,7 +8,6 @@ import com.moz1mozi.mybatis.product.dto.ProductSearchDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -49,4 +49,21 @@ public interface ProductDao {
     // 어드민 권한 비교
     @Select("SELECT ROLE FROM MEMBER_T WHERE ROLE = #{role} ")
     String findAdminByRole(@Param("role")String role);
+
+
+    // 재고 업데이트
+    void updateStockQuantity(StockUpdateDto stockUpdateDto);
+
+    // 재고 확인
+    int getStockByProductId(Long productId);
+
+    // 실제 재고
+    int getActualStockByProductId(Long productId);
+
+    // 수량 증가
+    void increaseStockQuantity(@Param("productId")Long productId, @Param("quantity") Integer quantity);
+
+    // 수량 감소
+    void decreaseStockQuantity(@Param("productId")Long productId, @Param("quantity") Integer quantity);
+
 }
