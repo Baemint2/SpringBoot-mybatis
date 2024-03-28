@@ -111,13 +111,17 @@ const cart = {
                 const productId = stockContainer.getAttribute('data-product-id');
                 const newQuantityElement = stockContainer.querySelector('.quantity');
                 const newQuantity = parseInt(newQuantityElement.textContent);
-                const isIncrease = newQuantity > parseInt(newQuantityElement.getAttribute('data-current-quantity'));
-                console.log("newQuantity:", newQuantity, "currentQuantity:", parseInt(newQuantityElement.getAttribute('data-current-quantity')), "isIncrease:", isIncrease);
+                const currentQuantity = parseInt(newQuantityElement.getAttribute('data-current-quantity'))
+                console.log("현재 수량 : " + currentQuantity)
+                const adjustment = newQuantity - currentQuantity; // 실제 변경해야 할 수량 계산
+                console.log("변경될 수량 : " + adjustment)
+
+                console.log("newQuantity:", newQuantity, "currentQuantity:", currentQuantity, "adjustment:", adjustment);
 
                 const stockUpdateData = {
                     productId: productId,
-                    newQuantity: newQuantity,
-                    isIncrease: isIncrease
+                    adjustment: adjustment,
+                    isIncrease: adjustment > 0
                 };
 
                 fetch("/api/v1/product/stock/update", {

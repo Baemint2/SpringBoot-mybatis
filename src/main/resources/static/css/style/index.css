@@ -97,6 +97,7 @@
 #categoryList {
     display: flex;
     flex-direction: column;
+
 }
 
 .card-body small{
