@@ -22,11 +22,11 @@
                 <div class="col-lg-6">
                     <h1 th:text="${productByNo[0].prodName}"></h1>
                     <p class="nickname" th:text="${productByNo[0].nickname}"></p>
-                    <p class="price">가격: <span id="formattedPrice">[[${productByNo[0].prodPrice}]]</span>원</p>
+                    <p class="price" id="prodPrice">가격: <span class="formattedPrice">[[${productByNo[0].prodPrice}]]</span>원</p>
                     <p class="description" th:text="${productByNo[0].description}"></p>
                     <p class="stock" th:text="${productByNo[0].stockQuantity}"></p>
                     <div>
-                        수량 <input type="number" value="1" min="1">
+                        수량 <input type="number" id="quantity" value="1" min="1">
                         <button id="btn-cart" class="btn btn-primary">장바구니</button>
                     </div>
                     <div class="action-buttons">
@@ -41,6 +41,7 @@
         </div>
     </div>
 </div>
+<script src="/js/app/cart.js"></script>
 <script src="/js/app/product.js"></script>
 </body>
 </html>

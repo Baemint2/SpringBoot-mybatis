@@ -60,7 +60,7 @@ public class MemberService {
                 .build();
 
         memberDao.insertMember(siteUser);
-        return siteUser.getMember_id();
+        return siteUser.getMemberId();
     }
 
     private Role mapStringToRole(String roleString) {

@@ -121,10 +121,12 @@ const product = {
     },
 
     formattedPrice:function () {
-        const priceElement = document.getElementById('formattedPrice')
-        const price = parseInt(priceElement.textContent, 10);
+        const priceElement = document.querySelectorAll('.formattedPrice')
 
-        priceElement.textContent = new Intl.NumberFormat('ko-KR').format(price);
+        priceElement.forEach(element => {
+            const price = parseInt(element.textContent, 10);
+            element.textContent = new Intl.NumberFormat('ko-KR').format(price);
+        })
     }
 
 

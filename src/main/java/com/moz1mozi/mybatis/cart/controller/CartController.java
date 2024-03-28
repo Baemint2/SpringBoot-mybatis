@@ -14,10 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -52,8 +49,7 @@ public class CartController {
             String username = authentication.getName();
             Long memberId = memberService.findByUsername(username).getMemberId();
             int updateStock = productService.addToCartAndUpdateStockQuantity(cartDto.getProductId(), cartDto.getQuantity());
-
-            Long cartItemId = cartService.addCartItem(cartDto, memberId);
+            Integer cartItemId = cartService.addOrUpdateCartItem(memberId, cartDto.getProductId(), cartDto.getQuantity(), cartDto.getPrice());
 
             return ResponseEntity.ok().body(Map.of("cartItemId", cartItemId,
                     "productId", cartDto.getProductId(),
@@ -74,5 +70,11 @@ public class CartController {
         return ResponseEntity.ok(totalPrice);
     }
 
+//     장바구니 상품 삭제
+    @DeleteMapping("/api/v1/cart/{cartItemId}")
+    public ResponseEntity<Long> deleteCartItem(@PathVariable Long cartItemId) {
+        cartService.deleteCartAndUpdateStock(cartItemId);
+        return ResponseEntity.ok(cartItemId);
+    }
 
 }

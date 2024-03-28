@@ -12,22 +12,23 @@
         method="post"
         enctype="multipart/form-data">
     <div class="error-message" id="error-error" style="display: none"></div>
-    <div class="category">
-        <div>
-            <select id="majorCategory">
-                <option value="">대분류 선택</option>
-            </select>
-        </div>
-        <div>
-            <select id="mediumCategory">
-                <option value="">중분류 선택</option>
-            </select>
-        </div>
-    </div>
     <div th:each="product: ${productByNo}">
+        <div class="category">
+            <div>
+                <select id="majorCategory">
+                    <option value="">대분류 선택</option>
+                </select>
+            </div>
+            <div>
+                <select id="mediumCategory">
+                    <option value="">중분류 선택</option>
+                </select>
+            </div>
+        </div>
         <input type="hidden" id="productId" th:value="${product.productId}">
         <img th:src="${product.storedUrl}" class="card-img-top" th:alt="${productByNo[0].prodName}" style="width: 200px; height: 200px;">
     </div>
+
     <div>
         <label for="files" class="form-label">상품 이미지 수정</label>
         <input type="file" id="files" class="form-control" name="files" accept="image/*" multiple>

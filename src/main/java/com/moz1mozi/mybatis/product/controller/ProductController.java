@@ -119,11 +119,10 @@ public class ProductController {
     }
 
     // 상품 삭제
-    @ResponseBody
     @DeleteMapping("/api/v1/product/remove/{productId}")
-    public Long removeProduct(@PathVariable Long productId) {
+    public ResponseEntity<Long> removeProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
-        return productId;
+        return ResponseEntity.ok(productId);
     }
 
     //    상품 검색
@@ -152,9 +151,9 @@ public class ProductController {
     // 수량 업데이트
     @PostMapping("/api/v1/product/stock/update")
     public ResponseEntity<?> adjustStock(@RequestBody StockUpdateDto stockUpdateDto) {
-        log.info("{} {} {}", stockUpdateDto.getProductId(), stockUpdateDto.getNewQuantity(), stockUpdateDto.isIncrease());
+        log.info("{} {} {}", stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment(), stockUpdateDto.isIncrease());
         try {
-            productService.adjustStockQuantity(stockUpdateDto.getProductId(), stockUpdateDto.getNewQuantity(), stockUpdateDto.isIncrease());
+            productService.adjustStockQuantity(stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment(), stockUpdateDto.isIncrease());
             return ResponseEntity.ok().build();
         } catch (OutOfStockException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());

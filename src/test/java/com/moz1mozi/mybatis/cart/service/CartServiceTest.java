@@ -1,8 +1,11 @@
 package com.moz1mozi.mybatis.cart.service;
 
+import com.moz1mozi.mybatis.cart.dao.CartDao;
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.product.dao.ProductDao;
+import com.moz1mozi.mybatis.product.service.ProductService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +31,13 @@ class CartServiceTest {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private ProductDao productDao;
+
+    @Autowired
+    private CartDao cartDao;
+
     public static final Long memberId = 18L;
     @Test
     void 장바구니등록_테스트() {
@@ -40,7 +50,7 @@ class CartServiceTest {
                 .dataAdded(Date.from(Instant.now()))
                 .build();
 
-        Long results = cartService.addCartItem(cartDto, memberId);
+        Integer results = cartService.addCartItem(cartDto, memberId);
         assertNotNull(results);
     }
 
@@ -64,5 +74,16 @@ class CartServiceTest {
     void 내장바구니_실패_() {
         List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
         assertTrue(itemsByMemberId.isEmpty());
+    }
+
+    @Test
+    void 장바구니_상품_삭제() {
+        Long cartItemId = 76L;
+        CartDto cartDto = cartDao.selectCartItemById(cartItemId);
+        assertNotNull(cartDto);
+
+        cartService.deleteCartAndUpdateStock(cartItemId);
+
+        assertNull(cartDao.selectCartItemById(cartItemId));
     }
 }
