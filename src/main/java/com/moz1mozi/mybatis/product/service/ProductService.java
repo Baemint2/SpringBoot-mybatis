@@ -162,29 +162,34 @@ public class ProductService {
     @Transactional
     public void increaseStockQuantity(Long productId, int quantity) {
         int currentStock = productDao.getStockByProductId(productId);
-        int newStockQuantity = currentStock + quantity;
+        int newStockQuantity = currentStock - quantity;
         updateStockQuantity(productId, newStockQuantity);
     }
 
     // 재고 감소
     @Transactional
     public void decreaseStockQuantity(Long productId, int quantity) {
+        log.info("재고감소 메소드 호출 되나요?");
         int currentStock = productDao.getStockByProductId(productId);
+        log.info("현재 재고 = {}", currentStock);
         if(currentStock < quantity) {
             throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
         }
         int newStockQuantity = currentStock - quantity;
+        log.info("수정된 재고 = {}", newStockQuantity);
 
         updateStockQuantity(productId, newStockQuantity);
     }
 
     @Transactional
     // 재고 수량 업데이트
-    public void updateStockQuantity(Long productId, int newQuantity) {
+    public void updateStockQuantity(Long productId, int adjustment) {
+        log.info("재고 수량 업데이트 되나요?");
         StockUpdateDto stockUpdateDto = StockUpdateDto.builder()
                 .productId(productId)
-                .newQuantity(newQuantity)
+                .adjustment(adjustment)
                 .build();
+        log.info("{} {}", stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment());
         productDao.updateStockQuantity(stockUpdateDto);
     }
 
@@ -193,10 +198,12 @@ public class ProductService {
     public void adjustStockQuantity(Long productId, int adjustment, boolean isIncrease) {
         log.info("{} {} {}", productId, adjustment, isIncrease);
         if(isIncrease) {
-            cartDao.decreaseCartItemQuantity(productId, adjustment);
+            // 수량 증가 시 카트 + 1 / 상품 재고 -1
+            cartDao.increaseCartItemQuantity(productId, adjustment);
             increaseStockQuantity(productId, adjustment);
         } else {
-            cartDao.increaseCartItemQuantity(productId, adjustment);
+            // 수량 감소 시 카트 -1 / 상품 재고 + 1
+            cartDao.decreaseCartItemQuantity(productId, adjustment);
             decreaseStockQuantity(productId, adjustment);
         }
     }

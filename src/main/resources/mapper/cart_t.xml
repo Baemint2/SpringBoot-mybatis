@@ -14,7 +14,9 @@
 
     <select id="findMyCartItems"
             resultType="com.moz1mozi.mybatis.cart.dto.CartDetailDto">
-        SELECT C.PRODUCT_ID,
+        SELECT
+        C.CART_ITEM_ID,
+        C.PRODUCT_ID,
         P.PROD_NAME,
         PI.STORED_URL,
         SUM(QUANTITY) AS TOTAL_QUANTITY,
@@ -25,7 +27,7 @@
         LEFT JOIN PRODUCT_IMAGE PI ON P.PRODUCT_ID = PI.PRODUCT_ID
         LEFT JOIN MEMBER_T M ON C.MEMBER_ID = M.MEMBER_ID
         WHERE C.MEMBER_ID = #{memberId}
-        GROUP BY C.PRODUCT_ID, P.PROD_NAME, PI.STORED_URL;
+        GROUP BY C.CART_ITEM_ID,C.PRODUCT_ID, P.PROD_NAME, PI.STORED_URL;
     </select>
     <select id="getTotalPrice"
             resultType="com.moz1mozi.mybatis.cart.dto.TotalCartDto">
@@ -41,7 +43,31 @@
 
     <update id="decreaseCartItemQuantity">
         UPDATE CART
-        SET QUANTITY = QUANTITY - #{quantity}
+        SET QUANTITY = QUANTITY + #{quantity}
         WHERE PRODUCT_ID = #{productId} AND QUANTITY > 0;
     </update>
+
+    <select id="findQuantity" resultType="Integer" parameterType="Map">
+        select QUANTITY
+        from CART
+        where MEMBER_ID = #{memberId} and PRODUCT_ID = #{productId};
+    </select>
+
+    <delete id="deleteCartItem">
+        delete from CART where CART_ITEM_ID = #{cartItemId};
+    </delete>
+
+    <delete id="deleteCartItems">
+        DELETE FROM CART WHERE CART_ITEM_ID IN
+        <foreach collection="cartItemIds" item="itemId" open="(" separator="," close=")">
+            #{itemId}
+        </foreach>
+    </delete>
+
+    <select id="selectCartItemById"
+            resultType="com.moz1mozi.mybatis.cart.dto.CartDto">
+        SELECT QUANTITY, PRODUCT_ID
+          FROM CART
+         WHERE CART_ITEM_ID = #{cartItemId}
+    </select>
 </mapper>

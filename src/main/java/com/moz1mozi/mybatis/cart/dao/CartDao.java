@@ -11,12 +11,29 @@ import java.util.List;
 @Mapper
 public interface CartDao {
 
-    long insertCartItem(CartDto cartDto);
+    int insertCartItem(CartDto cartDto);
 
     List<CartDetailDto> findMyCartItems(Long memberId);
 
     //전체 값
     TotalCartDto getTotalPrice(Long memberId);
 
+    CartDto selectCartItemById(Long cartItemId);
+
     void increaseCartItemQuantity(@Param("productId") Long productId, @Param("quantity") Integer quantity);
-    void decreaseCartItemQuantity(@Param("productId") Long productId, @Param("quantity") Integer quantity);}
+    void decreaseCartItemQuantity(@Param("productId") Long productId, @Param("quantity") Integer quantity);
+
+
+    // 상품 존재 여부 확인
+    Integer findQuantity(Long memberId, Long productId);
+
+    // 장바구니에서 제거
+    int deleteCartItem(Long cartItemId);
+
+    // 장바구니에서 여러 상품 제거
+    int deleteCartItems(List<Long> cartItemIds);
+
+
+}
+
+

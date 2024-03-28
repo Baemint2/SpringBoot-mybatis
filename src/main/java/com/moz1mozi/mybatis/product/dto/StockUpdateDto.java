@@ -11,7 +11,7 @@ import lombok.*;
 public class StockUpdateDto {
 
     private Long productId;
-    private Integer newQuantity;
+    private Integer adjustment;
     @JsonProperty("isIncrease")
     private boolean isIncrease;
 

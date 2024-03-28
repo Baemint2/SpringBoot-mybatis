@@ -142,7 +142,40 @@ const cart = {
                 })
             })
         })
+    },
+
+    bindDeleteEvents: function () {
+      document.querySelectorAll(".delete-cart-item-btn").forEach(button => {
+          button.addEventListener("click", function () {
+              const cartItemId = this.getAttribute('data-cart-item-id');
+              console.log(this.getAttribute('data-cart-item-id'));
+              cart.deleteCartItem(cartItemId);
+          })
+      })
+    },
+
+    deleteCartItem: function (cartItemId) {
+        console.log(`삭제 될 상품 ID: ${cartItemId}`);
+        fetch(`/api/v1/cart/${cartItemId}`, {
+            method: "DELETE",
+            headers: {"Content-Type" : "application/json"}
+        }).then(response => {
+            if(!response.ok) {
+                throw new Error("네트워크 에러가 발생했습니다.")
+            }
+            alert("상품이 삭제되었습니다.")
+            const buttonElement = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+            console.log(buttonElement)
+            if(buttonElement) {
+                const rowElement = buttonElement.closest('.stockContainer');
+                console.log(rowElement)
+                rowElement.remove();
+            }
+            this.getTotalPrice();
+        }).catch( error =>
+            alert(`오류가 발생했습니다. ${error.message}`));
     }
+
 
 
 }
@@ -154,4 +187,5 @@ document.addEventListener("DOMContentLoaded", function () {
     cart.btnDecrease();
     cart.btnIncrease();
     cart.changeStock();
+    cart.bindDeleteEvents();
 })

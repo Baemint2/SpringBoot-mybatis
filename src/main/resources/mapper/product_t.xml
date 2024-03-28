@@ -156,7 +156,7 @@
 
     <update id="updateStockQuantity" parameterType="com.moz1mozi.mybatis.product.dto.StockUpdateDto">
         UPDATE PRODUCT_T
-        SET STOCK_QUANTITY = #{newQuantity}
+        SET STOCK_QUANTITY = #{adjustment}
         WHERE PRODUCT_ID = #{productId}
     </update>
 
