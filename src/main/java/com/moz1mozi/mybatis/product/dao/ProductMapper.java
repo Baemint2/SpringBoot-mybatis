@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 @Mapper
-public interface ProductDao {
+public interface ProductMapper {
 
     //상품 등록
     Long insertProduct(ProductDto productDto);
@@ -30,7 +30,7 @@ public interface ProductDao {
     List<ProductDetailDto> getPagedProducts(@Param("pageSize")int pageSize, @Param("offset")int offset);
 
     // 상품 상세 조회
-    List<ProductDetailDto> getProductByNo(int productId);
+    List<ProductDetailDto> getProductByNo(Long productId);
 
     //상품 목록 조회
     List<ProductListDto> findAllProducts();
@@ -44,7 +44,7 @@ public interface ProductDao {
 
     // 판매자 권한 비교
     @Select("SELECT m.username FROM MEMBER_T M JOIN PRODUCT_T P ON M.MEMBER_ID = P.SELLER_ID WHERE P.PRODUCT_ID = #{productId}")
-    String findSellerUsernameByProductId(@Param("productId")int productId);
+    String findSellerUsernameByProductId(@Param("productId")Long productId);
 
     // 어드민 권한 비교
     @Select("SELECT ROLE FROM MEMBER_T WHERE ROLE = #{role} ")

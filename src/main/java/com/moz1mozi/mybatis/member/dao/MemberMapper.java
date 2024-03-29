@@ -2,14 +2,13 @@ package com.moz1mozi.mybatis.member.dao;
 
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
-import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
-public interface MemberDao {
+public interface MemberMapper {
     Long insertMember(MemberDto member);
 
     // 회원 정보 조회
