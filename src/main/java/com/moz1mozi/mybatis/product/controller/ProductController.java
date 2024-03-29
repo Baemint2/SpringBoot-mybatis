@@ -5,6 +5,7 @@ import com.moz1mozi.mybatis.exception.OutOfStockException;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
+import com.moz1mozi.mybatis.wishlist.service.WishListService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
@@ -32,6 +33,7 @@ import java.util.concurrent.CompletableFuture;
 public class ProductController {
     private final ProductService productService;
     private final MemberService memberService;
+    private final WishListService wishListService;
     private final Validator validator;
 
     @GetMapping("/product")
@@ -40,10 +42,13 @@ public class ProductController {
     }
 
     @GetMapping("/product/detail/{productId}")
-    public String productDetail(@PathVariable int productId,
+    public String productDetail(@PathVariable Long productId,
                                 Model model,
                                 Principal principal) {
         String currentUsername = principal.getName();
+        Long memberId = memberService.findByUsername(currentUsername).getMemberId();
+        boolean isLiked = wishListService.isLiked(memberId, productId);
+        model.addAttribute("isLiked",isLiked);
 
         List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
         model.addAttribute("productByNo", productByNo);
@@ -62,7 +67,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/modify/{productId}")
-    public String productModify(@PathVariable int productId,
+    public String productModify(@PathVariable Long productId,
                                 Model model) {
         List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
         model.addAttribute("productByNo", productByNo);
@@ -89,7 +94,7 @@ public class ProductController {
 
     // 제품 상세
     @GetMapping("/api/v1/product/detail/{productId}")
-    public ResponseEntity<List<ProductDetailDto>> getProductDetail(@PathVariable int productId) {
+    public ResponseEntity<List<ProductDetailDto>> getProductDetail(@PathVariable Long productId) {
         List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
         return ResponseEntity.ok(productByNo);
     }
