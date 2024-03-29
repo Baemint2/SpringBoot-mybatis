@@ -1,21 +1,13 @@
 package com.moz1mozi.mybatis.cart.service;
 
-import com.moz1mozi.mybatis.cart.dao.CartDao;
+import com.moz1mozi.mybatis.cart.dao.CartMapper;
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
-import com.moz1mozi.mybatis.product.dao.ProductDao;
-import com.moz1mozi.mybatis.product.service.ProductService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
 import java.util.Date;
@@ -33,10 +25,10 @@ class CartServiceTest {
     private MemberService memberService;
 
     @Autowired
-    private ProductDao productDao;
+    private ProductMapper productMapper;
 
     @Autowired
-    private CartDao cartDao;
+    private CartMapper cartMapper;
 
     public static final Long memberId = 18L;
     @Test
@@ -79,11 +71,11 @@ class CartServiceTest {
     @Test
     void 장바구니_상품_삭제() {
         Long cartItemId = 76L;
-        CartDto cartDto = cartDao.selectCartItemById(cartItemId);
+        CartDto cartDto = cartMapper.selectCartItemById(cartItemId);
         assertNotNull(cartDto);
 
         cartService.deleteCartAndUpdateStock(cartItemId);
 
-        assertNull(cartDao.selectCartItemById(cartItemId));
+        assertNull(cartMapper.selectCartItemById(cartItemId));
     }
 }

@@ -16,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Controller
@@ -38,6 +40,7 @@ public class CartController {
 
         List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
         model.addAttribute("myItems", itemsByMemberId);
+        model.addAttribute("loggedUser", username);
         return "cart/myCart";
     }
 
@@ -70,11 +73,22 @@ public class CartController {
         return ResponseEntity.ok(totalPrice);
     }
 
-//     장바구니 상품 삭제
+    // 장바구니 상품 삭제
     @DeleteMapping("/api/v1/cart/{cartItemId}")
     public ResponseEntity<Long> deleteCartItem(@PathVariable Long cartItemId) {
         cartService.deleteCartAndUpdateStock(cartItemId);
         return ResponseEntity.ok(cartItemId);
+    }
+
+    // 장바구니 상품 선택 삭제 (여러개 가능)
+    @DeleteMapping("/api/v1/cart/item/{cartItemIds}")
+    public ResponseEntity<?> deleteCartItems(@PathVariable String cartItemIds) {
+
+        boolean deleted = cartService.deleteCartItems(cartItemIds);
+        if(!deleted) {
+            return ResponseEntity.badRequest().body("특정 아이템이 유효하지 않습니다.");
+        }
+        return ResponseEntity.ok().build();
     }
 
 }

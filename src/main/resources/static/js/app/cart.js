@@ -6,6 +6,10 @@ const cart = {
             _this.addItems();
         });
 
+        document.getElementById("btn-delete-selected").addEventListener('click', function () {
+            _this.deleteSelectedItems();
+        })
+
     },
     updateProductQuantityOnPage: function(productId, updatedQuantity) {
         // 모든 productContainer 요소를 가져옴
@@ -58,7 +62,7 @@ const cart = {
                 const stockElement = document.querySelector(selector);
                 console.log(stockElement)
                 if (stockElement) {
-                    stockElement.textContent = `재고: ${stock}`;
+                    stockElement.innerHTML = `<strong class="mr-3" ">Quantity: ${stock}</strong>`;
                 } else {
                     console.error(`Stock element not found for product ID: ${productId}`);
                 }
@@ -174,6 +178,44 @@ const cart = {
             this.getTotalPrice();
         }).catch( error =>
             alert(`오류가 발생했습니다. ${error.message}`));
+    },
+    deleteSelectedItems: function () {
+        const selectedItems = document.querySelectorAll('input[type="checkbox"]:checked');
+        let cartItems = Array.from(selectedItems).map(item => item.getAttribute('data-cart-item-id'));
+
+        if(cartItems.length === 0) {
+            alert("삭제할 상품을 선택해주세요.");
+            return;
+        }
+
+        if(!confirm("선택한 상품을 삭제하시겠습니까?")) {
+            return;
+        }
+
+        fetch(`/api/v1/cart/item/${cartItems.join(',')}`, {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json" },
+        }).then(response => {
+            if(response.ok) {
+                alert("선택한 상품이 삭제되었습니다.")
+                cartItems.forEach(cartItemId => {
+                    const buttonElement = document.querySelector(`input[data-cart-item-id="${cartItemId}"]`)
+                    if(buttonElement) {
+                        const rowElement = buttonElement.closest('.stockContainer');
+                        if(rowElement) {
+                            rowElement.remove();
+                        }
+                    }
+                })
+                this.getTotalPrice()
+            } else {
+                throw new Error("네트워크 에러 발생");
+            }
+        }).catch(error => {
+            console.log(error);
+            alert("삭제 중 오류가 발생했습니다.")
+        })
+
     }
 
 
@@ -189,3 +231,5 @@ document.addEventListener("DOMContentLoaded", function () {
     cart.changeStock();
     cart.bindDeleteEvents();
 })
+
+
