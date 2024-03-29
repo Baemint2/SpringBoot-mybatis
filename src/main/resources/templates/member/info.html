@@ -9,14 +9,19 @@
     <link href="/css/style/modal.css" rel="stylesheet"/>
 </head>
 <body>
-<p th:text="${member.username}"></p>
+
+<h2>회원 정보 설정</h2>
 
 <button type="button" id="btn-withdrawal">회원 탈퇴</button>
 
 <form method="POST">
     <div class="changeNickname">
-        <label th:for="nickname"></label>
-        <input type="text" id="nickname" name="nickname" th:value="${member.username}" readonly>
+        <div>
+            <label th:for="nickname">닉네임 변경</label>
+            <p th:text="${member.username}"></p>
+        </div>
+        <label th:for="nickname">닉네임 변경</label>
+        <input type="text" id="nickname" name="nickname" th:value="${member.nickname}" readonly>
     </div>
     <button type="button" id="btn-changeNickname">변경</button>
 </form>
@@ -46,6 +51,8 @@
     </div>
 
 </div>
+
+<h3>회원 전환</h3>
 
 <script type="module" src="/js/app/member.js"></script>
 </body>

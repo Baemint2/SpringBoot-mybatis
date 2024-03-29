@@ -4,7 +4,7 @@ import com.moz1mozi.mybatis.exception.CustomException;
 import com.moz1mozi.mybatis.member.dto.FindMemberDto;
 import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.dto.Role;
-import com.moz1mozi.mybatis.member.dao.MemberDao;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -33,15 +33,15 @@ public class MemberService {
            throw new CustomException("confirmPassword", "비밀번호가 일치하지 않습니다");
        }
 
-       if(memberDao.existsByEmail(member.getEmail())) {
+       if(memberMapper.existsByEmail(member.getEmail())) {
            throw new CustomException("email", "이미 등록된 이메일입니다.");
        }
 
-       if(memberDao.existsByUsername(member.getUsername())) {
+       if(memberMapper.existsByUsername(member.getUsername())) {
            throw new CustomException("username", "이미 등록된 사용자명입니다.");
        }
 
-       if(memberDao.existsByNickname(member.getNickname())) {
+       if(memberMapper.existsByNickname(member.getNickname())) {
            throw new CustomException("nickname", "이미 등록된 닉네임입니다.");
        }
 
@@ -59,7 +59,7 @@ public class MemberService {
                 .role(role)
                 .build();
 
-        memberDao.insertMember(siteUser);
+        memberMapper.insertMember(siteUser);
         return siteUser.getMemberId();
     }
 
@@ -74,11 +74,11 @@ public class MemberService {
 
     @Transactional
     public boolean deleteMember(String username, String password) {
-        MemberDto member = Optional.ofNullable(memberDao.findByUsername(username))
+        MemberDto member = Optional.ofNullable(memberMapper.findByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
        log.info("유저 찾기 = {}", member.getUsername());
        if(passwordEncoder.matches(password, member.getPassword())) {
-           memberDao.deleteMember(member.getUsername());
+           memberMapper.deleteMember(member.getUsername());
            return true;
        }
        return false;
@@ -88,13 +88,13 @@ public class MemberService {
     public MemberDto findByUsername(String username) {
         String name = Optional.ofNullable(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
-        return memberDao.findByUsername(name);
+        return memberMapper.findByUsername(name);
     }
 
     // 비밀번호 변경
     @Transactional
     public boolean changePassword(PasswordChangeDto passwordChangeDto) {
-        MemberDto member = memberDao.findByUsername(passwordChangeDto.getUsername());
+        MemberDto member = memberMapper.findByUsername(passwordChangeDto.getUsername());
         if(member == null || !passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getPassword())) {
             return false;
         }
@@ -103,14 +103,14 @@ public class MemberService {
         }
 
         String encodedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
-        memberDao.updatePassword(passwordChangeDto.getUsername(), encodedPassword);
+        memberMapper.updatePassword(passwordChangeDto.getUsername(), encodedPassword);
         return true;
     }
 
     //아이디 찾기
     @Transactional(readOnly = true)
     public String findByUsernameEmail(FindMemberDto findMemberDto) {
-        return Optional.ofNullable(memberDao.findUsernameByEmail(findMemberDto.getEmail()))
+        return Optional.ofNullable(memberMapper.findUsernameByEmail(findMemberDto.getEmail()))
                                 .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
 
     }
@@ -118,7 +118,7 @@ public class MemberService {
     //닉네임 변경
     @Transactional
     public void updateNickname(String username, String nickname) {
-        if(memberDao.findByUsername(username) == null) {
+        if(memberMapper.findByUsername(username) == null) {
             throw new UsernameNotFoundException("사용자가 존재하지 않습니다.");
         }
         //중복 검사
@@ -126,22 +126,22 @@ public class MemberService {
             throw new CustomException("isNicknameDuplicate","이미 사용중인 닉네임입니다.");
         }
 
-        memberDao.updateNickname(username, nickname);
+        memberMapper.updateNickname(username, nickname);
     }
 
     //사용자명 중복 검사
     public boolean usernameDuplicate(String username) {
-        return memberDao.existsByUsername(username);
+        return memberMapper.existsByUsername(username);
     }
 
     //이메일 중복 검사
     public boolean emailDuplicate(String email) {
-        return memberDao.existsByEmail(email);
+        return memberMapper.existsByEmail(email);
     }
 
     //닉네임 중복 검사
     public boolean nicknameDuplicate(String nickname) {
-        return memberDao.existsByNickname(nickname);
+        return memberMapper.existsByNickname(nickname);
     }
 
 }

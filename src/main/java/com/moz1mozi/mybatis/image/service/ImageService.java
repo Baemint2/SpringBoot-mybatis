@@ -1,6 +1,6 @@
     package com.moz1mozi.mybatis.image.service;
 
-    import com.moz1mozi.mybatis.image.dao.ImageDao;
+    import com.moz1mozi.mybatis.image.dao.ImageMapper;
     import com.moz1mozi.mybatis.image.dto.ImageDto;
     import lombok.RequiredArgsConstructor;
     import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,7 @@
     @RequiredArgsConstructor
     public class ImageService {
 
-        private final ImageDao imageDao;
+        private final ImageMapper imageMapper;
 
         @Value("${file.upload-dir.images}")
         private String uploadDir;
@@ -43,7 +43,7 @@
 
         @Transactional
         public void  saveOrUpdateFileMetaData(String originalFileName, String storedFileName, Long prodId) {
-            List<ImageDto> imageDtos = imageDao.findByProductId(prodId);
+            List<ImageDto> imageDtos = imageMapper.findByProductId(prodId);
             String storedUrl = "/upload/" + storedFileName;
             Date now = Date.from(Instant.now());
             if(imageDtos.isEmpty()) {
@@ -56,7 +56,7 @@
                         .createdAt(now)
                         .build();
                 newImageDtos.add(imageDto);
-                imageDao.insertProductImage(newImageDtos);
+                imageMapper.insertProductImage(newImageDtos);
             } else {
                 List<ImageDto> updateImageDtos = new ArrayList<>();
                 for (ImageDto imageDto : imageDtos) {
@@ -70,7 +70,7 @@
                     }
                 }
                 if (!updateImageDtos.isEmpty()) {
-                    imageDao.updateProductImage(updateImageDtos);
+                    imageMapper.updateProductImage(updateImageDtos);
                 }
             }
         }

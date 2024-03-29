@@ -2,15 +2,14 @@ package com.moz1mozi.mybatis.product;
 
 import com.moz1mozi.mybatis.image.dto.ImageDto;
 import com.moz1mozi.mybatis.image.service.ImageService;
-import com.moz1mozi.mybatis.member.dao.MemberDao;
-import com.moz1mozi.mybatis.product.dao.ProductDao;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
+import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,9 +35,9 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
     @Autowired
-    private ProductDao productDao;
+    private ProductMapper productMapper;
     @Autowired
-    private MemberDao memberDao;
+    private MemberMapper memberMapper;
     @Autowired
     private ImageService imageService;
 
@@ -94,7 +93,7 @@ class ProductServiceTest {
 
     @Test
     void 상품조회_테스트_성공() {
-        int productId = 18;
+        Long productId = 18L;
         List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
         assertNotNull(productByNo);
     }
@@ -103,7 +102,7 @@ class ProductServiceTest {
     @Test
     // 존재하지 않는 memberID로 조회
     void 상품조회_테스트_실패() {
-        int productId = 99;
+        Long productId = 99L;
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> productService.getProductByNo(productId));
         String exceptionMessage = "해당 상품이 존재하지 않습니다.";
         String message = exception.getMessage();
@@ -132,7 +131,7 @@ class ProductServiceTest {
         productService.updateProduct(prodId, productUpdateDto, mockFile);
 
         // 검증: 수정된 상품 정보 조회
-        ProductDto updatedProduct = productDao.selectProductById(prodId);
+        ProductDto updatedProduct = productMapper.selectProductById(prodId);
         assertNotNull(updatedProduct);
         assertEquals("수수정된 상품", updatedProduct.getProdName());
         assertEquals("진짜진짜 수정된", updatedProduct.getDescription());

@@ -1,14 +1,12 @@
 package com.moz1mozi.mybatis.product.service;
 
-import com.moz1mozi.mybatis.cart.dao.CartDao;
-import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
-import com.moz1mozi.mybatis.cart.service.CartService;
+import com.moz1mozi.mybatis.cart.dao.CartMapper;
 import com.moz1mozi.mybatis.exception.OutOfStockException;
 import com.moz1mozi.mybatis.product.dto.StockUpdateDto;
 import com.moz1mozi.mybatis.image.service.ImageService;
-import com.moz1mozi.mybatis.member.dao.MemberDao;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.product.dao.ProductDao;
+import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import com.moz1mozi.mybatis.product.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -31,22 +28,22 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final ProductDao productDao;
-    private final CartDao cartDao;
-    private final MemberDao memberDao;
+    private final ProductMapper productMapper;
+    private final CartMapper cartMapper;
+    private final MemberMapper memberMapper;
     private final ImageService imageService;
 
     //상품 등록
     @Transactional
     public Long insertProduct(ProductDto productDto, List<MultipartFile> files, String username) throws IOException {
-        Long sellerId = memberDao.findByMemberIdByUsername(username);
-        MemberDto role = memberDao.findByUsername(username);
+        Long sellerId = memberMapper.findByMemberIdByUsername(username);
+        MemberDto role = memberMapper.findByUsername(username);
         if (!"판매자".equals(role.getRole().getDisplayName())) {
             throw new IllegalArgumentException("상품 업로드는 판매자만 가능합니다.");
         }
 
         productDto.setSellerId(sellerId);
-        productDao.insertProduct(productDto);
+        productMapper.insertProduct(productDto);
         long productId = productDto.getProductId(); // 상품 ID를 조회하거나, insertProduct 메서드 내에서 ProductDto에 상품 ID를 설정
         // 이미지 리스트가 존재하는 경우, 각 이미지 정보를 저장
         if(files != null && !files.isEmpty()) {
@@ -57,27 +54,27 @@ public class ProductService {
     }
 
     public int deleteProduct(Long prodId) {
-        return productDao.deleteProduct(prodId);
+        return productMapper.deleteProduct(prodId);
     }
 
     public List<ProductListDto> findAllProducts() {
-        return productDao.findAllProducts();
+        return productMapper.findAllProducts();
     }
 
     // 상품 상세
-    public List<ProductDetailDto> getProductByNo(int productId) {
-        return Optional.ofNullable(productDao.getProductByNo(productId))
+    public List<ProductDetailDto> getProductByNo(Long productId) {
+        return Optional.ofNullable(productMapper.getProductByNo(productId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
 
     }
 
     public Long updateProduct(Long prodId, ProductUpdateDto productUpdateDto, List<MultipartFile> files) throws IOException {
-        ProductDto existingProduct = Optional.ofNullable(productDao.selectProductById(prodId))
+        ProductDto existingProduct = Optional.ofNullable(productMapper.selectProductById(prodId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다. ID = " + prodId));
 
         existingProduct.update(productUpdateDto);
 
-        productDao.updateProduct(existingProduct);
+        productMapper.updateProduct(existingProduct);
         log.info("existingProduct = {}, {}", existingProduct.getImageDtoList(), existingProduct.getStoredUrl());
         if(files != null && !files.isEmpty()) {
             imageService.uploadFile(files, prodId);
@@ -104,8 +101,8 @@ public class ProductService {
         ProductSearchDto pagedSearchDto = searchDto.withPaging(searchDto.getPage(), searchDto.getPageSize());
 
         return CompletableFuture.supplyAsync(() -> {
-            List<ProductDetailDto> products = productDao.findByCondition(pagedSearchDto, pagedSearchDto.getPageSize(), offset);
-            Long totalResultsLong = productDao.countByCondition(pagedSearchDto);
+            List<ProductDetailDto> products = productMapper.findByCondition(pagedSearchDto, pagedSearchDto.getPageSize(), offset);
+            Long totalResultsLong = productMapper.countByCondition(pagedSearchDto);
             int totalResults = totalResultsLong.intValue();
             int totalPages = (int) Math.ceil((double) totalResults / pagedSearchDto.getPageSize());
 
@@ -114,8 +111,8 @@ public class ProductService {
     }
 
     // 판매자 권한 비교
-    public boolean isUserSellerOfProduct(String username, int productId) {
-        String sellerUsername = productDao.findSellerUsernameByProductId(productId);
+    public boolean isUserSellerOfProduct(String username, Long productId) {
+        String sellerUsername = productMapper.findSellerUsernameByProductId(productId);
 
         return username.equals(sellerUsername);
     }
@@ -131,7 +128,7 @@ public class ProductService {
     @Transactional
     // 장바구니 제품 추가
     public int addToCartAndUpdateStockQuantity(Long productId, int quantity) {
-        int stock = productDao.getActualStockByProductId(productId);
+        int stock = productMapper.getActualStockByProductId(productId);
         if(stock >= quantity) {
             int newStockQuantity = stock - quantity;
             updateStockQuantity(productId, newStockQuantity);
@@ -145,7 +142,7 @@ public class ProductService {
 
     @Transactional
     public void completeOrderAndUpdateStockQuantity(Long productId, int quantity) {
-        int stock = productDao.getStockByProductId(productId);
+        int stock = productMapper.getStockByProductId(productId);
         if(stock >= quantity) {
             updateStockQuantity(productId, stock - quantity);
         } else {
@@ -155,13 +152,13 @@ public class ProductService {
 
     @Transactional
     public int getStockByProductId(Long productId) {
-        return productDao.getStockByProductId(productId);
+        return productMapper.getStockByProductId(productId);
     }
 
     // 상품 재고 증가
     @Transactional
     public void increaseStockQuantity(Long productId, int quantity) {
-        int currentStock = productDao.getStockByProductId(productId);
+        int currentStock = productMapper.getStockByProductId(productId);
         int newStockQuantity = currentStock - quantity;
         updateStockQuantity(productId, newStockQuantity);
     }
@@ -170,7 +167,7 @@ public class ProductService {
     @Transactional
     public void decreaseStockQuantity(Long productId, int quantity) {
         log.info("재고감소 메소드 호출 되나요?");
-        int currentStock = productDao.getStockByProductId(productId);
+        int currentStock = productMapper.getStockByProductId(productId);
         log.info("현재 재고 = {}", currentStock);
         if(currentStock < quantity) {
             throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
@@ -190,7 +187,7 @@ public class ProductService {
                 .adjustment(adjustment)
                 .build();
         log.info("{} {}", stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment());
-        productDao.updateStockQuantity(stockUpdateDto);
+        productMapper.updateStockQuantity(stockUpdateDto);
     }
 
 
@@ -199,11 +196,11 @@ public class ProductService {
         log.info("{} {} {}", productId, adjustment, isIncrease);
         if(isIncrease) {
             // 수량 증가 시 카트 + 1 / 상품 재고 -1
-            cartDao.increaseCartItemQuantity(productId, adjustment);
+            cartMapper.increaseCartItemQuantity(productId, adjustment);
             increaseStockQuantity(productId, adjustment);
         } else {
             // 수량 감소 시 카트 -1 / 상품 재고 + 1
-            cartDao.decreaseCartItemQuantity(productId, adjustment);
+            cartMapper.decreaseCartItemQuantity(productId, adjustment);
             decreaseStockQuantity(productId, adjustment);
         }
     }

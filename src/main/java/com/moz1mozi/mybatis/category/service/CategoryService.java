@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.category.service;
 
-import com.moz1mozi.mybatis.category.dao.CategoryDao;
+import com.moz1mozi.mybatis.category.dao.CategoryMapper;
 import com.moz1mozi.mybatis.category.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +14,12 @@ import java.util.*;
 @Service
 public class CategoryService {
 
-    private final CategoryDao categoryDao;
+    private final CategoryMapper categoryMapper;
 
     @Transactional
     public List<CategoryDto> getHierarchicalCategories() {
         log.info("Retrieving all categories from the database.");
-        List<CategoryDto> allCategories = categoryDao.selectAllCategories();
+        List<CategoryDto> allCategories = categoryMapper.selectAllCategories();
 
         if (allCategories == null || allCategories.isEmpty()) {
             log.info("No categories found in the database.");

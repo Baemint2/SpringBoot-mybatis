@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.member.service;
 
-import com.moz1mozi.mybatis.member.dao.MemberDao;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +21,10 @@ import java.util.Optional;
 @Slf4j
 public class MemberSecurityService implements UserDetailsService {
 
-    private final MemberDao memberDao;
+    private final MemberMapper memberMapper;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberDto byUsername = Optional.ofNullable(memberDao.findByUsername(username))
+        MemberDto byUsername = Optional.ofNullable(memberMapper.findByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         log.info("username = {}", byUsername.getUsername());

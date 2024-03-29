@@ -1,7 +1,6 @@
 package com.moz1mozi.mybatis.member.service;
 
-import com.moz1mozi.mybatis.member.dao.MemberDao;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,19 +11,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final MemberDao memberDao;
+    private final MemberMapper memberMapper;
 
     public List<MemberInfoDto> getMemberInfo() {
-        return memberDao.selectMemberInfo();
+        return memberMapper.selectMemberInfo();
     }
 
     @PreAuthorize("hasRole('관리자')")
@@ -41,7 +38,7 @@ public class AdminService {
             }
         }
 
-        memberDao.deleteMember(username);
+        memberMapper.deleteMember(username);
         log.info("관리자: {} 삭제한 유저: {}", adminName, username);
     }
 }

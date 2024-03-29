@@ -1,7 +1,6 @@
 package com.moz1mozi.mybatis.member.service;
 
-import com.moz1mozi.mybatis.member.dao.MemberDao;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AdminServiceTest {
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberMapper memberMapper;
 
     @Autowired
     private AdminService adminService;

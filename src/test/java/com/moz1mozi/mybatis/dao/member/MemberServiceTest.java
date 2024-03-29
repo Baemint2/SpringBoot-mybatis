@@ -3,14 +3,13 @@ package com.moz1mozi.mybatis.dao.member;
 import com.moz1mozi.mybatis.exception.CustomException;
 import com.moz1mozi.mybatis.member.dto.FindMemberDto;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.dao.MemberDao;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import com.moz1mozi.mybatis.member.dto.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
@@ -25,7 +24,7 @@ class MemberServiceTest {
 
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberMapper memberMapper;
 
     @Autowired
     private MemberService memberService;
@@ -47,7 +46,7 @@ class MemberServiceTest {
                 .role(Role.BUYER)
                 .build();
        memberService.insertMember(member);
-        MemberDto savedMember = memberDao.findByUsername(member.getUsername());
+        MemberDto savedMember = memberMapper.findByUsername(member.getUsername());
         assertNotNull(savedMember);
         assertEquals(member.getUsername(), savedMember.getUsername());
     }
@@ -76,7 +75,7 @@ class MemberServiceTest {
                 .email("admin@admin.com")
                 .role(Role.ADMIN)
                 .build();
-        memberDao.insertMember(memberDto);
+        memberMapper.insertMember(memberDto);
 
         //When
         String newPassword = "qwer";
@@ -90,7 +89,7 @@ class MemberServiceTest {
         boolean result = memberService.changePassword(passwordChangeDto);
 
         assertThat(result).isTrue();
-        MemberDto updatedUser = memberDao.findByUsername(memberDto.getUsername());
+        MemberDto updatedUser = memberMapper.findByUsername(memberDto.getUsername());
         assertThat(passwordEncoder.matches(newPassword, updatedUser.getPassword())).isTrue();
     }
 
