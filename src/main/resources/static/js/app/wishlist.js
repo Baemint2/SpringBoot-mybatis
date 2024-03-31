@@ -1,34 +1,79 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const wishlistToggleBtn = document.getElementById('wishlist-toggle');
-
-    wishlistToggleBtn.addEventListener('click', function() {
-        const productId = this.getAttribute('data-product-id');
-        // 찜하기 상태 토글 AJAX 요청
-        fetch(`/wishlist/toggle?productId=${productId}`, {
-            method: 'POST',
+const wishlist = {
+    init: function () {
+        this.bindEvents();
+        this.fetchWishlist();
+    },
+    bindEvents: function() {
+        const wishlistToggleBtn = document.getElementById('wishlist-toggle');
+        if(wishlistToggleBtn) {
+            wishlistToggleBtn.addEventListener('click', () => {
+                const productId = wishlistToggleBtn.getAttribute('data-product-id');
+                this.toggleWishlist(productId, wishlistToggleBtn);
+            });
+        }
+    },
+    fetchWishlist: function () {
+        fetch('/api/v1/wishlist', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                // 필요에 따라 추가 헤더 설정
             },
-            // 요청과 함께 CSRF 토큰을 보내야 할 경우 여기에 추가
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
-                // 응답 데이터에서 찜하기 상태 가져오기
-                const isLiked = data.isLiked;
-
-                // 버튼 상태 업데이트
-                updateWishlistButton(wishlistToggleBtn, isLiked);
+                this.displayWishlist(data);
             })
             .catch(error => console.error('Error:', error));
-    });
-    function updateWishlistButton(button, isLiked) {
-        button.setAttribute('data-liked', isLiked);
-        if(isLiked) {
-            button.innerHTML = 'Remove from Wishlist';
+    },
+    displayWishlist: function (wishlistItems) {
+        const wishlistContainer = document.getElementById('wishlistContainer');
+        if(wishlistContainer) {
+            wishlistContainer.innerHTML = ''; // 기존 목록을 초기화
+            wishlistItems.forEach(item => {
+                const element = document.createElement('div');
+                element.classList.add('wishlist-item');
+                element.innerHTML = `
+                    <img src="${item.storedUrl}" alt="${item.prodName}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    <div>
+                        <h5>${item.prodName}</h5>
+                        <p>${item.prodPrice}원</p>
+                        <button class="btn-remove" data-product-id="${item.productId}">찜 해제</button>
+                    </div>
+                `;
+                element.querySelector('.btn-remove').addEventListener('click', () => {
+                    this.toggleWishlist(item.productId);
+                });
+
+                wishlistContainer.appendChild(element);
+            });
+        }
+    },
+    toggleWishlist: function (productId, button) {
+        fetch(`/api/v1/wishlist/toggle/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if(button) {
+                    this.updateWishlistButton(button, data);
+                }
+                this.fetchWishlist();
+            })
+            .catch(error => console.error('Error:', error));
+    },
+    updateWishlistButton: function (button, data) {
+        button.setAttribute('data-liked', data);
+        if (data) {
+            button.textContent = 'Remove from Wishlist';
         } else {
-            button.innerHTML = 'Add to Wishlist';
+            button.textContent = 'Add to Wishlist';
         }
     }
-})
+};
+
+document.addEventListener("DOMContentLoaded", function () {
+    wishlist.init();
+});

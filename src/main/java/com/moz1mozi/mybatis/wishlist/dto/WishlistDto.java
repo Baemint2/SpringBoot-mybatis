@@ -14,4 +14,7 @@ public class WishlistDto {
     private Long memberId;
     private Long productId;
     private boolean isLiked;
+    private String prodName;
+    private Integer prodPrice;
+    private String storedUrl;
 }

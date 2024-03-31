@@ -26,6 +26,8 @@
     <button type="button" id="btn-changeNickname">변경</button>
 </form>
 
+<div id="wishlistContainer"></div>
+
 <div id="modal-withdrawal-confirm" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close">❌</span>
@@ -42,7 +44,7 @@
     <span class="close">❌</span>
     <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
     <div class="modal-footer">
-        <input type="text" id="username" th:value="${member}">
+        <input type="text" id="username" th:value="${member.username}">
         <input type="password" id="password" class="password-error" placeholder="비밀번호를 입력해주세요">
     </div>
     <div id="password-error" style="display: none"></div>
@@ -55,5 +57,6 @@
 <h3>회원 전환</h3>
 
 <script type="module" src="/js/app/member.js"></script>
+<script type="module" src="/js/app/wishlist.js"></script>
 </body>
 </html>

@@ -1,9 +1,12 @@
 package com.moz1mozi.mybatis.wishlist.service;
 
 import com.moz1mozi.mybatis.wishlist.dao.WishlistMapper;
+import com.moz1mozi.mybatis.wishlist.dto.WishlistDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +30,10 @@ public class WishListService {
     @Transactional(readOnly = true)
     public boolean isLiked(Long memberId, Long productId) {
         return wishlistMapper.isLiked(memberId, productId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WishlistDto> getWishlistByMember(Long memberId) {
+        return wishlistMapper.getWishlistByMemberId(memberId);
     }
 }

@@ -26,4 +26,13 @@
           FROM WISHLIST_T
          WHERE MEMBER_ID = #{memberId} AND PRODUCT_ID = #{productId}
     </select>
+
+    <select id="getWishlistByMemberId"
+            resultType="com.moz1mozi.mybatis.wishlist.dto.WishlistDto">
+        SELECT P.PROD_NAME, P.PROD_PRICE, PI.STORED_URL, W.MEMBER_ID, P.PRODUCT_ID
+        FROM WISHLIST_T W
+        INNER JOIN PRODUCT_T P ON W.PRODUCT_ID = P.PRODUCT_ID
+        LEFT JOIN PRODUCT_IMAGE PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+        WHERE W.MEMBER_ID = #{member_id}
+    </select>
 </mapper>
