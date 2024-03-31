@@ -154,7 +154,7 @@ public class ProductController {
     }
 
     // 수량 업데이트
-    @PostMapping("/api/v1/product/stock/update")
+    @PutMapping("/api/v1/product/stock/update")
     public ResponseEntity<?> adjustStock(@RequestBody StockUpdateDto stockUpdateDto) {
         log.info("{} {} {}", stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment(), stockUpdateDto.isIncrease());
         try {

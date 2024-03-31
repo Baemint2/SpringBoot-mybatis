@@ -129,7 +129,7 @@ const cart = {
                 };
 
                 fetch("/api/v1/product/stock/update", {
-                    method: "POST",
+                    method: "PUT",
                     headers: {"Content-Type": "application/json"},
                     body : JSON.stringify(stockUpdateData)
                 })
