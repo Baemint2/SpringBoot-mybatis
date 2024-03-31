@@ -1,6 +1,7 @@
 package com.moz1mozi.mybatis.member.service;
 
 import com.moz1mozi.mybatis.exception.CustomException;
+import com.moz1mozi.mybatis.member.dao.MemberWithdrawalMapper;
 import com.moz1mozi.mybatis.member.dto.FindMemberDto;
 import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.dto.Role;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberMapper memberMapper;
+    private final MemberWithdrawalMapper memberWithdrawalMapper;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -78,6 +80,7 @@ public class MemberService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
        log.info("유저 찾기 = {}", member.getUsername());
        if(passwordEncoder.matches(password, member.getPassword())) {
+           memberWithdrawalMapper.insertMemberWithdrawal(member.getUsername());
            memberMapper.deleteMember(member.getUsername());
            return true;
        }
