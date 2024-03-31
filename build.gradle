@@ -37,9 +37,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.3'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
-    implementation 'org.springframework.data:spring-data-commons:3.2.3'
-
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
 
 //    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 //    implementation 'jakarta.servlet:jakarta.servlet-api' //스프링부트 3.0 이상
