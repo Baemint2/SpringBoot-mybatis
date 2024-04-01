@@ -3,8 +3,6 @@ package com.moz1mozi.mybatis.product.dto;
 import com.moz1mozi.mybatis.image.dto.ImageDto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.Instant;

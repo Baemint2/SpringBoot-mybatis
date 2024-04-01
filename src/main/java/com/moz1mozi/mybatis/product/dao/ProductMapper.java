@@ -1,10 +1,6 @@
 package com.moz1mozi.mybatis.product.dao;
 
-import com.moz1mozi.mybatis.product.dto.StockUpdateDto;
-import com.moz1mozi.mybatis.product.dto.ProductDetailDto;
-import com.moz1mozi.mybatis.product.dto.ProductDto;
-import com.moz1mozi.mybatis.product.dto.ProductListDto;
-import com.moz1mozi.mybatis.product.dto.ProductSearchDto;
+import com.moz1mozi.mybatis.product.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

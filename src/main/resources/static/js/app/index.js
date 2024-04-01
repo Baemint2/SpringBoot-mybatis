@@ -24,7 +24,8 @@ const categories = [
     {
         id: 3, name: '잡화', subCategories: [
             {id: 15, name: '다이어리'},
-            {id: 16, name: '휴대폰케이스'}
+            {id: 16, name: '휴대폰케이스'},
+            {id: 17, name: '음료'}
         ]
     },
     {
@@ -53,7 +54,15 @@ function fetchAndDisplayPosts(page) {
             updateTableContent(data.products); // 상품 내용 업데이트
             console.log(data)
             updatePagination(data.totalPages, page, currentSearchConditions, pageSize); // 페이지네이션 업데이트
-            history.pushState(null, '', `?${queryString}`);
+            history.pushState({
+                page: page,
+                prodName: prodName,
+                nickname: nickname,
+                startPrice: startPrice,
+                endPrice: endPrice,
+                pageSize: pageSize,
+                category: category
+            }, '', `?${queryString}`);
         })
         .catch(error => console.error('Error fetching products', error));
 }
@@ -230,5 +239,16 @@ categories.forEach(category => {
 })
 
 
-document.addEventListener('DOMContentLoaded', () => fetchAndDisplayPosts(1, null, null, null, null, 6, null));
+document.addEventListener('DOMContentLoaded', () => {
+    fetchAndDisplayPosts(1);
+
+    window.onpopstate = function (event) {
+        if(event.state) {
+            console.log(event.state);
+            const { page, prodName, nickname, startPrice, endPrice, pageSize, category } = event.state;
+            currentSearchConditions = { prodName, nickname, startPrice, endPrice, pageSize, category };
+            fetchAndDisplayPosts(page);
+        }
+    }
+});
 

@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class OutOfStockException extends RuntimeException{
 
-    private String field;
-    private String message;
+    private final String field;
+    private final String message;
 
     public OutOfStockException(String field, String message) {
         super(message);

@@ -2,7 +2,6 @@ package com.moz1mozi.mybatis.product.service;
 
 import com.moz1mozi.mybatis.cart.dao.CartMapper;
 import com.moz1mozi.mybatis.exception.OutOfStockException;
-import com.moz1mozi.mybatis.product.dto.StockUpdateDto;
 import com.moz1mozi.mybatis.image.service.ImageService;
 import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberDto;

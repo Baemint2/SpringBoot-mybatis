@@ -1,6 +1,5 @@
 package com.moz1mozi.mybatis.member.controller;
 
-import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
 import com.moz1mozi.mybatis.member.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor

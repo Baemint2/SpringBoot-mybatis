@@ -37,7 +37,7 @@
 
     <select id="findByUsername"
             parameterType="com.moz1mozi.mybatis.member.dto.MemberDto">
-        SELECT USERNAME, NICKNAME, PASSWORD, ROLE, MEMBER_ID
+        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, ROLE, MEMBER_ID
           FROM MEMBER_T
          WHERE USERNAME = #{username}
     </select>

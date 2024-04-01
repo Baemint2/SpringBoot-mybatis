@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -47,6 +50,26 @@ public class MemberApiController {
             return ResponseEntity.badRequest().body("사용자 삭제 실패: 사용자명 또는 비밀번호가 일치하지 않습니다.");
         }
 
+    }
+
+    @GetMapping("/info/")
+    public ResponseEntity<MemberDto> getMemberInfo(Principal principal) {
+        MemberDto member = memberService.findByUsername(principal.getName());
+        if(member != null) {
+            return ResponseEntity.ok(member);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    // 닉네임 변경
+    @PostMapping("/updateNickname")
+    public ResponseEntity<?> updateNickname(@RequestParam String nickname, Principal principal) {
+        String username = principal.getName();
+        memberService.updateNickname(username, nickname);
+        Map<String, String> response = Collections.singletonMap("nickname", nickname);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/username/check")

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title th:text="${productByNo[0].prodName}">Product Detail</title>
@@ -9,6 +10,36 @@
     <link href="/css/style/product.css" rel="stylesheet">
 </head>
 <body>
+<div th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="nav-header" href="/"><h1>모지히의 이게모지</h1></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a href="/member/info" class="nav-link" ><span th:text="${loggedUser.nickname}">사용자 이름</span>님</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a href="/member/cart" role="button" class="nav-link">장바구니</a>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a href="/member/signup" role="button" class="btn btn-secondary">회원가입</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a href="/member/login" role="button" class="btn btn-success">로그인</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('관리자')">
+                    <a href="/admin">관리자페이지</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a href="/member/logout" role="button" class="btn btn-danger">로그아웃</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 <div class="container mt-5">
     <div class="row" th:each="product: ${productByNo}">
         <div class="col-md-6">
@@ -34,9 +65,9 @@
                 <a href="/" class="text-secondary">뒤로가기</a>
             </div>
             <div class="wishlist-button-container">
-                <button id="wishlist-toggle" th:data-product-id="${productByNo[0].productId}" th:attr="data-liked=${isLiked}">
-                    <span th:if="${isLiked}">Remove from Wishlist</span>
-                    <span th:unless="${isLiked}">Add to Wishlist</span>
+                <button type="button" id="wishlist-toggle" th:data-product-id="${productByNo[0].productId}" th:attr="data-liked=${isLiked}">
+                    <span th:if="${isLiked}"><i class="fa-solid fa-heart"></i></span>
+                    <span th:unless="${isLiked}"><i class="fa-regular fa-heart"></i></span>
                 </button>
             </div>
             <div class="action-buttons">

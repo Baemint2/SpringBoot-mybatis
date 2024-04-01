@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -7,50 +8,70 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="/css/style/index.css" rel="stylesheet">
     <link href="/css/style/category.css" rel="stylesheet">
+    <link href="/css/style/product.css" rel="stylesheet">
 </head>
 <body>
-<form class="product-form" method="post" enctype="multipart/form-data">
-    <div class="error-message" id="error-error" style="display: none"></div>
-    <div>
-        <label for="prodName" class="form-label">상품명</label>
-        <input type="text" id="prodName" class="form-control" name="prodName">
-        <div class="error-message" id="prodName-error" style="display: none"></div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="nav-header" href="/"><h1>모지히의 이게모지</h1></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a href="/member/info" class="nav-link" ><span th:text="${loggedUser.nickname}">사용자 이름</span>님</a>
+            </li>
+        </ul>
     </div>
-    <div class="category">
-        <div>
-            <select id="majorCategory">
-                <option value="">대분류 선택</option>
-            </select>
+</nav>
+<div class="product-form-wrapper">
+    <form class="product-form" method="post" enctype="multipart/form-data">
+        <div class="error-message" id="error-error" style="display: none"></div>
+        <div class="category">
+            <div>
+                <select id="majorCategory">
+                    <option value="">대분류 선택</option>
+                </select>
+            </div>
+            <div>
+                <select id="mediumCategory">
+                    <option value="">중분류 선택</option>
+                </select>
+            </div>
         </div>
         <div>
-            <select id="mediumCategory">
-                <option value="">중분류 선택</option>
-            </select>
+            <label for="prodName" class="form-label">상품명</label>
+            <input type="text" id="prodName" class="form-control" name="prodName">
+            <div class="error-message" id="prodName-error" style="display: none"></div>
         </div>
-    </div>
-    <div>
-        <label for="description" class="form-label">상품설명</label>
-        <textarea id="description" class="form-control" name="description"></textarea>
-        <div class="error-message" id="description-error" style="display: none"></div>
-    </div>
-    <div>
-        <label for="prodPrice" class="form-label">상품가격</label>
-        <input type="text" id="prodPrice" class="form-control" name="prodPrice">
-        <div class="error-message" id="prodPrice-error" style="display: none"></div>
-    </div>
-    <div>
-        <label for="stockQuantity" class="form-label">상품수량</label>
-        <input type="text" id="stockQuantity" class="form-control" name="stockQuantity">
-        <div class="error-message" id="stockQuantity-error" style="display: none"></div>
-    </div>
-    <div>
-        <label for="files" class="form-label">상품 이미지</label>
-        <input type="file" id="files" class="form-control" name="files" accept="image/*" multiple>
-        <div class="error-message" id="files-error" style="display: none"></div>
-    </div>
-</form>
-<a href="/" role="button" class="btn btn-secondary">취소</a>
-<button type="button" class="btn btn-primary" id="btn-save">등록</button>
+        <div>
+            <label for="description" class="form-label">상품설명</label>
+            <textarea id="description" class="form-control" name="description"></textarea>
+            <div class="error-message" id="description-error" style="display: none"></div>
+        </div>
+        <div>
+            <label for="prodPrice" class="form-label">상품가격</label>
+            <input type="text" id="prodPrice" class="form-control" name="prodPrice">
+            <div class="error-message" id="prodPrice-error" style="display: none"></div>
+        </div>
+        <div>
+            <label for="stockQuantity" class="form-label">상품수량</label>
+            <input type="text" id="stockQuantity" class="form-control" name="stockQuantity">
+            <div class="error-message" id="stockQuantity-error" style="display: none"></div>
+        </div>
+        <div>
+            <label for="files" class="form-label">상품 이미지</label>
+            <input type="file" id="files" class="form-control" name="files" accept="image/*" multiple>
+            <div class="error-message" id="files-error" style="display: none"></div>
+        </div>
+        <div id="image-preview-container"></div>
+    </form>
+</div>
+<div class="action-buttons">
+    <a href="/" role="button" class="btn btn-secondary">취소</a>
+    <button type="button" class="btn btn-primary" id="btn-save">등록</button>
+</div>
 <script src="/js/app/category.js"></script>
 <script src="/js/app/product.js"></script>
 </body>

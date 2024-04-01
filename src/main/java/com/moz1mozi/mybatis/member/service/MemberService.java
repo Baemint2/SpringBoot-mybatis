@@ -1,12 +1,12 @@
 package com.moz1mozi.mybatis.member.service;
 
 import com.moz1mozi.mybatis.exception.CustomException;
+import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dao.MemberWithdrawalMapper;
 import com.moz1mozi.mybatis.member.dto.FindMemberDto;
+import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.dto.Role;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,7 +30,6 @@ public class MemberService {
 
     @Transactional
     public Long insertMember(MemberDto member) {
-
        if(!member.getPassword().equals(member.getConfirmPassword())) {
            throw new CustomException("confirmPassword", "비밀번호가 일치하지 않습니다");
        }

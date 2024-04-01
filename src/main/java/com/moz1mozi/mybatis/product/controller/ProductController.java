@@ -2,6 +2,7 @@ package com.moz1mozi.mybatis.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moz1mozi.mybatis.exception.OutOfStockException;
+import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
@@ -37,7 +38,10 @@ public class ProductController {
     private final Validator validator;
 
     @GetMapping("/product")
-    public String products() {
+    public String products(Model model, Principal principal) {
+        String username = principal.getName();
+        MemberDto loggedUser = memberService.findByUsername(username);
+        model.addAttribute("loggedUser", loggedUser);
         return "product/product-insert";
     }
 
@@ -46,7 +50,11 @@ public class ProductController {
                                 Model model,
                                 Principal principal) {
         String currentUsername = principal.getName();
-        Long memberId = memberService.findByUsername(currentUsername).getMemberId();
+        MemberDto loggedUser = memberService.findByUsername(currentUsername);
+        model.addAttribute("loggedUser", loggedUser);
+
+
+        Long memberId = loggedUser.getMemberId();
         boolean isLiked = wishListService.isLiked(memberId, productId);
         model.addAttribute("isLiked",isLiked);
 
@@ -57,7 +65,6 @@ public class ProductController {
         if (!productByNo.isEmpty()) {
             boolean isOwner = productService.isUserSellerOfProduct(currentUsername, productId);
             boolean isAdmin = productService.isCurrentUserAdmin();
-
             model.addAttribute("isOwner", isOwner);
             model.addAttribute("isAdmin", isAdmin);
             log.info("현재 사용자 = {}", isOwner);

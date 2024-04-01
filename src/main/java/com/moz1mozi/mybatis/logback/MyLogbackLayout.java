@@ -1,10 +1,10 @@
 package com.moz1mozi.mybatis.logback;
 
-import java.text.SimpleDateFormat;
-
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.LayoutBase;
+
+import java.text.SimpleDateFormat;
 
 public class MyLogbackLayout extends LayoutBase<ILoggingEvent> {
 

@@ -8,6 +8,10 @@ const member = {
         const _this = this;
         document.getElementById("btn-signup")?.addEventListener("click", function () {
             _this.signup();
+        });
+
+        document.getElementById("btn-change-nickname")?.addEventListener("click", function () {
+            _this.changeNickname();
         })
     },
 
@@ -24,16 +28,16 @@ const member = {
             role: document.querySelector("input[name='role']:checked")?.value || "BUYER"
         }
 
-        fetch("/api/v1/member/signup" , {
+        fetch("/api/v1/member/signup", {
             method: "POST",
             headers: {
-                "Content-Type" : "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
         }).then(response => {
-            if(response.ok) {
+            if (response.ok) {
                 alert("회원가입이 완료되었습니다.")
-                location.href= "/user/login";
+                location.href = "/user/login";
             } else {
                 throw new Error("회원가입 처리 중 문제가 발생했습니다.")
             }
@@ -41,10 +45,53 @@ const member = {
             alert("알 수 없는 오류가 발생했습니다.");
             console.log(error);
         })
+    },
+    changeNickname: function () {
+        const nicknameSpan = document.querySelector("#nickname-span");
+        console.log(nicknameSpan)
+        const currentNickname = nicknameSpan.textContent
+        console.log(currentNickname)
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = currentNickname;
+        input.id = 'nickname-input';
+        input.className = 'form-control'
+
+        nicknameSpan.replaceWith(input);
+
+        input.focus();
+        console.log(input)
+
+        input.addEventListener('blur', function () {
+            const newNickname = input.value;
+            // API 호출
+            member.updateNicknameApi(newNickname).then(() => {
+                const span = document.createElement('span');
+                span.textContent = newNickname;
+                span.id = 'nickname-span';
+                input.replaceWith(span);
+            }).catch(error => {
+                console.error('Nickname update failed:', error);
+            });
+        });
+    },
+    updateNicknameApi: async function (newNickname) {
+        const response = await fetch('/api/v1/member/updateNickname', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `nickname=${encodeURIComponent(newNickname)}`
+        });
+        if (!response.ok) {
+            throw new Error("네트워크 오류입니다.");
+        }
+        return await response.text(); // 또는 JSON 응답인 경우 response.json()
     }
 }
 
-function execPostCode() {
+
+    window.execPostCode = function () {
     new daum.Postcode({
         oncomplete: function(data) {
             // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.

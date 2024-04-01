@@ -35,6 +35,9 @@ public interface CartMapper {
 
     // 상품 존재 여부 확인
     boolean existsById(Long cartItemId);
+
+    // 주문 화면으로 이동
+    List<CartDetailDto> findCartItemsByIds(List<Long> cartItemsIds);
 }
 
 

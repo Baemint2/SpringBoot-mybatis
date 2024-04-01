@@ -119,7 +119,7 @@ class MemberServiceTest {
     @Test
     void 닉네임변경_성공_테스트() {
         String username = "emozi";
-        String nickname = "이모지";
+        String nickname = "이모지히";
         memberService.updateNickname(username, nickname);
 
         MemberDto member = memberService.findByUsername(username);
@@ -130,11 +130,11 @@ class MemberServiceTest {
     void 닉네임변경_중복검사() {
         // 테스트를 위한 초기 닉네임 설정
         String username = "emozi";
-        String nickname = "이모지";
+        String nickname = "이모지히";
         memberService.updateNickname(username, nickname); // 중복되지 않는 닉네임으로 초기 설정
 
         // 중복 닉네임으로 변경 시도
-        String duplicateNickname = "이모지"; // 이전 단계에서 이미 사용된 닉네임
+        String duplicateNickname = "이모지히"; // 이전 단계에서 이미 사용된 닉네임
         assertThrows(CustomException.class, () -> {
             memberService.updateNickname(username, duplicateNickname);
         });

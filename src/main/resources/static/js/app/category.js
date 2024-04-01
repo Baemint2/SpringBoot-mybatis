@@ -15,7 +15,8 @@ const categories = [
     {
         id: 3, name: '잡화', subCategories: [
             {id: 15, name: '다이어리'},
-            {id: 16, name: '휴대폰케이스'}
+            {id: 16, name: '휴대폰케이스'},
+            {id: 17, name: '음료'}
         ]
     },
     {

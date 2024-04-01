@@ -1,0 +1,35 @@
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#wishlist-toggle {
+    margin-left: auto;
+    margin-right: auto;
+    background: none;
+    border: none; /* 버튼의 테두리도 제거하고 싶은 경우 추가 */
+    padding: 0; /* 버튼의 내부 여백을 제거하고 싶은 경우 추가 */
+}
+
+.product-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 600px;
+    height: 600px;
+
+}
+
+.product-form input,
+.product-form textarea{
+    width: 500px;
+    padding: 5px;
+}
+
+.product-form-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
