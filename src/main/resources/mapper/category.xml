@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moz1mozi.mybatis.category.dao.CategoryMapper">
 
-    <select id="selectAllCategories" resultType="com.moz1mozi.mybatis.category.dto.CategoryDto">
+    <select id="selectAllCategories" resultType="CategoryDto">
         SELECT CATEGORY_ID, CATEGORY_NAME, PARENT_ID,
                 CREATED_AT, MODIFIED_AT
           FROM CATEGORY_T

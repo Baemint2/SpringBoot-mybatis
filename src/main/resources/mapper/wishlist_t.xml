@@ -28,7 +28,7 @@
     </select>
 
     <select id="getWishlistByMemberId"
-            resultType="com.moz1mozi.mybatis.wishlist.dto.WishlistDto">
+            resultType="WishlistDto">
         SELECT P.PROD_NAME, P.PROD_PRICE, PI.STORED_URL, W.MEMBER_ID, P.PRODUCT_ID
         FROM WISHLIST_T W
         INNER JOIN PRODUCT_T P ON W.PRODUCT_ID = P.PRODUCT_ID

@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moz1mozi.mybatis.cart.dao.CartMapper">
     <insert id="insertCartItem"
-            parameterType="com.moz1mozi.mybatis.cart.dto.CartDto">
+            parameterType="CartDto">
         <selectKey keyProperty="cartItemId" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -13,7 +13,7 @@
     </insert>
 
     <select id="findMyCartItems"
-            resultType="com.moz1mozi.mybatis.cart.dto.CartDetailDto">
+            resultType="CartDetailDto">
         SELECT
         C.CART_ITEM_ID,
         C.PRODUCT_ID,
@@ -30,7 +30,7 @@
         GROUP BY C.CART_ITEM_ID,C.PRODUCT_ID, P.PROD_NAME, PI.STORED_URL;
     </select>
     <select id="getTotalPrice"
-            resultType="com.moz1mozi.mybatis.cart.dto.TotalCartDto">
+            resultType="TotalCartDto">
         SELECT SUM(PRICE * QUANTITY) AS TOTAL_PRICE
         FROM CART
         WHERE MEMBER_ID = #{memberId};
@@ -66,7 +66,7 @@
 
     <!-- 필요한 거 똑같이 상품 id,    -->
     <select id="findCartItemsByIds"
-            resultType="com.moz1mozi.mybatis.cart.dto.CartDetailDto">
+            resultType="CartDetailDto">
         SELECT P.PROD_NAME, P.PROD_PRICE, PI.STORED_URL, W.MEMBER_ID, P.PRODUCT_ID
         FROM WISHLIST_T W
         INNER JOIN PRODUCT_T P ON W.PRODUCT_ID = P.PRODUCT_ID
@@ -75,7 +75,7 @@
     </select>
 
     <select id="selectCartItemById"
-            resultType="com.moz1mozi.mybatis.cart.dto.CartDto">
+            resultType="CartDto">
         SELECT QUANTITY, PRODUCT_ID, CART_ITEM_ID
           FROM CART
          WHERE CART_ITEM_ID = #{cartItemId}
