@@ -19,24 +19,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Map<String, String>> handlerCustomException(CustomException ex) {
-        Map<String, String> errors = new HashMap<>();
-        errors.put(ex.getField(), ex.getMessage());
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(Map.of(ex.getField(), ex.getMessage()));
     }
 
     @ExceptionHandler(OutOfStockException.class)
     public ResponseEntity<Map<String, String>> handlerOutOfStockException(OutOfStockException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(ex.getField(), ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidCurrentPasswordException.class)
+    public ResponseEntity<Map<String, String>> handlerInvalidCurrentPasswordException(InvalidCurrentPasswordException ex) {
+        return ResponseEntity.badRequest().body(Map.of(ex.getField(), ex.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handlerIllegalArgumentException(IllegalArgumentException ex) {
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("error", ex.getMessage());
-
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
