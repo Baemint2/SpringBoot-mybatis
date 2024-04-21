@@ -2,6 +2,7 @@ package com.moz1mozi.mybatis.member.controller;
 
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.dto.MemberWithdrawalDto;
+import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -64,12 +64,21 @@ public class MemberApiController {
     }
 
     // 닉네임 변경
-    @PostMapping("/updateNickname")
+    @PutMapping("/updateNickname")
     public ResponseEntity<?> updateNickname(@RequestParam String nickname, Principal principal) {
         String username = principal.getName();
         memberService.updateNickname(username, nickname);
         Map<String, String> response = Collections.singletonMap("nickname", nickname);
         return ResponseEntity.ok(response);
+    }
+
+
+
+    @PutMapping("/updatePassword")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDto password, Principal principal) {
+        String username = principal.getName();
+        memberService.changePassword(username, password);
+        return ResponseEntity.ok().body(Map.of("message", "비밀번호가 성공적으로 업데이트 되었습니다.", "password", password));
     }
 
     @GetMapping("/username/check")

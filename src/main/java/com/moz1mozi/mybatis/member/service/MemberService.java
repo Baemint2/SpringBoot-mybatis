@@ -1,12 +1,11 @@
 package com.moz1mozi.mybatis.member.service;
 
 import com.moz1mozi.mybatis.exception.CustomException;
+import com.moz1mozi.mybatis.exception.InvalidCurrentPasswordException;
+import com.moz1mozi.mybatis.exception.PasswordsDoNotMatchException;
 import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dao.MemberWithdrawalMapper;
-import com.moz1mozi.mybatis.member.dto.FindMemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
-import com.moz1mozi.mybatis.member.dto.Role;
+import com.moz1mozi.mybatis.member.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +25,6 @@ public class MemberService {
     private final MemberMapper memberMapper;
     private final MemberWithdrawalMapper memberWithdrawalMapper;
     private final PasswordEncoder passwordEncoder;
-
 
     @Transactional
     public Long insertMember(MemberDto member) {
@@ -53,10 +51,8 @@ public class MemberService {
                 .password(passwordEncoder.encode(member.getPassword()))
                 .nickname(member.getNickname())
                 .email(member.getEmail())
-                .zipcode(member.getZipcode())
-                .streetAddress(member.getStreetAddress())
-                .detailAddress(member.getDetailAddress())
-                .created_at(Date.from(Instant.now()))
+                .mobile(member.getMobile())
+                .createdAt(Date.from(Instant.now()))
                 .role(role)
                 .build();
 
@@ -95,18 +91,20 @@ public class MemberService {
 
     // 비밀번호 변경
     @Transactional
-    public boolean changePassword(PasswordChangeDto passwordChangeDto) {
-        MemberDto member = memberMapper.findByUsername(passwordChangeDto.getUsername());
+    public void changePassword(String username, PasswordChangeDto passwordChangeDto) {
+        MemberDto member = memberMapper.findByUsername(username);
         if(member == null || !passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getPassword())) {
-            return false;
+            throw new InvalidCurrentPasswordException("InvalidPassword", "현재비밀번호가 일치하지 않습니다.");
+        }
+        if (passwordChangeDto.getNewPassword().equals(passwordChangeDto.getCurrentPassword())) {
+            throw new InvalidCurrentPasswordException("SameAsOld", "새 비밀번호는 기존 비밀번호와 달라야 합니다.");
         }
         if(!passwordChangeDto.getNewPassword().equals(passwordChangeDto.getConfirmPassword())) {
-            return false;
+            throw new PasswordsDoNotMatchException("NotMatchPassword", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
         }
 
         String encodedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
-        memberMapper.updatePassword(passwordChangeDto.getUsername(), encodedPassword);
-        return true;
+        memberMapper.updatePassword(username, encodedPassword);
     }
 
     //아이디 찾기
@@ -131,6 +129,9 @@ public class MemberService {
         memberMapper.updateNickname(username, nickname);
     }
 
+    //주소 변경
+
+
     //사용자명 중복 검사
     public boolean usernameDuplicate(String username) {
         return memberMapper.existsByUsername(username);
@@ -145,5 +146,6 @@ public class MemberService {
     public boolean nicknameDuplicate(String nickname) {
         return memberMapper.existsByNickname(nickname);
     }
+
 
 }
