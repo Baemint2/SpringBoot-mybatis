@@ -5,7 +5,7 @@
 <mapper namespace="com.moz1mozi.mybatis.member.dao.MemberMapper">
     <insert id="insertMember"
             parameterType="MemberDto">
-        <selectKey keyProperty="member_id" resultType="long" order="AFTER">
+        <selectKey keyProperty="memberId" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
         INSERT INTO MEMBER_T (
@@ -13,13 +13,11 @@
         PASSWORD,
         EMAIL,
         NICKNAME,
-        ZIPCODE,
-        STREETADDRESS,
-        DETAILADDRESS,
+        MOBILE,
         ROLE,
         CREATED_AT,
         MODIFIED_AT
-        ) VALUES (#{username}, #{password}, #{email}, #{nickname}, #{zipcode}, #{streetAddress}, #{detailAddress}, #{role, typeHandler=com.moz1mozi.mybatis.typehandler.RoleTypeHandler}, now(), now())
+        ) VALUES (#{username}, #{password}, #{email}, #{nickname}, #{mobile} ,#{role, typeHandler=com.moz1mozi.mybatis.typehandler.RoleTypeHandler}, now(), now())
     </insert>
 
     <delete id="deleteMember">
@@ -30,14 +28,13 @@
 
     <select id="selectMemberInfo"
             resultType="MemberInfoDto">
-        SELECT MEMBER_ID, USERNAME, PASSWORD, EMAIL, NICKNAME, ROLE, ZIPCODE,
-               STREETADDRESS, DETAILADDRESS, CREATED_AT, MODIFIED_AT
+        SELECT MEMBER_ID, USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, CREATED_AT, MODIFIED_AT
         FROM MEMBER_T;
     </select>
 
     <select id="findByUsername"
             parameterType="MemberDto">
-        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, ROLE, MEMBER_ID
+        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, MEMBER_ID
           FROM MEMBER_T
          WHERE USERNAME = #{username}
     </select>
@@ -88,6 +85,16 @@
         SET NICKNAME = #{nickname}
         WHERE USERNAME = #{username}
     </update>
+
+    <!--
+    <update id="updateAddress">
+        UPDATE MEMBER_T
+        SET ZIPCODE = #{address.zipcode},
+        STREETADDRESS = #{address.streetAddress},
+        DETAILADDRESS = #{address.detailAddress}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+    -->
     <select id="findUsernameByEmail"
             resultType="String">
         SELECT USERNAME

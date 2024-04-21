@@ -17,9 +17,6 @@ public class MemberInfoDto {
     private String password;
     private String email;
     private String nickname;
-    private String zipcode;
-    private String streetAddress;
-    private String detailAddress;
     private Date createdAt;
     private Date modifiedAt;
     private Role role;
