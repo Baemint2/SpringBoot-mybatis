@@ -29,16 +29,22 @@ public class CartController {
     private final CartService cartService;
 
     private final MemberService memberService;
+
     @GetMapping("/member/cart")
     public String myCart(Model model, Principal principal) {
         String username = principal.getName();
         MemberDto loggedUser = memberService.findByUsername(username);
         Long memberId = loggedUser.getMemberId();
         log.info("로그인한 멤버 : {}", memberId);
+        model.addAttribute("loggedUser", loggedUser);
 
         List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
-        model.addAttribute("myItems", itemsByMemberId);
-        model.addAttribute("loggedUser", loggedUser);
+        if (itemsByMemberId.isEmpty()) {
+            model.addAttribute("emptyCartMessage", "장바구니가 비어있습니다.");
+        } else {
+            model.addAttribute("myItems", itemsByMemberId);
+
+        }
         return "cart/myCart";
     }
 

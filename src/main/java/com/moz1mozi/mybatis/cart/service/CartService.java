@@ -80,11 +80,10 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<CartDetailDto> getCartItemsByMemberId(Long memberId) {
 
-        List<CartDetailDto> items = cartMapper.findMyCartItems(memberId);
-        if (items.isEmpty()) {
-            throw new IllegalArgumentException("장바구니가 비어 있습니다.");
-        }
-        return items;
+        //        if (items.isEmpty()) {
+//            throw new IllegalArgumentException("장바구니가 비어 있습니다.");
+//        }
+        return cartMapper.findMyCartItems(memberId);
     }
 
     @Transactional
@@ -120,4 +119,8 @@ public class CartService {
         }
 
     }
+
+//    public List<CartDetailDto> findCartItemsByIds(List<Long> cartItemIds) {
+//
+//    };
 }
