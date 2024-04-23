@@ -3,4 +3,31 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moz1mozi.mybatis.delivery.mapper.ShippingAddressMapper">
+
+    <insert id="insertShippingAddress"
+        parameterType="ShippingAddressDto">
+        <selectKey keyProperty="addressId" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO SHIPPING_ADDRESS_T (
+        MEMBER_ID,
+        RECIPIENT_NAME,
+        MOBILE,
+        ZIPCODE,
+        STREETADDRESS,
+        DETAILADDRESS,
+        DEFAULT_ADDRESS,
+        CREATE_DT,
+        MODIFIED_DT
+        ) VALUES (#{memberId}, #{address.recipientName}, #{address.mobile}, #{address.zipcode},
+                  #{address.streetaddress}, #{address.detailaddress}, #{address.defaultAddress}, NOW(), NOW())
+
+    </insert>
+
+    <select id="getShippingAddressByMemberId"
+            resultType="ShippingAddressDto">
+        SELECT ADDRESS_ID, MEMBER_ID, RECIPIENT_NAME, MOBILE, ZIPCODE, STREETADDRESS, DETAILADDRESS, DEFAULT_ADDRESS
+        FROM SHIPPING_ADDRESS_T
+        WHERE MEMBER_ID = #{memberId};
+    </select>
 </mapper>
