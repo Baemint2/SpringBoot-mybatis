@@ -43,12 +43,12 @@
 <div class="container mt-5">
     <div class="row" th:each="product: ${productByNo}">
         <div class="col-md-6">
-            <img th:src="@{${product.storedUrl}}" class="img-fluid" th:alt="${productByNo[0].prodName}" style="height: 500px;width: 500px">
+            <img th:src="@{${product.imageDto.storedUrl}}" class="img-fluid" th:alt="${productByNo[0].prodName}" style="height: 500px;width: 500px">
         </div>
         <input type="hidden" id="productId" th:value="${productByNo[0].productId}">
         <div class="col-md-6">
             <h1 class="display-4" th:text="${productByNo[0].prodName}">Product Name</h1>
-            <p class="nickname" th:text="${productByNo[0].nickname}">by Brand</p>
+            <p class="nickname" th:text="${productByNo[0].memberDto.nickname}">by Brand</p>
             <h2 class="price" id="prodPrice">가격: <span class="formattedPrice">[[${productByNo[0].prodPrice}]]</span>원</h2>
             <p class="description" th:text="${productByNo[0].description}">Product description goes here. It's a brief introduction about the product features and qualities.</p>
             <div class="my-4">

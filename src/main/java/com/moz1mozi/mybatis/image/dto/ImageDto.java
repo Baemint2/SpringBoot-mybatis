@@ -14,7 +14,6 @@ public class ImageDto {
     private long productId;
     private String originalFileName;
     private String storedFileName;
-
     private String storedUrl;
     private Date createdAt;
     private Date modifiedAt;

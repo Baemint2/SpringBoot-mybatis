@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(config -> config
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/admin")).hasRole("관리자")
+                                .requestMatchers(new AntPathRequestMatcher("/admin")).hasRole("관리자")
                                 .anyRequest().permitAll())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**"))

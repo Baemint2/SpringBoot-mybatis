@@ -67,10 +67,10 @@
     <!-- 필요한 거 똑같이 상품 id,    -->
     <select id="findCartItemsByIds"
             resultType="CartDetailDto">
-        SELECT P.PROD_NAME, P.PROD_PRICE, PI.STORED_URL, W.MEMBER_ID, P.PRODUCT_ID
+        SELECT P.PROD_NAME, P.PROD_PRICE, I.STORED_URL, W.MEMBER_ID, P.PRODUCT_ID
         FROM WISHLIST_T W
         INNER JOIN PRODUCT_T P ON W.PRODUCT_ID = P.PRODUCT_ID
-        LEFT JOIN PRODUCT_IMAGE PI ON P.PRODUCT_ID = PI.PRODUCT_ID
+        LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
         WHERE W.MEMBER_ID = #{member_id}
     </select>
 

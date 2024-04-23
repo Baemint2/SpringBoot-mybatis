@@ -17,6 +17,6 @@ public class CartDetailDto {
     private String prodName;
     private int totalQuantity;
     private int totalPrice; // 문자열 대신 정수나 실수 타입 사용
-    private String storedUrl;
+    private String storedUrl; //
     private Date lastAdded;
 }
