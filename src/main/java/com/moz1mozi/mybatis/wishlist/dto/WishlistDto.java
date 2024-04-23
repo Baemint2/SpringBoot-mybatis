@@ -1,5 +1,7 @@
 package com.moz1mozi.mybatis.wishlist.dto;
 
+import com.moz1mozi.mybatis.image.dto.ImageDto;
+import com.moz1mozi.mybatis.product.dto.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +16,6 @@ public class WishlistDto {
     private Long memberId;
     private Long productId;
     private boolean isLiked;
-    private String prodName;
-    private Integer prodPrice;
-    private String storedUrl;
+    private ProductDto productDto;
+    private ImageDto imageDto;
 }

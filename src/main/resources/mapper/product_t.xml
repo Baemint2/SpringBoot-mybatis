@@ -3,6 +3,44 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moz1mozi.mybatis.product.dao.ProductMapper">
+
+    <resultMap id="ProductMap" type="ProductDetailDto">
+        <id property="productId" column="PRODUCT_ID"/>
+        <result property="prodName" column="PROD_NAME"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="prodPrice" column="PROD_PRICE"/>
+        <result property="stockQuantity" column="STOCK_QUANTITY"/>
+        <result property="role" column="Role"/>
+        <association property="memberDto" javaType="MemberDto">
+            <id property="memberId" column="MEMBER_ID"/>
+            <result property="username" column="USERNAME"/>
+            <result property="nickname" column="nickname"/>
+        </association>
+        <association property="imageDto" javaType="ImageDto">
+            <id property="imageId" column="IMAGE_ID"/>
+            <result property="storedUrl" column="STORED_URL"/>
+        </association>
+        <association property="categoryDto" javaType="CategoryDto">
+            <id property="categoryId" column="CATEGORY_ID"/>
+            <result property="categoryName" column="CATEGORY_NAME"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="ProductWithImage" type="ProductDto">
+        <id property="productId" column="productId"/>
+        <result property="prodName" column="prodName"/>
+        <result property="prodPrice" column="prodPrice"/>
+        <result property="description" column="description"/>
+        <result property="stockQuantity" column="stockQuantity"/>
+        <result property="modifiedAt" column="modifiedAt"/>
+        <collection property="imageDtoList" ofType="com.moz1mozi.mybatis.image.dto.ImageDto">
+            <id property="imageId" column="imageId"/>
+            <result property="storedUrl" column="storedUrl"/>
+            <result property="originalFileName" column="originalFileName"/>
+            <result property="storedFileName" column="storedFileName"/>
+        </collection>
+    </resultMap>
+
     <insert id="insertProduct"
             parameterType="ProductDto">
         <selectKey keyProperty="productId" resultType="long" order="AFTER">
@@ -40,8 +78,7 @@
         LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
     </select>
 
-    <select id="getProductByNo"
-            resultType="ProductDetailDto">
+    <select id="getProductByNo" resultMap="ProductMap">
         select P.PRODUCT_ID, M.USERNAME, I.STORED_URL, P.PROD_NAME,
                P.DESCRIPTION, P.PROD_PRICE, P.STOCK_QUANTITY, M.NICKNAME,
                C.CATEGORY_NAME
@@ -52,31 +89,6 @@
         WHERE P.PRODUCT_ID = #{productId};
     </select>
 
-    <select id="getPagedProducts"
-            resultType="ProductDetailDto">
-        SELECT P.PROD_NAME, P.PROD_PRICE, I.STORED_URL, M.nickname,
-               P.PRODUCT_ID, P.ROLE
-          FROM PRODUCT_T P
-        LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
-        LEFT JOIN MEMBER_T M ON P.SELLER_ID = M.MEMBER_ID
-        ORDER BY P.PRODUCT_ID DESC
-        LIMIT #{pageSize} OFFSET #{offset};
-    </select>
-
-    <resultMap id="ProductWithImage" type="ProductDto">
-        <id property="productId" column="productId"/>
-        <result property="prodName" column="prodName"/>
-        <result property="prodPrice" column="prodPrice"/>
-        <result property="description" column="description"/>
-        <result property="stockQuantity" column="stockQuantity"/>
-        <result property="modifiedAt" column="modifiedAt"/>
-        <collection property="imageDtoList" ofType="com.moz1mozi.mybatis.image.dto.ImageDto">
-            <id property="imageId" column="imageId"/>
-            <result property="storedUrl" column="storedUrl"/>
-            <result property="originalFileName" column="originalFileName"/>
-            <result property="storedFileName" column="storedFileName"/>
-        </collection>
-    </resultMap>
     <select id="selectProductById"
             resultMap="ProductWithImage">
         SELECT P.PRODUCT_ID, P.PROD_NAME, P.PROD_PRICE, P.DESCRIPTION , P.STOCK_QUANTITY, P.MODIFIED_AT
@@ -99,7 +111,7 @@
     <!--검색 기능 추가-->
     <select id="findByCondition"
             parameterType="ProductSearchDto"
-            resultType="ProductDetailDto">
+            resultMap="ProductMap">
         SELECT P.PRODUCT_ID, I.STORED_URL, P.PROD_NAME, P.DESCRIPTION, P.PROD_PRICE,
         P.STOCK_QUANTITY, MT.NICKNAME, P.CATEGORY_ID, C.CATEGORY_NAME
         FROM PRODUCT_T P

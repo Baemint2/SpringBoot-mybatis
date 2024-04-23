@@ -43,13 +43,13 @@ const wishlist = {
                 row.innerHTML = `
             <td>
                 <a href="/product/detail/${item.productId}" class="wishlist-item-link">
-                    <img src="${item.storedUrl}" alt="${item.prodName}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    <img src="${item.imageDto.storedUrl}" alt="${item.prodName}" class="img-thumbnail" style="width: 100px; height: 100px;">
                 </a>
             </td>
             <td>
                 <a href="/product/detail/${item.productId}" class="wishlist-item-link">
-                    <div>${item.prodName}</div>
-                    <div>${item.prodPrice}원</div>
+                    <div>${item.productDto.prodName}</div>
+                    <div>${item.productDto.prodPrice}원</div>
                 </a>
             </td>
             <td>

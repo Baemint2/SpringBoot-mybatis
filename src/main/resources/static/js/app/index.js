@@ -91,16 +91,18 @@ function createProductCard(product) {
     anchor.classList.add('card-link'); // 필요에 따라 스타일링을 위한 클래스를 추가할 수 있습니다.
 
     console.log(product)
+    console.log(product.imageDto)
+    console.log(product.categoryDto)
     const formattedNumber = new Intl.NumberFormat('ko-KR').format(product.prodPrice);
+    const categoryName = product.categoryDto?.categoryName || '카테고리 없음';
     anchor.innerHTML = `
         <div class="card mb-3">
-            <img src="${product.storedUrl}" class="card-img-top" alt="${product.prodName}">
+            <img src="${product.imageDto.storedUrl}" class="card-img-top" alt="${product.prodName}">
             <div class="card-body">
-                <small>[${product.categoryName}]</small>
-                <h5 class="card-title">${product.nickname}</h5>
+                <small>[${categoryName}]</small>
+                <h5 class="card-title">${product.memberDto.nickname}</h5>
                 <p class="card-text">${product.prodName}</p>
                 <p class="card-text">${formattedNumber}원</p>
-                
             </div>
         </div>`;
 

@@ -1,5 +1,8 @@
 package com.moz1mozi.mybatis.product.dto;
 
+import com.moz1mozi.mybatis.category.dto.CategoryDto;
+import com.moz1mozi.mybatis.image.dto.ImageDto;
+import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.dto.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,14 +15,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductDetailDto {
     private long productId;
-    private String storedUrl;
     private String prodName;
     private String description;
     private int prodPrice;
     private int stockQuantity;
-    private String nickname;
-    private String username;
     private Role role;
-    private int categoryId;
-    private String categoryName;
+    private MemberDto memberDto;
+    private ImageDto imageDto;
+    private CategoryDto categoryDto;
 }
