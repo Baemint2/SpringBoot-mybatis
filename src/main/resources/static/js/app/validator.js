@@ -10,8 +10,8 @@ export const validator = {
         document.getElementById('nickname')?.addEventListener('blur', function ()  {
             _this.checkDuplicate('nickname', this.value, 'nickname-error', '이미 사용중인 닉네임입니다.');
         });
-        document.getElementById('confirmPassword')?.addEventListener('blur', () => {
-            _this.passwordMatch();
+        document.getElementById('confirmPassword')?.addEventListener('blur', function () {
+            _this.passwordMatch("modal-current-pass", this.value, "modal-currentPassword-error", "이미 사용중인 비밀번호입니다.");
         });
     },
     checkDuplicate: function (field, value, errorElementId, errorMessage) {
@@ -19,7 +19,10 @@ export const validator = {
             .then(response => response.json())
             .then(data => {
                 const isDuplicate = data[`is${field.charAt(0).toUpperCase() + field.slice(1)}Duplicate`];
+                console.log(data)
+                console.log(isDuplicate)
                 const errorElement = document.getElementById(errorElementId)
+                console.log(errorElement)
                 if (isDuplicate) {
                     errorElement.textContent = errorMessage;
                     errorElement.style.display = 'block';
@@ -39,5 +42,21 @@ export const validator = {
         } else  {
             errorMessage.style.display = 'none';
         }
-    }
+    },
+    validateCurrentPassword: function () {
+
+    },
+    validateConfirmPassword: function () {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPasswordInput = document.getElementById('modal-confirm-pass');
+        const confirmPassword = confirmPasswordInput.value;
+        const errorElement = document.getElementById('modalConfirmPass-error');
+
+        if (newPassword !== confirmPassword) {
+            errorElement.textContent = "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.";
+            errorElement.style.display = 'block';
+        } else {
+            errorElement.style.display = 'none';
+        }
+    },
 }

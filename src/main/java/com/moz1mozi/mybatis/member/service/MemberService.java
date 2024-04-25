@@ -11,10 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -84,9 +86,27 @@ public class MemberService {
 
     @Transactional
     public MemberDto findByUsername(String username) {
-        String name = Optional.ofNullable(username)
+        return Optional.ofNullable(memberMapper.findByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
-        return memberMapper.findByUsername(name);
+    }
+
+    @Transactional(readOnly = true)
+    public Long getMemberIdByUsername(String username) {
+        return Optional.ofNullable(memberMapper.findByMemberIdByUsername(username))
+                .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public Long getMemberId(Long memberId) {
+        Long member = Optional.ofNullable(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
+        return memberMapper.findByMemberId(member);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Long> getMemberAddress(Long memberId) {
+        return Optional.ofNullable(memberMapper.findMemberIdByAddressId(memberId))
+                .orElseThrow(() -> new CustomException("addressNotFound","배송지가 존재하지 않습니다."));
     }
 
     // 비밀번호 변경

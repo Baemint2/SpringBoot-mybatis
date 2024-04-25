@@ -37,6 +37,7 @@
         SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, MEMBER_ID
           FROM MEMBER_T
          WHERE USERNAME = #{username}
+
     </select>
 
     <select id="findByRoleWithUsername"
@@ -58,6 +59,14 @@
         SELECT MEMBER_ID, USERNAME
         FROM MEMBER_T
         WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <select id="findMemberIdByAddressId"
+            parameterType="MemberDto">
+        SELECT SA.ADDRESS_ID, M.USERNAME, M.MOBILE, M.MEMBER_ID
+        FROM MEMBER_T M
+        INNER JOIN SHIPPING_ADDRESS_T SA ON M.MEMBER_ID = SA.MEMBER_ID
+        WHERE M.MEMBER_ID = #{memberId};
     </select>
 
     <!-- 중복 검사 -->

@@ -49,7 +49,7 @@ public class CartController {
     }
 
     // 상품 추가
-    @PostMapping("/api/v1/cart/add")
+    @PostMapping("/api/v1/cart")
     public ResponseEntity<?> addCartItems(@RequestBody CartDto cartDto, Principal principal) {
         try {
             String username = principal.getName();
@@ -66,7 +66,7 @@ public class CartController {
     }
 
     // 총 가격
-    @GetMapping("/api/v1/cart/total")
+    @GetMapping("/api/v1/cart")
     public ResponseEntity<?> getCartTotal(Principal principal) {
         String username = principal.getName();
         Long memberId = memberService.findByUsername(username).getMemberId();

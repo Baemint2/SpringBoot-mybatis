@@ -18,8 +18,11 @@ public interface MemberMapper {
 
     MemberDto findByUsername(String username);
 
+    Long findByMemberId(Long memberId);
+
     Long findByMemberIdByUsername(String username);
 
+    List<Long> findMemberIdByAddressId(Long memberId);
 
     // 이메일로 아이디(username) 찾기
     String findUsernameByEmail(String email);

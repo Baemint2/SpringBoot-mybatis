@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,7 +15,15 @@ public class OrderController {
 
     private final CartService cartService;
 
-//    public String showOrderPage(@RequestParam List<Long> carItemIs, Model model) {
+    @GetMapping("/order/detail")
+    public String showOrderPage( Model model) {
+        return "order/detail";
+    }
+
+    @PostMapping("/order/detail")
+    public String showOrderPage() {
+        return "order/detail";
+    }
 
 
 }

@@ -26,7 +26,7 @@
             </div>
         </div>
         <input type="hidden" id="productId" th:value="${product.productId}">
-        <img th:src="${product.storedUrl}" class="card-img-top" th:alt="${productByNo[0].prodName}" style="width: 200px; height: 200px;">
+        <img th:src="${product.imageDto.storedUrl}" class="card-img-top" th:alt="${productByNo[0].prodName}" style="width: 200px; height: 200px;">
     </div>
 
     <div>

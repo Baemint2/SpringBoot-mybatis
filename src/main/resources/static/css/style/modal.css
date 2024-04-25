@@ -72,3 +72,17 @@
     justify-content: center;
     padding: 20px;
 }
+
+.addressList div{
+    border: 1px solid deepskyblue;
+    padding: 20px;
+}
+
+.removeBtn {
+    margin-bottom: 20px;
+}
+
+.address-reg {
+    display: flex;
+    justify-content: center;
+}

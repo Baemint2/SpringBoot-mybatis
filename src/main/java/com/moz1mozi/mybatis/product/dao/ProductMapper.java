@@ -20,11 +20,6 @@ public interface ProductMapper {
     //상품 삭제
     int deleteProduct(Long prodId);
 
-    @Select("SELECT COUNT(*) FROM PRODUCT_T")
-    Long countAllProducts();
-
-    List<ProductDetailDto> getPagedProducts(@Param("pageSize")int pageSize, @Param("offset")int offset);
-
     // 상품 상세 조회
     List<ProductDetailDto> getProductByNo(Long productId);
 
@@ -46,7 +41,6 @@ public interface ProductMapper {
     @Select("SELECT ROLE FROM MEMBER_T WHERE ROLE = #{role} ")
     String findAdminByRole(@Param("role")String role);
 
-
     // 재고 업데이트
     void updateStockQuantity(StockUpdateDto stockUpdateDto);
 
@@ -58,8 +52,5 @@ public interface ProductMapper {
 
     // 수량 증가
     void increaseStockQuantity(@Param("productId")Long productId, @Param("quantity") Integer quantity);
-
-    // 수량 감소
-    void decreaseStockQuantity(@Param("productId")Long productId, @Param("quantity") Integer quantity);
 
 }

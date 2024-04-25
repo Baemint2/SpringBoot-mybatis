@@ -58,12 +58,15 @@ const product = {
         }).catch(error => console.log("Fetch error: ", error));
     },
     productUpdate: function () {
+        const productId = document.getElementById("productId").value
         const data = {
             prodName: document.getElementById("prodName").value,
             description: document.getElementById("description").value,
             prodPrice: document.getElementById("prodPrice").value,
             stockQuantity: document.getElementById("stockQuantity").value,
-            categoryId: document.getElementById("mediumCategory").value
+            categoryId: document.getElementById("mediumCategory").value,
+            productId: productId
+
         }
         const formData = new FormData();
         formData.append('product', new Blob([JSON.stringify(data)], {type: "application/json"}));
@@ -72,8 +75,6 @@ const product = {
         for (let i = 0; i < files.length; i++) {
             formData.append('files', files[i]);
         }
-        const productId = document.getElementById("productId").value;
-        console.log(productId)
         console.log(data)
         console.log(formData)
         fetch(`/api/v1/product/update/${productId}`, {
@@ -82,7 +83,7 @@ const product = {
         }).then(response => {
             if (response.ok) {
                 alert("글이 수정되었습니다.")
-                window.location.href = `/product/detail/${productId}`
+                // window.location.href = `/product/detail/${productId}`
             } else {
                 return response.json()
             }

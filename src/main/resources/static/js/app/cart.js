@@ -31,7 +31,7 @@ const cart = {
         const data = { productId, quantity, price };
         console.log(data);
 
-        fetch('/api/v1/cart/add', {
+        fetch('', {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data)
@@ -71,7 +71,7 @@ const cart = {
     },
 
     getTotalPrice: function () {
-        fetch('/api/v1/cart/total')
+        fetch('/api/v1/cart')
             .then(response => response.json())
             .then(price => {
                 console.log(price.totalPrice)

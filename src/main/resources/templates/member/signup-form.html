@@ -33,23 +33,12 @@
     </div>
     <div>
         <label for="email" class="form-label">이메일</label>
-        <input type="text" id="email" name="email" class="form-control" placeholder="이메일">
+        <input type="email" id="email" name="email" class="form-control" placeholder="이메일">
         <div class="error-message" id="email-error" style="display: none;"></div>
     </div>
-    <div>
-        <label for="streetAddress" class="form-label">주소</label>
-        <div class="row">
-            <div class="col-auto">
-            <input type="text" id="zipcode" name="zipcode" class="form-control mb-1" placeholder="우편번호">
-            </div>
-            <div class="col">
-                <button type="button" class="mb-1" onclick="execPostCode()">
-                    우편번호 찾기
-                </button>
-            </div>
-        </div>
-        <input type="text" id="streetAddress" name="streetAddress" class="form-control mb-1" placeholder="주소">
-        <input type="text" id="detailAddress" name="detailAddress" class="form-control" placeholder="상세주소">
+    <div class="col-12">
+        <label for="mobile" class="form-label">휴대전화</label>
+        <input type="text" class="form-control" id="mobile" placeholder="- 제외하고 입력해주세요.">
     </div>
     <div>
         <label class="form-label">역할 선택</label>

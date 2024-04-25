@@ -19,4 +19,5 @@ public class MemberDto {
         private Date createdAt;
         private Date modifiedAt;
         private Role role;
+        private Long addressId;
 }

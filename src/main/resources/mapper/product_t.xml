@@ -57,7 +57,7 @@
     </insert>
 
     <delete id="deleteProduct"
-            parameterType="ProductDto">
+            parameterType="long">
         DELETE
           FROM PRODUCT_T
          WHERE PRODUCT_ID = #{productId}

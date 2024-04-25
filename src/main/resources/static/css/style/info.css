@@ -1,0 +1,23 @@
+.wishlist-item-link {
+    color: black;
+    text-decoration: none;
+}
+
+.info-container {
+    display: flex;
+    justify-content: center;
+}
+
+.info-table {
+
+    width: 500px;
+}
+h2 {
+    display: flex;
+    justify-content: space-around;
+}
+
+.info-btns {
+    display: flex;
+    justify-content: center;
+}

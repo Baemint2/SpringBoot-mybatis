@@ -1,5 +1,7 @@
 package com.moz1mozi.mybatis.member.controller;
 
+import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
+import com.moz1mozi.mybatis.delivery.service.ShippingAddressService;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -18,6 +21,7 @@ import java.security.Principal;
 public class MemberController {
 
     private final MemberService memberService;
+    private final ShippingAddressService shippingAddressService;
 
     @GetMapping("/signup")
     public String signup() {
@@ -32,8 +36,12 @@ public class MemberController {
     @GetMapping("/info")
     public String info(Model model, Principal principal) {
         MemberDto member = memberService.findByUsername(principal.getName());
+        List<Long> addressId = memberService.getMemberAddress(member.getMemberId());
 
-            model.addAttribute("member", member);
+        log.info("RESULT: {}", addressId);
+//        log.info("addressId : {}", addressId);
+        model.addAttribute("member", member);
+        model.addAttribute("addressId", addressId);
         return "member/info";
     }
 }

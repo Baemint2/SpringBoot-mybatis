@@ -19,8 +19,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
+                <th:if></th:if>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a href="/member/info" class="nav-link" ><span th:text="${loggedUser.nickname}">사용자 이름</span>님</a>
+                    <a href="/member/info" class="nav-link"><span th:text="${loggedUser.nickname}">사용자 이름</span>님</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a href="/member/cart" role="button" class="nav-link">장바구니</a>
@@ -40,40 +41,46 @@
             </ul>
         </div>
     </nav>
-<div class="container mt-5">
-    <div class="row" th:each="product: ${productByNo}">
-        <div class="col-md-6">
-            <img th:src="@{${product.imageDto.storedUrl}}" class="img-fluid" th:alt="${productByNo[0].prodName}" style="height: 500px;width: 500px">
-        </div>
-        <input type="hidden" id="productId" th:value="${productByNo[0].productId}">
-        <div class="col-md-6">
-            <h1 class="display-4" th:text="${productByNo[0].prodName}">Product Name</h1>
-            <p class="nickname" th:text="${productByNo[0].memberDto.nickname}">by Brand</p>
-            <h2 class="price" id="prodPrice">가격: <span class="formattedPrice">[[${productByNo[0].prodPrice}]]</span>원</h2>
-            <p class="description" th:text="${productByNo[0].description}">Product description goes here. It's a brief introduction about the product features and qualities.</p>
-            <div class="my-4">
-                <div class="d-flex align-items-center stock">
-                    <strong class="mr-3">Quantity: [[${productByNo[0].stockQuantity}]]</strong>
+    <div class="container mt-5">
+        <div class="row" th:each="product: ${productByNo}">
+            <div class="col-md-6">
+                <img th:src="@{${product.imageDto.storedUrl}}" class="img-fluid" th:alt="${productByNo[0].prodName}"
+                     style="height: 500px;width: 500px">
+            </div>
+            <input type="hidden" id="productId" th:value="${productByNo[0].productId}">
+            <div class="col-md-6">
+                <h1 class="display-4" th:text="${productByNo[0].prodName}">Product Name</h1>
+                <p class="nickname" th:text="${productByNo[0].memberDto.nickname}">by Brand</p>
+                <h2 class="price" id="prodPrice">가격: <span class="formattedPrice">[[${productByNo[0].prodPrice}]]</span>원
+                </h2>
+                <p class="description" th:text="${productByNo[0].description}">Product description goes here. It's a
+                    brief introduction about the product features and qualities.</p>
+                <div class="my-4">
+                    <div class="d-flex align-items-center stock">
+                        <strong class="mr-3">Quantity: [[${productByNo[0].stockQuantity}]]</strong>
+                    </div>
+                    <div>
+                        <input type="number" id="quantity" value="1" min="1" class="form-control w-25">
+                    </div>
+                    <button id="btn-cart" class="btn btn-warning btn-lg my-3">장바구니 추가</button>
                 </div>
+                <!--            <i class="fa-regular fa-heart"></i>-->
                 <div>
-                    <input type="number" id="quantity" value="1" min="1" class="form-control w-25">
+                    <a href="/" class="text-secondary">뒤로가기</a>
                 </div>
-                <button id="btn-cart" class="btn btn-warning btn-lg my-3">장바구니 추가</button>
-            </div>
-<!--            <i class="fa-regular fa-heart"></i>-->
-            <div>
-                <a href="/" class="text-secondary">뒤로가기</a>
-            </div>
-            <div class="wishlist-button-container">
-                <button type="button" id="wishlist-toggle" th:data-product-id="${productByNo[0].productId}" th:attr="data-liked=${isLiked}">
-                    <span th:if="${isLiked}"><i class="fa-solid fa-heart"></i></span>
-                    <span th:unless="${isLiked}"><i class="fa-regular fa-heart"></i></span>
-                </button>
-            </div>
-            <div class="action-buttons">
-                <div th:if="${isOwner or isAdmin}">
-                    <a th:href="@{/product/modify/{productId}(productId=${product.productId})}" class="btn btn-sm btn-outline-secondary">수정</a>
-                    <button type="button" class="btn btn-sm btn-outline-danger" id="btn-remove">삭제</button>
+                <div class="wishlist-button-container">
+                    <button type="button" id="wishlist-toggle" th:data-product-id="${productByNo[0].productId}"
+                            th:attr="data-liked=${isLiked}">
+                        <span th:if="${isLiked}"><i class="fa-solid fa-heart"></i></span>
+                        <span th:unless="${isLiked}"><i class="fa-regular fa-heart"></i></span>
+                    </button>
+                </div>
+                <div class="action-buttons">
+                    <div th:if="${isOwner or isAdmin}">
+                        <a th:href="@{/product/modify/{productId}(productId=${product.productId})}"
+                           class="btn btn-sm btn-outline-secondary">수정</a>
+                        <button type="button" class="btn btn-sm btn-outline-danger" id="btn-remove">삭제</button>
+                    </div>
                 </div>
             </div>
         </div>
