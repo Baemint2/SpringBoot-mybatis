@@ -49,27 +49,33 @@ public class ProductController {
     public String productDetail(@PathVariable Long productId,
                                 Model model,
                                 Principal principal) {
-        String currentUsername = principal.getName();
-        MemberDto loggedUser = memberService.findByUsername(currentUsername);
-        model.addAttribute("loggedUser", loggedUser);
+        if(principal != null) {
+            String currentUsername = principal.getName();
+            MemberDto loggedUser = memberService.findByUsername(currentUsername);
+            model.addAttribute("loggedUser", loggedUser);
+            Long memberId = loggedUser.getMemberId();
+            boolean isLiked = wishListService.isLiked(memberId, productId);
+            model.addAttribute("isLiked", isLiked);
 
 
-        Long memberId = loggedUser.getMemberId();
-        boolean isLiked = wishListService.isLiked(memberId, productId);
-        model.addAttribute("isLiked",isLiked);
-
-        List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
-        model.addAttribute("productByNo", productByNo);
+            List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
+            model.addAttribute("productByNo", productByNo);
 
 
-        if (!productByNo.isEmpty()) {
-            boolean isOwner = productService.isUserSellerOfProduct(currentUsername, productId);
-            boolean isAdmin = productService.isCurrentUserAdmin();
-            model.addAttribute("isOwner", isOwner);
-            model.addAttribute("isAdmin", isAdmin);
-            log.info("현재 사용자 = {}", isOwner);
+            if (!productByNo.isEmpty()) {
+                boolean isOwner = productService.isUserSellerOfProduct(currentUsername, productId);
+                boolean isAdmin = productService.isCurrentUserAdmin();
+                model.addAttribute("isOwner", isOwner);
+                model.addAttribute("isAdmin", isAdmin);
+                log.info("현재 사용자 = {}", isOwner);
+            }
+        } else {
+            model.addAttribute("isLiked", false);
+            List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
+            model.addAttribute("productByNo", productByNo);
+            model.addAttribute("isOwner", false);
+            model.addAttribute("isAdmin", false);
         }
-
         return "product/product-detail";
     }
 
@@ -98,7 +104,6 @@ public class ProductController {
         return ResponseEntity.ok(Map.of("productId", productId));
     }
 
-
     // 제품 상세
     @GetMapping("/api/v1/product/detail/{productId}")
     public ResponseEntity<List<ProductDetailDto>> getProductDetail(@PathVariable Long productId) {
@@ -126,7 +131,7 @@ public class ProductController {
         }
         // 업데이트 로직 수행
         Long updateProductId = productService.updateProduct(productId, productUpdateDto, files);
-
+        log.info("result : {}", updateProductId);
         return ResponseEntity.ok(updateProductId);
     }
 
