@@ -32,6 +32,7 @@ public class ProductDto {
     private String storedUrl;
 
     public void update(ProductUpdateDto updateProductDto) {
+        this.productId = updateProductDto.getProductId();
         this.prodName = updateProductDto.getProdName();
         this.description = updateProductDto.getDescription();
         this.prodPrice = updateProductDto.getProdPrice();
