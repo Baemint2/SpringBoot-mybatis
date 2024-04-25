@@ -20,4 +20,13 @@ public class ShippingAddressDto {
     private String defaultAddress;
     private Date createDt;
     private Date modifiedDt;
+
+    public void updateAddress(UpdateAddressDto updateAddressDto) {
+        this.recipientName = updateAddressDto.getRecipientName();
+        this.mobile = updateAddressDto.getMobile();
+        this.zipcode = updateAddressDto.getZipcode();
+        this.detailaddress = updateAddressDto.getDetailaddress();
+        this.streetaddress = updateAddressDto.getStreetaddress();
+        this.defaultAddress = updateAddressDto.getDefaultAddress();
+    }
 }

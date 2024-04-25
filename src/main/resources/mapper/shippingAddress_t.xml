@@ -24,10 +24,43 @@
 
     </insert>
 
+    <select id="getAddressIdByMemberId">
+        SELECT ADDRESS_ID
+          FROM SHIPPING_ADDRESS_T
+         WHERE MEMBER_ID = #{memberId}
+    </select>
+
     <select id="getShippingAddressByMemberId"
             resultType="ShippingAddressDto">
         SELECT ADDRESS_ID, MEMBER_ID, RECIPIENT_NAME, MOBILE, ZIPCODE, STREETADDRESS, DETAILADDRESS, DEFAULT_ADDRESS
         FROM SHIPPING_ADDRESS_T
         WHERE MEMBER_ID = #{memberId};
     </select>
+
+    <select id="getShippingAddressById"
+            resultType="ShippingAddressDto">
+        SELECT ADDRESS_ID, MEMBER_ID, RECIPIENT_NAME, MOBILE, ZIPCODE, STREETADDRESS, DETAILADDRESS, DEFAULT_ADDRESS
+        FROM SHIPPING_ADDRESS_T
+        WHERE ADDRESS_ID = #{addressId};
+    </select>
+
+    <update id="updateShippingAddressById"
+            parameterType="ShippingAddressDto">
+        UPDATE SHIPPING_ADDRESS_T
+        SET RECIPIENT_NAME = #{recipientName},
+            MOBILE = #{mobile},
+            ZIPCODE = #{zipcode},
+            STREETADDRESS = #{streetaddress},
+            DETAILADDRESS = #{detailaddress},
+            DEFAULT_ADDRESS = #{defaultAddress},
+            MODIFIED_DT = NOW()
+        WHERE ADDRESS_ID = #{addressId};
+    </update>
+
+    <delete id="deleteShippingAddressById"
+            parameterType="long">
+        DELETE
+          FROM SHIPPING_ADDRESS_T
+         WHERE ADDRESS_ID = #{addressId};
+    </delete>
 </mapper>
