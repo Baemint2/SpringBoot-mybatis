@@ -64,7 +64,6 @@ public class ShippingAddressService {
 
     @Transactional
     public void deleteAddress(Long addressId) {
-        //TODO 주소 존재 여부 로직 추가하기
         shippingAddressMapper.deleteShippingAddressById(addressId);
     }
 }

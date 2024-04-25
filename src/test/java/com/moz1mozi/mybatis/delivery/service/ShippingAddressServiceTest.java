@@ -1,6 +1,7 @@
 package com.moz1mozi.mybatis.delivery.service;
 
 import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
+import com.moz1mozi.mybatis.delivery.dto.UpdateAddressDto;
 import com.moz1mozi.mybatis.delivery.mapper.ShippingAddressMapper;
 import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -54,8 +54,24 @@ class ShippingAddressServiceTest {
     void 배송지_조회() {
         String username = "mary";
         MemberDto name = memberService.findByUsername(username);
-        List<ShippingAddressDto> result = shippingAddressService.getAddress(name.getMemberId());
+        List<ShippingAddressDto> result = shippingAddressService.getAllAddresses(name.getMemberId());
         assertThat(result.get(0).getRecipientName()).isEqualTo("혬찌");
+    }
+
+    @Test
+    void 배송지_수정() {
+        Long addressId = 17L;
+        UpdateAddressDto shippingAddressDto = UpdateAddressDto.builder()
+                .mobile("01012345678")
+                .zipcode("12345")
+                .recipientName("히모지")
+                .streetaddress("한강로")
+                .detailaddress("카카오빌딩")
+                .defaultAddress("Y")
+                .build();
+
+        shippingAddressService.updateAddress(addressId, shippingAddressDto);
+
     }
 
 }
