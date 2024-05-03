@@ -11,9 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -41,7 +44,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain userFilterChain(HttpSecurity http) throws Exception {
+    RememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
+        TokenBasedRememberMeServices.RememberMeTokenAlgorithm encodingAlgorithm = TokenBasedRememberMeServices.RememberMeTokenAlgorithm.SHA256;
+        TokenBasedRememberMeServices rememberMe = new TokenBasedRememberMeServices("remember-me", userDetailsService, encodingAlgorithm);
+        rememberMe.setTokenValiditySeconds(604800);
+        rememberMe.setMatchingAlgorithm(TokenBasedRememberMeServices.RememberMeTokenAlgorithm.MD5);
+        return rememberMe;
+    }
+
+
+    @Bean
+    SecurityFilterChain userFilterChain(HttpSecurity http, RememberMeServices rememberMeServices) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -61,7 +74,11 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true))
                 .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/accessDenied"));
+                        .accessDeniedPage("/accessDenied"))
+                .rememberMe(rememberMe -> rememberMe.rememberMeParameter("remember-me")
+                        .rememberMeServices(rememberMeServices)
+                        .tokenValiditySeconds(604800)
+                        .useSecureCookie(false));
         return http.build();
     }
 }
