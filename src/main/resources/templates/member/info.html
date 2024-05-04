@@ -1,59 +1,38 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::link} ,~{::section}, true)}">
 <head>
-    <meta charset="UTF-8">
-
-    <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <title>마이 페이지</title>
     <link href="/css/style/modal.css" rel="stylesheet"/>
     <link href="/css/style/info.css" rel="stylesheet">
     <link href="/css/style/index.css" rel="stylesheet">
+    <link href="/css/style/address.css" rel="stylesheet">
 </head>
 <body>
-<div th:fragment="header">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="nav-header" href="/"><h1>모지히의 이게모지</h1></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a href="/member/info" class="nav-link"><span th:text="${member.nickname}">사용자 이름</span>님</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('관리자')">
-                    <a href="/admin">관리자페이지</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a href="/member/logout" role="button" class="btn btn-danger">로그아웃</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<div>
+    <section>
     <h2 style="align-items: center">회원 정보 설정</h2>
     <div class="container my-5 info-container">
         <table class="table info-table">
             <tbody>
             <tr>
                 <th>사용자 ID</th>
-                <td><p th:text="${member.username}"></p></td>
+                <td><p th:text="${loggedUser.username}"></p></td>
             </tr>
             <tr>
                 <th>닉네임</th>
                 <td>
-                    <span id="nickname-span" th:text="${member.nickname}"></span>
+                    <span id="nickname-span" th:text="${loggedUser.nickname}"></span>
                     <button type="button" id="btn-change-nickname">변경</button>
+                    <div class="error-message" style="display: block;"></div>
                 </td>
             </tr>
             <tr>
                 <th>이메일</th>
                 <td>
-                    <input type="email" id="email" name="email" th:value="${member.email}">
+                    <input type="email" id="email" name="email" th:value="${loggedUser.email}">
                     <button type="button" id="btn-change-email">변경</button>
                 </td>
             </tr>
@@ -85,8 +64,8 @@
                             </div>
                             <div class="modal-body">
                                 <form id="addressForm">
-                                    <input type="hidden" class="username" th:value="${member.username}">
-                                    <input type="hidden" class="memberId" th:value="${member.memberId}">
+                                    <input type="hidden" class="username" th:value="${loggedUser.username}">
+                                    <input type="hidden" class="memberId" th:value="${loggedUser.memberId}">
                                     <input type="hidden" class="addressId">
                                     <div id="addressList" class="addressList"></div>
                                     <div class="address-reg">
@@ -108,7 +87,7 @@
                                 <span class="close">❌</span>
                             </div>
                             <div class="modal-body">
-                                <div class="mb-4">
+                                <div class="mb-4 addAddressNickname">
                                     <label for="addressNickname">받는 분 이름</label>
                                     <input type="text" id="addressNickname" name="addressNickname">
                                 </div>
@@ -147,7 +126,7 @@
                                 <span class="close">❌</span>
                             </div>
                             <div class="modal-body">
-                                <div class="mb-4">
+                                <div class="mb-3">
                                     <label for="modifyAddressNickname">받는 분 이름</label>
                                     <input type="text" id="modifyAddressNickname" name="modifyAddressNickname">
                                 </div>
@@ -163,9 +142,9 @@
                                 </div>
                                 <input type="text" id="modifyStreetAddress" name="modifyStreetAddress" class="form-control mb-1">
                                 <input type="text" id="modifyDetailAddress" name="modifyDetailAddress" class="form-control">
-                                <div class="mt-4 mb-4">
+                                <div class="mt-3 mb-2">
                                     <label for="addressMobile">전화번호</label>
-                                    <input type="text" id="modifyAddressMobile" name="modifyAddressMobile">
+                                    <input type="text" id="modifyAddressMobile" name="modifyAddressMobile" maxlength="11">
                                 </div>
                                 <div>
                                     <input type="checkbox" id="modifyDefaultAddress"> 기본 배송지 선택
@@ -201,7 +180,7 @@
             </div>
             <div class="modal-body">
                 <form id="passwordForm">
-                    <input type="hidden" class="username" th:value="${member.username}">
+                    <input type="hidden" class="username" th:value="${loggedUser.username}">
                     <div class="mb-3">
                         <label for="modal-current-pass" class="col-form-label">현재 비밀번호:</label>
                         <input type="password" class="form-control currentPassword" id="modal-current-pass">
@@ -243,7 +222,7 @@
         <span class="close">❌</span>
         <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
         <div class="modal-footer">
-            <input type="text" id="username" th:value="${member.username}">
+            <input type="text" id="username" th:value="${loggedUser.username}">
             <input type="password" id="password" class="password-error" placeholder="비밀번호를 입력해주세요">
         </div>
         <div id="password-error" style="display: none"></div>
@@ -257,6 +236,7 @@
     <script type="module" src="/js/app/wishlist.js"></script>
     <script type="module" src="/js/app/member.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    </section>
 </div>
 </body>
 </html>
