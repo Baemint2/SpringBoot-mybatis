@@ -6,6 +6,7 @@ import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class MemberApiController {
 
 
     @PutMapping("/updatePassword")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDto password, Principal principal) {
+    public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordChangeDto password, Principal principal) {
         String username = principal.getName();
         memberService.changePassword(username, password);
         return ResponseEntity.ok().body(Map.of("message", "비밀번호가 성공적으로 업데이트 되었습니다.", "password", password));

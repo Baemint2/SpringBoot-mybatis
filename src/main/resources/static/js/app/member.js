@@ -53,14 +53,13 @@ const member = {
     },
     changeNickname: function () {
         const nicknameSpan = document.querySelector("#nickname-span");
-        console.log(nicknameSpan)
-        const currentNickname = nicknameSpan.textContent
-        console.log(currentNickname)
+
+        console.log(nicknameSpan);
+        const currentNickname = nicknameSpan.textContent;
         const input = document.createElement("input");
         input.type = "text";
         input.value = currentNickname;
         input.id = 'nickname-input';
-        input.className = 'form-control'
 
         nicknameSpan.replaceWith(input);
 
@@ -69,6 +68,14 @@ const member = {
 
         input.addEventListener('blur', function () {
             const newNickname = input.value;
+            const originalNickname = nicknameSpan.textContent;
+            const errorMessage = document.querySelector(".error-message"); // 에러 메시지를 표시할 요소의 ID가 "error-message"라고 가정
+
+            if(newNickname === originalNickname) {
+                input.replaceWith(nicknameSpan);
+                errorMessage.style.display = 'none';
+                return;
+            }
 
             fetch('/api/v1/member/updateNickname', {
                 method: 'PUT',
@@ -77,23 +84,31 @@ const member = {
                 },
                 body: `nickname=${encodeURIComponent(newNickname)}`
             })
-            .then(response => {
-                if(!response.ok) {
-                    throw new Error("네트워크 오류입니다.");
-                }
-                return response.text();
-            })
-            .then(() => {
-                const span = document.createElement('span');
-                span.textContent = newNickname;
-                span.id = 'nickname-span';
-                input.replaceWith(span);
-            }).catch(error => {
-                console.error('Nickname update failed:', error);
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.isNicknameDuplicate); // 서버에서 보낸 오류 메시지 추출
+                        });
+                    }
+                    return response.text();
+                })
+                .then(() => {
+                    const span = document.createElement('span');
+                    span.textContent = newNickname;
+                    console.log(span);
+                    span.id = 'nickname-span';
+                    input.replaceWith(span);
+                    errorMessage.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Nickname update failed:', error);
+                    // 여기에서 사용자 인터페이스에 에러 메시지를 표시하면 좋습니다.
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.display = 'block';
+                });
         });
     },
-    changeAddress: function () {
+        changeAddress: function () {
         const data = {
             zipcode: document.getElementById("zipcode").value,
             streetAddress: document.getElementById("streetAddress").value,
@@ -107,30 +122,26 @@ const member = {
             },
             body: JSON.stringify(data)
         })
-        .then(response => {
-            if(response.ok) {
-                return response.json();
-            }
-            throw new Error("주소 업데이트에 실패했습니다.");
-        })
-        .then(data => {
-            alert("주소가 성공적으로 업데이트 되었습니다.");
-            console.log(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        })
+            .then(response => {
+                if(response.ok) {
+                    return response.json();
+                }
+                throw new Error("주소 업데이트에 실패했습니다.");
+            })
+            .then(data => {
+                alert("주소가 성공적으로 업데이트 되었습니다.");
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
     },
     changePassword: function () {
         const btnUpdatePassword = document.getElementById("btn-update-password");
         const modal = document.getElementById('passwordModal');
-        const currentPassError = document.getElementById("modal-currentPassword-error");
-        const confirmPassError = document.getElementById("modal-confirmPass-error");
 
         btnUpdatePassword.addEventListener("click", function () {
             modal.style.display = 'block';
-            currentPassError.style.display = 'none'; // 모달을 열 때 오류 메시지를 숨깁니다.
-            confirmPassError.style.display = 'none';
             bindModalEventListeners();
         });
 
@@ -155,18 +166,6 @@ const member = {
                 const newPasswordElement = document.getElementById("newPassword");
                 const confirmPasswordElement = document.getElementById("modal-confirm-pass");
 
-                // 입력된 데이터 검증
-                if (newPasswordElement.value !== confirmPasswordElement.value) {
-                    confirmPassError.textContent = "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.";
-                    confirmPassError.style.display = 'block';
-                    return;
-                }
-
-                if (currentPasswordElement.value === newPasswordElement.value) {
-                    currentPassError.textContent = "새 비밀번호는 기존 비밀번호와 달라야 합니다.";
-                    currentPassError.style.display = 'block';
-                    return;
-                }
 
                 // 데이터 객체 생성
                 const data = {
@@ -186,22 +185,26 @@ const member = {
                     body: JSON.stringify(data)
                 })
                     .then(response => {
-                        if (!response.ok) {
-                            // 서버가 오류 메시지를 JSON으로 반환했다고 가정
-                            return response.json().then(errorData => Promise.reject(errorData));
+                        if(!response.ok) {
+                            return response.json().then(data => Promise.reject(data));
                         }
+                        alert("비밀번호가 성공적으로 변경 되었습니다.");
+                        // location.href = "/member/info";
                         return response.json();
                     })
-                    .then(data => {
-                        alert("비밀번호가 성공적으로 업데이트 되었습니다.");
-                        window.location.href = "/member/info";
-                    })
                     .catch(error => {
-                        console.error('Error:', error);
-                        currentPassError.textContent = error.message || "비밀번호 수정 과정에서 문제가 발생했습니다.";
-                        currentPassError.style.display = 'block';
-                    });
-            });
+                        console.log("Error:", error);
+                        Object.entries(error).forEach(([key, value]) => {
+                            const errorContainer = document.getElementById(`${key}-error`);
+                            console.log(key)
+                            console.log(value)
+                            if(errorContainer) {
+                                errorContainer.textContent = value;
+                                errorContainer.style.display = "block";
+                            }
+                        })
+                    })
+            })
         }
     }
 }
