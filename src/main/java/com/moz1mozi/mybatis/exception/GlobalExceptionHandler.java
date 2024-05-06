@@ -2,6 +2,7 @@ package com.moz1mozi.mybatis.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidCurrentPasswordException.class)
     public ResponseEntity<Map<String, String>> handlerInvalidCurrentPasswordException(InvalidCurrentPasswordException ex) {
+        return ResponseEntity.badRequest().body(Map.of(ex.getField(), ex.getMessage()));
+    }
+
+    @ExceptionHandler(PasswordsDoNotMatchException.class)
+    public ResponseEntity<Map<String, String>> handlerPasswordDoNotMatchException(PasswordsDoNotMatchException ex) {
         return ResponseEntity.badRequest().body(Map.of(ex.getField(), ex.getMessage()));
     }
 

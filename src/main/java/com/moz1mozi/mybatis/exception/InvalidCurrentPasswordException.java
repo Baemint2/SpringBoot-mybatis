@@ -8,7 +8,7 @@ public class InvalidCurrentPasswordException extends RuntimeException{
     private final String field;
     private final String message;
 
-    public InvalidCurrentPasswordException(String message, String field) {
+    public InvalidCurrentPasswordException(String field, String message) {
         super(message);
         this.field = field;
         this.message = message;
