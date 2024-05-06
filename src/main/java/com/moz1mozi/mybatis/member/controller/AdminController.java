@@ -1,5 +1,6 @@
 package com.moz1mozi.mybatis.member.controller;
 
+import com.moz1mozi.mybatis.config.IsAdmin;
 import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
 import com.moz1mozi.mybatis.member.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.List;
 public class AdminController {
     private final AdminService adminService;
 
-    @PreAuthorize("hasRole('관리자')")
+    @IsAdmin
     @GetMapping("/admin/memberInfo")
     public ResponseEntity<List<MemberInfoDto>> getMemberInfo() {
         List<MemberInfoDto> memberInfo = adminService.getMemberInfo();
@@ -28,7 +29,7 @@ public class AdminController {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('관리자')")
+    @IsAdmin
     @DeleteMapping("/api/v1/admin/member/{username}")
     public ResponseEntity<?> removeMember(@PathVariable String username) {
         adminService.removeMember(username);
