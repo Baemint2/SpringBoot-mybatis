@@ -1,5 +1,6 @@
 package com.moz1mozi.mybatis.member.service;
 
+import com.moz1mozi.mybatis.config.IsAdmin;
 import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AdminService {
         return memberMapper.selectMemberInfo();
     }
 
-    @PreAuthorize("hasRole('관리자')")
+    @IsAdmin
     @Transactional
     public void removeMember(String username) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
