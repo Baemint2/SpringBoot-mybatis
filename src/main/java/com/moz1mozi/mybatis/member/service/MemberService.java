@@ -113,11 +113,16 @@ public class MemberService {
     @Transactional
     public void changePassword(String username, PasswordChangeDto passwordChangeDto) {
         MemberDto member = memberMapper.findByUsername(username);
-        if(member == null || !passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getPassword())) {
-            throw new InvalidCurrentPasswordException("InvalidPassword", "현재비밀번호가 일치하지 않습니다.");
+        if (member == null) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
+
+        if(!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getPassword())) {
+            throw new InvalidCurrentPasswordException("invalidCurrentPassword", "현재비밀번호가 일치하지 않습니다.");
+        }
+
         if (passwordChangeDto.getNewPassword().equals(passwordChangeDto.getCurrentPassword())) {
-            throw new InvalidCurrentPasswordException("SameAsOld", "새 비밀번호는 기존 비밀번호와 달라야 합니다.");
+            throw new InvalidCurrentPasswordException("sameAsOld", "새 비밀번호는 기존 비밀번호와 달라야 합니다.");
         }
         if(!passwordChangeDto.getNewPassword().equals(passwordChangeDto.getConfirmPassword())) {
             throw new PasswordsDoNotMatchException("NotMatchPassword", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
