@@ -1,0 +1,94 @@
+.form-control {
+    width: 250px;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.verify-email {
+    display: flex;
+}
+.find-username {
+    flex-direction: column;
+    align-items: center;
+}
+
+.email-wrap {
+    display: flex;
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: calc(-1* var(--bs-gutter-y));
+    margin-right: calc(-.5* var(--bs-gutter-x));
+    margin-left: calc(-.5* var(--bs-gutter-x));
+}
+
+.find-text {
+    display: inline-block;
+    font-size: 15px;
+    line-height: 17px;
+    text-decoration: none;
+    color: #888;
+}
+
+.find-wrap{
+    padding: 20px 0 35px;
+    text-align: center;
+}
+
+.find-wrap li {
+    position: relative;
+    display: inline-block;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+.find-container {
+    display: flex;
+    justify-content: center;
+}
+
+.find-container h1 {
+    margin-bottom: 40px;
+}
+
+.find-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 500px;
+    height: 500px;
+}
+
+.find-btn {
+    width: 70%;
+}
+
+
+.find-header {
+    color: black;
+    text-decoration: none;
+    position: fixed;
+    top: 30px;
+    background: white;
+    padding: 20px 0;
+    z-index: 1000; /* 확실히 최상위에 위치하도록 z-index 설정 */
+}
+
+.content {
+    padding-top: 80px; /* 헤더 높이 + 추가 여백 */
+}
+
+.navbar-collapse {
+    justify-content: end;
+}
+
+.error-message {
+    color: #dc3545; /* 빨간색 텍스트 색상 */
+    font-size: 0.875em; /* 글씨 크기 */
+    margin-top: 0.25rem; /* 필드 위에 조금의 여백을 제공 */
+}

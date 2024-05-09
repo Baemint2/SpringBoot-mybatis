@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Username Found</title>
+</head>
+<body>
+<h1>Username Result</h1>
+<div th:if="${findUsername}">
+    <p>Your username is: <span th:text="${findUsername}"></span></p>
+</div>
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+</body>
+</html>
