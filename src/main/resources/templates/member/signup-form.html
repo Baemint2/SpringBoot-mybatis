@@ -1,62 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::link} ,~{::section}, false)}">
 <head>
-    <meta charset="UTF-8">
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="/css/style/index.css" rel="stylesheet">
     <title>회원가입</title>
 </head>
 <body>
-<div class="container my-3 signup-container">
-<form class="signup-form" id="signup" method="post" autocomplete="off">
-    <div>
-        <label for="username" class="form-label">사용자 ID</label>
-        <input type="text" id="username" name="username" class="form-control" placeholder="아이디" autocomplete="on">
-        <div class="error-message" id="username-error" style="display: none;"></div>
+<section>
+    <div class="container my-3 signup-container">
+        <form class="signup-form" id="signup" method="post" autocomplete="off">
+            <div>
+                <label for="username" class="form-label">사용자 ID</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="아이디"
+                       autocomplete="on">
+                <div class="error-message" id="username-error" style="display: none;"></div>
+            </div>
+            <div>
+                <label for="password" class="form-label">비밀번호</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호">
+                <div class="error-message" id="password-error" style="display: none;"></div>
+            </div>
+            <div>
+                <label for="confirmPassword" class="form-label">비밀번호 확인</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+                       placeholder="비밀번호 확인">
+                <div class="error-message" id="confirmPassword-error" style="display: none;"></div>
+            </div>
+            <div>
+                <label for="nickname" class="form-label">닉네임</label>
+                <input type="text" id="nickname" name="nickname" class="form-control" placeholder="닉네임"
+                       autocomplete="on">
+                <div class="error-message" id="nickname-error" style="display: none;"></div>
+            </div>
+            <div>
+                <div>
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="이메일" autocomplete="on">
+                    <div class="error-message" id="email-error" style="display: none;"></div>
+                </div>
+                <div class="col-4 d-flex align-items-end">
+                    <button class="btn btn-secondary emailValidateBtn" th:data-action="signup" type="button">인증번호 받기</button>
+                </div>
+            </div>
+            <div class="mb-3" id="verificationCodeDiv" style="display:none;">
+                <div class="row">
+                    <div class="col-8">
+                        <label class="form-label" th:for="verificationCode">인증번호</label>
+                        <input class="form-control" id="verificationCode" placeholder="인증번호" type="text">
+                        <div class="error-message" id="verificationCode-error" style="display: none"></div>
+                    </div>
+                    <div class="col-4 d-flex align-items-end">
+                        <button class="btn btn-secondary" id="checkVerificationCode" type="button">확인</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="mobile" class="form-label">휴대전화</label>
+                <input type="text" class="form-control" id="mobile" placeholder="- 제외하고 입력해주세요.">
+            </div>
+            <div>
+                <label class="form-label">역할 선택</label>
+                <div>
+                    <input type="radio" id="buyer" name="role" value="BUYER">
+                    <label for="buyer">구매자</label>
+                </div>
+                <div>
+                    <input type="radio" id="seller" name="role" value="SELLER">
+                    <label for="seller">판매자</label>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="btn-signup">회원가입</button>
+        </form>
     </div>
-    <div>
-        <label for="password" class="form-label">비밀번호</label>
-        <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호">
-        <div class="error-message" id="password-error" style="display: none;"></div>
-
-    </div>
-    <div>
-        <label for="confirmPassword" class="form-label">비밀번호 확인</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="비밀번호 확인">
-        <div class="error-message" id="confirmPassword-error" style="display: none;"></div>
-    </div>
-    <div>
-        <label for="nickname" class="form-label">닉네임</label>
-        <input type="text" id="nickname" name="nickname" class="form-control" placeholder="닉네임" autocomplete="on">
-        <div class="error-message" id="nickname-error" style="display: none;"></div>
-    </div>
-    <div>
-        <label for="email" class="form-label">이메일</label>
-        <input type="email" id="email" name="email" class="form-control" placeholder="이메일" autocomplete="on">
-        <div class="error-message" id="email-error" style="display: none;"></div>
-    </div>
-    <div class="col-12">
-        <label for="mobile" class="form-label">휴대전화</label>
-        <input type="text" class="form-control" id="mobile" placeholder="- 제외하고 입력해주세요.">
-    </div>
-    <div>
-        <label class="form-label">역할 선택</label>
-        <div>
-            <input type="radio" id="buyer" name="role" value="BUYER">
-            <label for="buyer">구매자</label>
-        </div>
-        <div>
-            <input type="radio" id="seller" name="role" value="SELLER">
-            <label for="seller">판매자</label>
-        </div>
-    </div>
-    <button type="button" class="btn btn-primary" id="btn-signup">회원가입</button>
-</form>
-</div>
-<script crossorigin="anonymous" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script crossorigin="anonymous" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
-<script type="module" src="/js/app/member.js"></script>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script type="module" src="/js/app/member.js"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</section>
 </body>
 </html>

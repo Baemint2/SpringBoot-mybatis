@@ -84,10 +84,19 @@ public class MemberService {
        return false;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberDto findByUsername(String username) {
         return Optional.ofNullable(memberMapper.findByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
+    }
+
+    public boolean checkUserExists(String nickname, String email, String username) {
+        if(username != null) {
+            //username 제공된 경우
+            return memberMapper.findByNicknameAndEmailAndUsername(nickname, email, username).isPresent();
+        } else {
+            return memberMapper.findByNicknameAndEmail(nickname, email).isPresent();
+        }
     }
 
     @Transactional(readOnly = true)

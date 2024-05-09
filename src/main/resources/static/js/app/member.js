@@ -1,5 +1,7 @@
 import {validator} from "./validator.js";
 import {withdrawal} from "./memberWithdrawal.js";
+import {emailVerify} from "./emailVerification.js";
+
 
 // let globalAddressData = {};
 
@@ -140,7 +142,7 @@ const member = {
         const btnUpdatePassword = document.getElementById("btn-update-password");
         const modal = document.getElementById('passwordModal');
 
-        btnUpdatePassword.addEventListener("click", function () {
+        btnUpdatePassword?.addEventListener("click", function () {
             modal.style.display = 'block';
             bindModalEventListeners();
         });
@@ -213,4 +215,5 @@ document.addEventListener("DOMContentLoaded", function () {
     member.init();
     validator.init();
     withdrawal.init();
+    emailVerify.init();
 })

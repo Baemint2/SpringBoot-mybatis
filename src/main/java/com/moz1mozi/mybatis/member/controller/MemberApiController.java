@@ -1,14 +1,19 @@
 package com.moz1mozi.mybatis.member.controller;
 
+import com.moz1mozi.mybatis.email.service.AuthenticationService;
+import com.moz1mozi.mybatis.email.service.EmailService;
+import com.moz1mozi.mybatis.member.dto.FindMemberDto;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.dto.MemberWithdrawalDto;
 import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.utils.VerificationCodeUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +29,8 @@ import java.util.Map;
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final EmailService emailService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@RequestBody MemberDto memberDto) {
@@ -53,7 +60,7 @@ public class MemberApiController {
 
     }
 
-    @GetMapping("/info/")
+    @GetMapping("/info")
     public ResponseEntity<MemberDto> getMemberInfo(Principal principal) {
         MemberDto member = memberService.findByUsername(principal.getName());
         if(member != null) {
@@ -73,6 +80,15 @@ public class MemberApiController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/verify-user")
+    public ResponseEntity<?> verifyUser(@RequestBody FindMemberDto findMemberDto) {
+        boolean userExists = memberService.checkUserExists(findMemberDto.getNickname(), findMemberDto.getEmail(), findMemberDto.getUsername());
+        if(!userExists) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "일치하는 회원 정보가 없습니다."));
+        }
+        authenticationService.sendAndSaveVerificationCode(findMemberDto.getEmail());
+        return ResponseEntity.ok().body(Map.of("message", "인증 코드가 발송되었습니다."));
+    }
 
 
     @PutMapping("/updatePassword")

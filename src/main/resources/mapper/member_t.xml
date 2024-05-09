@@ -37,8 +37,22 @@
         SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, MEMBER_ID
           FROM MEMBER_T
          WHERE USERNAME = #{username}
-
     </select>
+
+    <select id="findByNicknameAndEmail"
+            parameterType="FindMemberDto">
+        SELECT USERNAME, nickname, email, CREATED_AT
+          FROM MEMBER_T
+         WHERE nickname = #{nickname} AND email = #{email}
+    </select>
+
+    <select id="findByNicknameAndEmailAndUsername"
+            parameterType="FindMemberDto">
+        SELECT USERNAME, nickname, email, CREATED_AT
+        FROM MEMBER_T
+        WHERE nickname = #{nickname} AND email = #{email} AND Username = #{username}
+    </select>
+
 
     <select id="findByRoleWithUsername"
             parameterType="MemberDto">
