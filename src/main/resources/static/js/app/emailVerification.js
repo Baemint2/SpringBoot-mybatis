@@ -5,7 +5,7 @@ export const emailVerify = {
         const _this = this;
         document.querySelectorAll(".emailValidateBtn").forEach(btn => {
             btn.addEventListener("click", () => {
-                const email = document.getElementById("email").value;
+                const email = document.querySelector(".email").value;
                 const action = btn.getAttribute('data-action');
                 _this.handleVerificationCode(email, action);
             })
@@ -17,13 +17,14 @@ export const emailVerify = {
     handleVerificationCode: function (email, action) {
         let apiUrl = "/api/v1/email/send-verification-code";
         let requestBody = {email: email, action: action};
+        console.log(email);
 
         if(action === "verify-user") {
             apiUrl = "/api/v1/member/verify-user";
             requestBody = {
                 email: email,
-                nickname: document.getElementById("nickname").value,
-                username: document.getElementById("username")?.value,
+                nickname: document.querySelector(".nickname").value,
+                username: document.querySelector(".username")?.value,
            }
         }
         fetch(apiUrl, {
@@ -61,8 +62,8 @@ export const emailVerify = {
 
     checkVerifyCode: function () {
         const data = {
-            email: document.getElementById("email").value,
-            verificationCode: document.getElementById("verificationCode").value,
+            email: document.querySelector(".email").value,
+            verificationCode: document.querySelector(".verificationCode").value,
         }
         fetch("/api/v1/email/verify-code", {
             method: "POST",
