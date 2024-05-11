@@ -18,9 +18,12 @@ public interface MemberMapper {
 
     Long deleteMember(String username);
 
-    MemberDto findByUsername(String username);
+    Optional<MemberDto> findByUsername(String username);
 
-    Long findByMemberId(Long memberId);
+
+    Optional<MemberDto> findByEmail(String email);
+
+    Optional<MemberDto> findByMemberId(Long memberId);
 
     Long findByMemberIdByUsername(String username);
 
@@ -40,6 +43,10 @@ public interface MemberMapper {
 
     // 닉네임 변경
     void updateNickname(@Param("username")String username, @Param("nickname")String nickname);
+
+    // 프로필 이미지 변경
+    void updateProfileImage(@Param("username") String username, @Param("profileImagePath")String profileImage);
+
     // 중복 검사
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
