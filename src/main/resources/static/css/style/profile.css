@@ -1,0 +1,30 @@
+.member-profile .signup-form > div:first-child {position: relative;}
+
+/* 프로필 이미지 */
+.member-profile .profile-img {
+    float: right;
+    width: 200px;
+    height: 200px;
+    margin-top: 15px;
+    border: 1px solid #e6e7eb;
+    border-radius: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* 프로필 이미지 hover */
+.member-profile .profile-img:hover {filter: brightness(50%);}
+.member-profile .profile-img:hover + #update-img {display: block;}
+
+/* 프로필 이미지 변경 텍스트 */
+.member-profile #update-img {
+    display: none;
+    position: absolute;
+    top: 95px;
+    right: 80px;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+/* 이미지 업로드 input */
+.member-profile #file-input {display: none;}
