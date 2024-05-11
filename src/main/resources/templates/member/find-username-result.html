@@ -1,14 +1,40 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::link} ,~{::section}, false)}">
 <head>
     <title>Username Found</title>
+    <link href="/css/style/find-user.css" rel="stylesheet">
 </head>
 <body>
-<h1>Username Result</h1>
-<div th:if="${findUsername}">
-    <p>Your username is: <span th:text="${findUsername}"></span></p>
-</div>
-<div th:if="${error}">
-    <p th:text="${error}"></p>
-</div>
+<section>
+    <div>
+        <div class="container my-3 find-result">
+            <div class="my-3">
+                <div class="mb-4">
+                    <h4>해당 이메일로 가입된 아이디가 있습니다.</h4>
+                </div>
+                <div class="find-username">
+                    <div th:if="${findUsername}">
+                        <p>Your username is: <span th:text="${findUsername}"></span></p>
+                    </div>
+                    <div class="find-result-info mb-4">
+                        <span>아이디 : moz1mozi</span>
+                        <span>가입 : 가입한 날짜</span>
+                    </div>
+                    <div class="mb-3" style="text-align: center">
+                    <span>비밀번호가 기억나지 않으세요?</span>
+                        <a href="/member/find/password">비밀번호 찾기</a>
+                    </div>
+
+                    <div th:if="${error}">
+                        <p th:text="${error}"></p>
+                    </div>
+                </div>
+                <a role="button" class="btn btn-primary result-to-login" href="/member/login">로그인 하러가기</a>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
 </html>
