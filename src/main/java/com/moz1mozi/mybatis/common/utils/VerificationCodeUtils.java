@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.utils;
+package com.moz1mozi.mybatis.common.utils;
 
 import java.security.SecureRandom;
 

@@ -1,16 +1,17 @@
-package com.moz1mozi.mybatis.exception;
+package com.moz1mozi.mybatis.common.exception;
 
 import lombok.Getter;
 
 @Getter
-public class PasswordsDoNotMatchException extends RuntimeException{
+public class OutOfStockException extends RuntimeException{
 
     private final String field;
     private final String message;
 
-    public PasswordsDoNotMatchException(String field, String message) {
+    public OutOfStockException(String field, String message) {
         super(message);
         this.field = field;
         this.message = message;
     }
+
 }

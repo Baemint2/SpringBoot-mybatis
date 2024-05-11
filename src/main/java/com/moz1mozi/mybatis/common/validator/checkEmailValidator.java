@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.validator;
+package com.moz1mozi.mybatis.common.validator;
 
 import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberDto;

@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.exception;
+package com.moz1mozi.mybatis.common.exception;
 
 import lombok.Getter;
 

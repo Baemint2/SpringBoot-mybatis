@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.validator;
+package com.moz1mozi.mybatis.common.validator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.Errors;

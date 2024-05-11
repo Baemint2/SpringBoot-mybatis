@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.config;
+package com.moz1mozi.mybatis.common.config;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

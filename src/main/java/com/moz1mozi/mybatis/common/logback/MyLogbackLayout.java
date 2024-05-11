@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.logback;
+package com.moz1mozi.mybatis.common.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.CoreConstants;

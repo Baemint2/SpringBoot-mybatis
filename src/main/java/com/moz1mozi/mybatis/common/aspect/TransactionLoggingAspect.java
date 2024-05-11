@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.aspect;
+package com.moz1mozi.mybatis.common.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
