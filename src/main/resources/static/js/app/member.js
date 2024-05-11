@@ -19,6 +19,11 @@ const member = {
             _this.changeAddress();
         });
         _this.changePassword();
+        document.getElementById("btn-update-profile")?.addEventListener("click", function () {
+            _this.changeProfileImage();
+        })
+        _this.setupProfileImageUpload();
+        window.addEventListener("pageshow", this.handlePageShow);
     },
 
     signup: function () {
@@ -29,18 +34,19 @@ const member = {
             nickname: document.getElementById("nickname").value,
             email: document.getElementById("email").value,
             mobile: document.getElementById("mobile").value,
-            // zipcode: globalAddressData.zipcode || '', // 우편번호
-            // streetAddress: globalAddressData.streetAddress || '', // 도로명 주소
-            // detailAddress: document.getElementById("detailAddress").value, // 상세주소
             role: document.querySelector("input[name='role']:checked")?.value || "BUYER"
         }
 
+        const formData = new FormData();
+        formData.append('member', new Blob([JSON.stringify(data)], {type: "application/json"}));
+
+
+        const file = document.getElementById("file-input").files[0];
+            formData.append('file', file); // 'files' 대신 'file' 사용
+
         fetch("/api/v1/member/signup", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            body: formData
         }).then(response => {
             if (response.ok) {
                 alert("회원가입이 완료되었습니다.")
@@ -52,6 +58,29 @@ const member = {
             alert("알 수 없는 오류가 발생했습니다.");
             console.log(error);
         })
+    },
+    setupProfileImageUpload: function () {
+      const profileImage = document.querySelector(".profile-img");
+      const updateText = document.getElementById("update-img");
+      const fileInput = document.getElementById("file-input");
+
+        profileImage?.addEventListener('click', function() {
+            fileInput.click();
+        });
+        updateText?.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+      fileInput?.addEventListener("change", function () {
+          if(this.files && this.files[0]) {
+              const reader = new FileReader();
+              reader.onload = (e) =>
+                  profileImage.src = e.target.result;
+              reader.readAsDataURL(this.files[0]);
+          }
+
+      })
+
     },
     changeNickname: function () {
         const nicknameSpan = document.querySelector("#nickname-span");
@@ -139,45 +168,17 @@ const member = {
             })
     },
     changePassword: function () {
-        const btnUpdatePassword = document.getElementById("btn-update-password");
-        const modal = document.getElementById('passwordModal');
+        const passwordForm = document.getElementById("passwordForm");
+        if(passwordForm) {
+            passwordForm.addEventListener("submit", function (e) {
+                e.preventDefault();
 
-        btnUpdatePassword?.addEventListener("click", function () {
-            modal.style.display = 'block';
-            bindModalEventListeners();
-        });
-
-        function bindModalEventListeners() {
-            const btnClose = document.querySelectorAll('.close');
-            const btnCancel = document.getElementById('cancel-password-modal');
-            const btnConfirm = document.getElementById('save-password-modal')
-
-            btnClose.forEach(function (element) {
-                element.addEventListener('click', function () {
-                    modal.style.display = 'none';
-                })
-            });
-
-            btnCancel.addEventListener('click', function () {
-                modal.style.display = 'none';
-            });
-
-            btnConfirm.addEventListener('click', function () {
-                const usernameElement = document.querySelector(".username");
-                const currentPasswordElement = document.getElementById("modal-current-pass");
-                const newPasswordElement = document.getElementById("newPassword");
-                const confirmPasswordElement = document.getElementById("modal-confirm-pass");
-
-
-                // 데이터 객체 생성
                 const data = {
-                    username: usernameElement.value,
-                    currentPassword: currentPasswordElement.value,
-                    newPassword: newPasswordElement.value,
-                    confirmPassword: confirmPasswordElement.value
-                };
-                console.log(data);
-
+                    username: document.querySelector(".username").value,
+                    currentPassword: document.getElementById("modal-current-pass").value,
+                    newPassword: document.getElementById("newPassword").value,
+                    confirmPassword: document.getElementById("modal-confirm-pass").value
+                }
                 // 서버로 데이터 전송
                 fetch("/api/v1/member/updatePassword", {
                     method: 'PUT',
@@ -191,7 +192,7 @@ const member = {
                             return response.json().then(data => Promise.reject(data));
                         }
                         alert("비밀번호가 성공적으로 변경 되었습니다.");
-                        // location.href = "/member/info";
+                        location.href = "/member/login";
                         return response.json();
                     })
                     .catch(error => {
@@ -207,6 +208,42 @@ const member = {
                         })
                     })
             })
+        }
+    },
+    changeProfileImage: function () {
+        const username = document.getElementById("info-username").textContent;
+
+        const formData = new FormData();
+        formData.append('username', username);
+
+        const file = document.getElementById("file-input").files[0];
+        if (file) { // 파일이 선택되었는지 확인
+            formData.append('file', file);
+        }
+
+        fetch("/api/v1/member/updateProfile", {
+            method: "PUT",
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Failed to update profile image');
+        }).then(data => {
+            alert(data.message);
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    },
+    handlePageShow: function (e) {
+        if(e.persisted) {
+            document.querySelectorAll('.form-control').forEach(function(input) {
+                input.value = '';
+            });
+            document.getElementById("verificationCodeDiv").style.display = 'none';
+            document.querySelectorAll('.error-message').forEach(function(element) {
+                element.style.display = 'none';
+            });
         }
     }
 }

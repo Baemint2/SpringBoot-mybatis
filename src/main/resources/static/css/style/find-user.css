@@ -74,9 +74,26 @@
     text-decoration: none;
     position: fixed;
     top: 30px;
-    background: white;
     padding: 20px 0;
     z-index: 1000; /* 확실히 최상위에 위치하도록 z-index 설정 */
+}
+
+.find-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.result-to-login{
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.find-result-info {
+    display: flex;
+    justify-content: space-between;
 }
 
 .content {

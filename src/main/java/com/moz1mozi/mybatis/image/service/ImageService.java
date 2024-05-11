@@ -2,6 +2,9 @@
 
     import com.moz1mozi.mybatis.image.dao.ImageMapper;
     import com.moz1mozi.mybatis.image.dto.ImageDto;
+    import com.moz1mozi.mybatis.member.dao.MemberMapper;
+    import com.moz1mozi.mybatis.member.dto.MemberDto;
+    import com.moz1mozi.mybatis.member.service.MemberService;
     import lombok.RequiredArgsConstructor;
     import org.springframework.beans.factory.annotation.Value;
     import org.springframework.stereotype.Service;
@@ -24,9 +27,13 @@
     public class ImageService {
 
         private final ImageMapper imageMapper;
+        private final MemberMapper memberMapper;
 
         @Value("${file.upload-dir.images}")
         private String uploadDir;
+
+        @Value("${file.upload-dir.members}")
+        private String profileDir;
 
         public String storeFile(MultipartFile file) throws IOException {
             if(file.isEmpty()) {
@@ -36,6 +43,19 @@
             String originalFilename = file.getOriginalFilename();
             String storedFileName = UUID.randomUUID() + "_" + originalFilename;
             Path destinationPath = Paths.get(uploadDir).resolve(storedFileName);
+
+            Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            return storedFileName;
+        }
+
+        public String storeProfileImage(MultipartFile file) throws IOException {
+            if(file.isEmpty()) {
+                throw new IllegalStateException("업로드된 파일이 없습니다.");
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            String storedFileName = UUID.randomUUID() + "_" + originalFilename;
+            Path destinationPath = Paths.get(profileDir).resolve(storedFileName);
 
             Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
             return storedFileName;

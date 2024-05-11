@@ -15,6 +15,7 @@ public class MemberDto {
         private String confirmPassword;
         private String email;
         private String nickname;
+        private String profileImagePath;
         private String mobile;
         private Date createdAt;
         private Date modifiedAt;

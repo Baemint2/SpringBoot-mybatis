@@ -14,10 +14,11 @@
         EMAIL,
         NICKNAME,
         MOBILE,
+        PROFILE_IMAGE_PATH,
         ROLE,
         CREATED_AT,
         MODIFIED_AT
-        ) VALUES (#{username}, #{password}, #{email}, #{nickname}, #{mobile} ,#{role, typeHandler=com.moz1mozi.mybatis.typehandler.RoleTypeHandler}, now(), now())
+        ) VALUES (#{username}, #{password}, #{email}, #{nickname}, #{mobile}, #{profileImagePath} ,#{role, typeHandler=com.moz1mozi.mybatis.common.typehandler.RoleTypeHandler}, now(), now())
     </insert>
 
     <delete id="deleteMember">
@@ -34,9 +35,16 @@
 
     <select id="findByUsername"
             parameterType="MemberDto">
-        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, MEMBER_ID
+        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, PROFILE_IMAGE_PATH, ROLE, MEMBER_ID
           FROM MEMBER_T
          WHERE USERNAME = #{username}
+    </select>
+
+    <select id="findByEmail"
+            parameterType="MemberDto">
+        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, MEMBER_ID
+        FROM MEMBER_T
+        WHERE EMAIL = #{email}
     </select>
 
     <select id="findByNicknameAndEmail"
@@ -116,15 +124,11 @@
         WHERE USERNAME = #{username}
     </update>
 
-    <!--
-    <update id="updateAddress">
+    <update id="updateProfileImage">
         UPDATE MEMBER_T
-        SET ZIPCODE = #{address.zipcode},
-        STREETADDRESS = #{address.streetAddress},
-        DETAILADDRESS = #{address.detailAddress}
-        WHERE MEMBER_ID = #{memberId}
+           SET PROFILE_IMAGE_PATH = #{profileImagePath}
+         WHERE USERNAME = #{username}
     </update>
-    -->
     <select id="findUsernameByEmail"
             resultType="String">
         SELECT USERNAME

@@ -7,7 +7,6 @@ import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.dto.MemberWithdrawalDto;
 import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
-import com.moz1mozi.mybatis.utils.VerificationCodeUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -17,7 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Map;
@@ -33,8 +34,9 @@ public class MemberApiController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@RequestBody MemberDto memberDto) {
-        Long memberId = memberService.insertMember(memberDto);
+    public ResponseEntity<Map<String, String>> signup(@Valid @RequestPart("member") MemberDto memberDto,
+                                                      @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+        Long memberId = memberService.insertMember(memberDto, file);
         log.info("회원가입 = {}", memberId);
         return ResponseEntity.ok(Map.of("message", "회원가입이 성공적으료 완료되었습니다."));
     }
@@ -92,11 +94,27 @@ public class MemberApiController {
 
 
     @PutMapping("/updatePassword")
-    public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordChangeDto password, Principal principal) {
-        String username = principal.getName();
-        memberService.changePassword(username, password);
-        return ResponseEntity.ok().body(Map.of("message", "비밀번호가 성공적으로 업데이트 되었습니다.", "password", password));
+    public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordChangeDto password, HttpSession session) {
+        try {
+            memberService.changePassword(password.getUsername(), password);
+            session.invalidate(); // 세션 종료
+            return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 업데이트 되었습니다. 다시 로그인 해주세요."));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "비밀번호 변경 실패: " + ex.getMessage()));
+        }
     }
+
+    @PutMapping("/updateProfile")
+    public ResponseEntity<?> changeProfileImage(@RequestPart("username") String username,
+                                                @RequestPart(value = "file", required = false) MultipartFile profileImage) {
+        try {
+            memberService.updateProfileImage(username, profileImage);
+            return ResponseEntity.ok(Map.of("message", "프로필 이미지가 성공적으로 업데이트되었습니다."));
+        } catch (IOException ex) {
+            return ResponseEntity.internalServerError().body(Map.of("error", "프로필 이미지 업데이트에 실패했습니다."));
+        }
+    }
+
 
     @GetMapping("/username/check")
     public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam("username")String username) {

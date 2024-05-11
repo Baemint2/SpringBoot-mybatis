@@ -7,235 +7,258 @@
     <title>마이 페이지</title>
     <link href="/css/style/modal.css" rel="stylesheet"/>
     <link href="/css/style/info.css" rel="stylesheet">
+    <link href="/css/style/profile.css" rel="stylesheet">
     <link href="/css/style/index.css" rel="stylesheet">
     <link href="/css/style/address.css" rel="stylesheet">
 </head>
 <body>
 <div>
     <section>
-    <h2 style="align-items: center">회원 정보 설정</h2>
-    <div class="container my-5 info-container">
-        <table class="table info-table">
-            <tbody>
-            <tr>
-                <th>사용자 ID</th>
-                <td><p th:text="${loggedUser.username}"></p></td>
-            </tr>
-            <tr>
-                <th>닉네임</th>
-                <td>
-                    <span id="nickname-span" th:text="${loggedUser.nickname}"></span>
-                    <button type="button" id="btn-change-nickname">변경</button>
-                    <div class="error-message" style="display: block;"></div>
-                </td>
-            </tr>
-            <tr>
-                <th>이메일</th>
-                <td>
-                    <input type="email" id="email" name="email" th:value="${loggedUser.email}">
-                    <button type="button" id="btn-change-email">변경</button>
-                </td>
-            </tr>
-            <tr>
-                <th>비밀번호</th>
-                <td>
-                    <button type="button" id="btn-update-password" data-bs-toggle="modal"
-                            data-bs-target="#passwordModal">
-                        비밀번호 변경
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <th>휴대폰 번호</th>
-                <td>
-                    010-1234-5678
-                </td>
-            </tr>
-            <!-- ...주소 입력 부분... -->
-            <tr>
-                <th>배송지</th>
-                <td>
-                    <button type="button" id="btnAddressManager" class="btn btn-primary">배송지 관리</button>
-                    <div class="modal" id="addressModal" style="display: none;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addressModalLabel">배송지 관리</h5>
-                                <span class="close">❌</span>
-                            </div>
-                            <div class="modal-body">
-                                <form id="addressForm">
-                                    <input type="hidden" class="username" th:value="${loggedUser.username}">
-                                    <input type="hidden" class="memberId" th:value="${loggedUser.memberId}">
-                                    <input type="hidden" class="addressId">
-                                    <div id="addressList" class="addressList"></div>
-                                    <div class="address-reg">
-                                        <a href="#" class="open">배송지 추가</a>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary cancel-address-modal">닫기</button>
-                                <button type="button" class="btn btn-primary">저장</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 배송지 추가 모달 -->
-                    <div class="modal" id="addAddressModal" style="display: none;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">배송지 추가</h5>
-                                <span class="close">❌</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-4 addAddressNickname">
-                                    <label for="addressNickname">받는 분 이름</label>
-                                    <input type="text" id="addressNickname" name="addressNickname">
-                                </div>
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <input type="text" id="zipcode" name="zipcode" class="form-control mb-1">
-                                    </div>
-                                    <div class="col">
-                                        <button type="button" class="mb-1" onclick="execPostCode(false)">
-                                            우편번호 찾기
-                                        </button>
-                                    </div>
-                                </div>
-                                <input type="text" id="streetAddress" name="streetAddress" class="form-control mb-1">
-                                <input type="text" id="detailAddress" name="detailAddress" class="form-control">
-                                <div class="mt-4 mb-4">
-                                    <label for="addressMobile">전화번호</label>
-                                    <input type="text" id="addressMobile" name="addressMobile">
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="defaultAddress"> 기본 배송지 선택
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary cancel-address-modal"  id="cancelAddModal">닫기</button>
-                                <button type="button" class="btn btn-primary save-address-modal" id="addAddressButton">저장</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 배송지 수정 모달 -->
-                    <div class="modal" id="modifyAddressModal" style="display: none;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">배송지 수정</h5>
-                                <span class="close">❌</span>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="modifyAddressNickname">받는 분 이름</label>
-                                    <input type="text" id="modifyAddressNickname" name="modifyAddressNickname">
-                                </div>
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <input type="text" id="modifyZipcode" name="zipcode" class="form-control mb-1">
-                                    </div>
-                                    <div class="col">
-                                        <button type="button" class="mb-1" onclick="execPostCode(true)">
-                                            우편번호 찾기
-                                        </button>
-                                    </div>
-                                </div>
-                                <input type="text" id="modifyStreetAddress" name="modifyStreetAddress" class="form-control mb-1">
-                                <input type="text" id="modifyDetailAddress" name="modifyDetailAddress" class="form-control">
-                                <div class="mt-3 mb-2">
-                                    <label for="addressMobile">전화번호</label>
-                                    <input type="text" id="modifyAddressMobile" name="modifyAddressMobile" maxlength="11">
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="modifyDefaultAddress"> 기본 배송지 선택
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-danger removeBtn"
-                                            id="removeAddressButton" th:value="${addressId}">삭제</button>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary cancel-address-modal" id="cancelModifyModal">닫기</button>
-                                <button type="button" class="btn btn-primary" id="updateAddressButton">저장</button>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="info-btns">
-        <button type="button" class="btn btn-outline-danger" id="btn-withdrawal">회원 탈퇴</button>
-        <button type="button" id="show-wishlist">관심 상품</button>
-    </div>
-    <div id="wishlistContainer"></div>
-    <!-- 비밀번호 수정 모달 -->
-    <div class="modal" id="passwordModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="passwordModalLabel">비밀번호 수정</h5>
-                <span class="close">❌</span>
-            </div>
-            <div class="modal-body">
-                <form id="passwordForm">
-                    <input type="hidden" class="username" th:value="${loggedUser.username}">
-                    <div class="mb-3">
-                        <label for="modal-current-pass" class="col-form-label">현재 비밀번호:</label>
-                        <input type="password" class="form-control currentPassword" id="modal-current-pass">
-                        <div class="error-message" id="modal-currentPassword-error" style="display: none;"></div>
-
-                    </div>
-                    <div class="mb-3">
-                        <label for="newPassword" class="col-form-label">새 비밀번호:</label>
-                        <input type="password" class="form-control" id="newPassword">
-                    </div>
-                    <div class="mb-3">
-                        <label for="modal-confirm-pass" class="col-form-label">새 비밀번호 확인:</label>
-                        <input type="password" class="form-control" id="modal-confirm-pass">
-                        <div class="error-message" id="modal-confirmPass-error" style="display: none;"></div>
-                    </div>
+        <h2 style="align-items: center">회원 정보 설정</h2>
+        <div class="member-profile">
+            <div class="container my-5 info-container">
+                <form id="profile-form" method="post" enctype="multipart/form-data">
+                    <img th:if="${loggedUser.profileImagePath == null}" src="/images/anonymous.png" class="profile-img">
+                    <img th:if="${loggedUser.profileImagePath != null}" th:src="${loggedUser.profileImagePath}" class="profile-img">
+                    <div id="update-img">변경</div>
+                    <input type="file" id="file-input" name="profileImage" class="form-control">
+                    <button type="button" id="btn-update-profile">프로필 업데이트</button>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancel-password-modal">닫기</button>
-                <button type="button" class="btn btn-primary" id="save-password-modal">저장</button>
+                <table class="table info-table">
+                    <tbody>
+                    <tr>
+                        <th>사용자 ID</th>
+                        <td><p th:text="${loggedUser.username}" id="info-username"></p></td>
+                    </tr>
+                    <tr>
+                        <th>닉네임</th>
+                        <td>
+                            <span id="nickname-span" th:text="${loggedUser.nickname}"></span>
+                            <button type="button" id="btn-change-nickname">변경</button>
+                            <div class="error-message" style="display: block;"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이메일</th>
+                        <td>
+                            <input type="email" id="email" name="email" th:value="${loggedUser.email}">
+                            <button type="button" id="btn-change-email">변경</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>비밀번호</th>
+                        <td>
+                            <a href="/member/change-password" role="button" class="btn btn-primary">
+                                비밀번호 변경
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>휴대폰 번호</th>
+                        <td>
+                            010-1234-5678
+                        </td>
+                    </tr>
+                    <!-- ...주소 입력 부분... -->
+                    <tr>
+                        <th>배송지</th>
+                        <td>
+                            <button type="button" id="btnAddressManager" class="btn btn-primary">배송지 관리</button>
+                            <div class="modal" id="addressModal" style="display: none;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addressModalLabel">배송지 관리</h5>
+                                        <span class="close">❌</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="addressForm">
+                                            <input type="hidden" class="username" th:value="${loggedUser.username}">
+                                            <input type="hidden" class="memberId" th:value="${loggedUser.memberId}">
+                                            <input type="hidden" class="addressId">
+                                            <div id="addressList" class="addressList"></div>
+                                            <div class="address-reg">
+                                                <a href="#" class="open">배송지 추가</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary cancel-address-modal">닫기</button>
+                                        <button type="button" class="btn btn-primary">저장</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 배송지 추가 모달 -->
+                            <div class="modal" id="addAddressModal" style="display: none;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">배송지 추가</h5>
+                                        <span class="close">❌</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-4 addAddressNickname">
+                                            <label for="addressNickname">받는 분 이름</label>
+                                            <input type="text" id="addressNickname" name="addressNickname">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <input type="text" id="zipcode" name="zipcode"
+                                                       class="form-control mb-1">
+                                            </div>
+                                            <div class="col">
+                                                <button type="button" class="mb-1" onclick="execPostCode(false)">
+                                                    우편번호 찾기
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="streetAddress" name="streetAddress"
+                                               class="form-control mb-1">
+                                        <input type="text" id="detailAddress" name="detailAddress" class="form-control">
+                                        <div class="mt-4 mb-4">
+                                            <label for="addressMobile">전화번호</label>
+                                            <input type="text" id="addressMobile" name="addressMobile">
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" id="defaultAddress"> 기본 배송지 선택
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary cancel-address-modal"
+                                                id="cancelAddModal">닫기
+                                        </button>
+                                        <button type="button" class="btn btn-primary save-address-modal"
+                                                id="addAddressButton">저장
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 배송지 수정 모달 -->
+                            <div class="modal" id="modifyAddressModal" style="display: none;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">배송지 수정</h5>
+                                        <span class="close">❌</span>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="modifyAddressNickname">받는 분 이름</label>
+                                            <input type="text" id="modifyAddressNickname" name="modifyAddressNickname">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <input type="text" id="modifyZipcode" name="zipcode"
+                                                       class="form-control mb-1">
+                                            </div>
+                                            <div class="col">
+                                                <button type="button" class="mb-1" onclick="execPostCode(true)">
+                                                    우편번호 찾기
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <input type="text" id="modifyStreetAddress" name="modifyStreetAddress"
+                                               class="form-control mb-1">
+                                        <input type="text" id="modifyDetailAddress" name="modifyDetailAddress"
+                                               class="form-control">
+                                        <div class="mt-3 mb-2">
+                                            <label for="addressMobile">전화번호</label>
+                                            <input type="text" id="modifyAddressMobile" name="modifyAddressMobile"
+                                                   maxlength="11">
+                                        </div>
+                                        <div>
+                                            <input type="checkbox" id="modifyDefaultAddress"> 기본 배송지 선택
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-danger removeBtn"
+                                            id="removeAddressButton" th:value="${addressId}">삭제
+                                    </button>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary cancel-address-modal"
+                                                id="cancelModifyModal">닫기
+                                        </button>
+                                        <button type="button" class="btn btn-primary" id="updateAddressButton">저장
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </div>
+        <div class="info-btns">
+            <button type="button" class="btn btn-outline-danger" id="btn-withdrawal">회원 탈퇴</button>
+            <button type="button" id="show-wishlist">관심 상품</button>
+        </div>
+        <div id="wishlistContainer"></div>
+        <!-- 비밀번호 수정 모달 -->
+        <div class="modal" id="passwordModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordModalLabel">비밀번호 수정</h5>
+                    <span class="close">❌</span>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordForm">
+                        <input type="hidden" class="username" th:value="${loggedUser.username}">
+                        <div class="mb-3">
+                            <label for="modal-current-pass" class="col-form-label">현재 비밀번호:</label>
+                            <input type="password" class="form-control currentPassword" id="modal-current-pass">
+                            <div class="error-message" id="invalidCurrentPassword-error" style="display: none;"></div>
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="col-form-label">새 비밀번호:</label>
+                            <input type="password" class="form-control" id="newPassword">
+                            <div class="error-message" id="sameAsOld-error" style="display: none;"></div>
+                            <div class="error-message" id="newPassword-error" style="display: none;"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="modal-confirm-pass" class="col-form-label">새 비밀번호 확인:</label>
+                            <input type="password" class="form-control" id="modal-confirm-pass">
+                            <div class="error-message" id="NotMatchPassword-error" style="display: none;"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-password-modal">닫기</button>
+                    <button type="button" class="btn btn-primary" id="save-password-modal">저장</button>
+                </div>
+            </div>
+        </div>
 
 
-    <div id="modal-withdrawal-confirm" class="modal" style="display: none;">
-        <div class="modal-content">
+        <div id="modal-withdrawal-confirm" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">❌</span>
+                <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+                <div class="modal-footer">
+                    <button id="confirm-withdrawal" class="btn btn-primary modal-button">예</button>
+                    <button id="cancel-withdrawal" class="btn btn-secondary modal-button">아니오</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 회원 정보 확인 -->
+        <div id="password-confirmation-form" style="display: none">
             <span class="close">❌</span>
             <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
             <div class="modal-footer">
-                <button id="confirm-withdrawal" class="btn btn-primary modal-button">예</button>
-                <button id="cancel-withdrawal" class="btn btn-secondary modal-button">아니오</button>
+                <input type="text" id="username" th:value="${loggedUser.username}">
+                <input type="password" id="password" class="password-error" placeholder="비밀번호를 입력해주세요">
             </div>
-        </div>
-    </div>
+            <div id="password-error" style="display: none"></div>
+            <div id="submit-withdrawal-container">
+                <button id="submit-withdrawal">탈퇴하기</button>
+            </div>
 
-    <!-- 회원 정보 확인 -->
-    <div id="password-confirmation-form" style="display: none">
-        <span class="close">❌</span>
-        <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
-        <div class="modal-footer">
-            <input type="text" id="username" th:value="${loggedUser.username}">
-            <input type="password" id="password" class="password-error" placeholder="비밀번호를 입력해주세요">
-        </div>
-        <div id="password-error" style="display: none"></div>
-        <div id="submit-withdrawal-container">
-            <button id="submit-withdrawal">탈퇴하기</button>
         </div>
 
-    </div>
-
-    <script src="/js/app/address.js"></script>
-    <script type="module" src="/js/app/wishlist.js"></script>
-    <script type="module" src="/js/app/member.js"></script>
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script src="/js/app/address.js"></script>
+        <script type="module" src="/js/app/wishlist.js"></script>
+        <script type="module" src="/js/app/member.js"></script>
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     </section>
 </div>
 </body>
