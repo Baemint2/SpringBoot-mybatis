@@ -7,6 +7,7 @@ import com.moz1mozi.mybatis.image.service.ImageService;
 import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dao.MemberWithdrawalMapper;
 import com.moz1mozi.mybatis.member.dto.*;
+import com.moz1mozi.mybatis.member.utils.MemberUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +22,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static com.moz1mozi.mybatis.member.utils.MemberUtils.mapStringToRole;
+import static com.moz1mozi.mybatis.member.utils.MemberUtils.validateMemberData;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -33,7 +37,7 @@ public class MemberService {
 
     @Transactional
     public Long insertMember(MemberDto member, MultipartFile profileImage) throws IOException {
-        validateMemberData(member);
+        validateMemberData(member, memberMapper, true);
 
         String profileImageUrl = null;
         if(profileImage != null && !profileImage.isEmpty()) {
@@ -56,33 +60,6 @@ public class MemberService {
 
         memberMapper.insertMember(siteUser);
         return siteUser.getMemberId();
-    }
-
-    private void validateMemberData(MemberDto member) {
-        if(!member.getPassword().equals(member.getConfirmPassword())) {
-            throw new CustomException("confirmPassword", "비밀번호가 일치하지 않습니다");
-        }
-
-        if(memberMapper.existsByEmail(member.getEmail())) {
-            throw new CustomException("email", "이미 등록된 이메일입니다.");
-        }
-
-        if(memberMapper.existsByUsername(member.getUsername())) {
-            throw new CustomException("username", "이미 등록된 사용자명입니다.");
-        }
-
-        if(memberMapper.existsByNickname(member.getNickname())) {
-            throw new CustomException("nickname", "이미 등록된 닉네임입니다.");
-        }
-    }
-
-    private Role mapStringToRole(String roleString) {
-        for(Role role : Role.values()) {
-            if(role.getDisplayName().equals(roleString)) {
-                return role;
-            }
-        }
-        return Role.BUYER;
     }
 
     @Transactional

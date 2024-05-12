@@ -2,14 +2,16 @@
 <html
         xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
         xmlns:th="http://www.thymeleaf.org"
-        th:replace="~{common/layout :: layout(~{::title}, ~{::link} ,~{::section})}">
+        th:replace="~{common/layout :: layout(~{::title}, ~{::link} ,~{::section}, false)}">
 <head>
     <title>관리자 페이지</title>
     <link href="/css/style/index.css" rel="stylesheet">
 </head>
 <body>
+<section>
 관리자 페이지입니다.
 <button class="btn btn-primary" id="btn-memberList">회원 목록</button>
+    <a class="btn btn-secondary" role="button" href="/admin/register-member">회원 등록</a>
 <table class="table table-horizontal table-bordered">
     <thead class="table-dark">
     <tr>
@@ -25,6 +27,7 @@
     <!-- 여기에 회원 정보 행(row)이 동적으로 추가됩니다. -->
     </tbody>
 </table>
+    <script src="/js/app/admin.js"></script>
+</section>
 </body>
-<script src="/js/app/admin.js"></script>
 </html>

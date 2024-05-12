@@ -4,6 +4,9 @@ const admin = {
         document.getElementById("btn-memberList")?.addEventListener("click", function () {
             _this.memberList();
         });
+        document.getElementById("btn-register")?.addEventListener("click", function () {
+            _this.memberResiter();
+        })
     },
     formatDate: function(dateString) {
         const date = new Date(dateString);
@@ -50,6 +53,37 @@ const admin = {
         }).catch(error => {
                 console.error('알 수 없는 오류가 발생했습니다:', error);
             });
+    },
+    memberResiter: function () {
+        const data = {
+            username: document.getElementById("admin-username").value,
+            nickname: document.getElementById("admin-nickname").value,
+            email: document.getElementById("admin-email").value,
+            mobile: document.getElementById("admin-mobile").value,
+            role: document.querySelector("input[name='role']:checked")?.value || "BUYER"
+        }
+
+        const formData = new FormData();
+        formData.append('member', new Blob([JSON.stringify(data)], {type: "application/json"}));
+
+
+        const file = document.getElementById("file-input").files[0];
+        formData.append('file', file); // 'files' 대신 'file' 사용
+
+        fetch("/api/v1/admin/register-member", {
+            method: "POST",
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                alert("회원등록이 완료되었습니다.")
+                location.href = "/admin";
+            } else {
+                throw new Error("회원등록 처리 중 문제가 발생했습니다.")
+            }
+        }).catch(error => {
+            alert("알 수 없는 오류가 발생했습니다.");
+            console.log(error);
+        })
     },
     removeMember: function (username) {
         fetch(`/api/v1/admin/member/${username}`, {
