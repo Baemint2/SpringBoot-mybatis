@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      th:replace="~{common/layout :: layout(~{::title}, ~{::link} ,~{::section}, false)}">
+<head>
+    <link href="/css/style/index.css" rel="stylesheet">
+    <link href="/css/style/profile.css" rel="stylesheet">
+    <title>회원 등록</title>
+</head>
+<body>
+<section>
+    <div class="member-profile">
+        <div class="container my-3 signup-container">
+            <form class="signup-form" id="signup" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div>
+                    <img src="/images/anonymous.png" class="profile-img" data-src="/images/anonymous.png">
+                    <div id="update-img">등록</div>
+                    <input type="file" id="file-input" name="profileImage" class="form-control">
+                </div>
+                <div>
+                    <label for="admin-username" class="form-label">사용자 ID</label>
+                    <input type="text" id="admin-username" name="username" class="form-control username" placeholder="아이디"
+                           autocomplete="on">
+                    <div class="error-message" id="username-error" style="display: none;"></div>
+                </div>
+                <div>
+                    <label for="admin-nickname" class="form-label">닉네임</label>
+                    <input type="text" id="admin-nickname" name="nickname" class="form-control nickname" placeholder="닉네임"
+                           autocomplete="on">
+                    <div class="error-message" id="nickname-error" style="display: none;"></div>
+                </div>
+                <div>
+                    <div>
+                        <label for="admin-email" class="form-label">이메일</label>
+                        <input type="email" id="admin-email" name="email" class="form-control email" placeholder="이메일"
+                               autocomplete="on">
+                        <div class="error-message" id="email-error" style="display: none;"></div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label for="admin-mobile" class="form-label">휴대전화</label>
+                    <input type="text" class="form-control" id="admin-mobile" placeholder="- 제외하고 입력해주세요.">
+                </div>
+                <div>
+                    <label class="form-label">역할 선택</label>
+                    <div>
+                        <input type="radio" id="admin-buyer" class="buyer" name="role" value="BUYER">
+                        <label for="admin-buyer">구매자</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="admin-seller" class="seller" name="role" value="SELLER">
+                        <label for="admin-seller">판매자</label>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="btn-register">회원 등록</button>
+            </form>
+        </div>
+    </div>
+    <script type="module" src="/js/app/member.js"></script>
+    <script type="module" src="/js/app/admin.js"></script>
+</section>
+</body>
+</html>
