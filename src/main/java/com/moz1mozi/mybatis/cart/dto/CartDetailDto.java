@@ -14,6 +14,7 @@ import java.util.Date;
 public class CartDetailDto {
     private Long productId;
     private Long cartItemId;
+    private Long memberId;
     private String prodName;
     private int totalQuantity;
     private int totalPrice; // 문자열 대신 정수나 실수 타입 사용

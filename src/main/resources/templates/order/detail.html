@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Order Details</title>
 </head>
 <body>
-안녕하세요?
+<div>
+    <div>
+        <h2>배송지 정보</h2>
+        <p>배송지 명: <span th:text="${address.recipientName}"></span></p>
+        <p>전화번호: <span th:text="${address.mobile}"></span></p>
+        <p>주소: <span th:text="${address.streetaddress}"></span></p>
+        <p>우편번호: <span th:text="${address.zipcode}"></span></p>
+    </div>
+    <h2>주문 상품</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>상품명</th>
+            <th>수량</th>
+            <th>가격</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${productIds.length == 0}">
+            <td colspan="4">No products selected.</td>
+        </tr>
+        <tr th:each="i : ${#numbers.sequence(0, productIds.length - 1)}" th:if="${productIds.length > 0}">
+            <td th:text="${productNames[i]}"></td>
+            <td th:text="${quantities[i]}"></td>
+            <td th:text="${prices[i]}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
 </body>
+<script src="/js/app/address.js"></script>
 </html>
