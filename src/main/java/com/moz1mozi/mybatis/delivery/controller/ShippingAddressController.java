@@ -3,6 +3,7 @@ package com.moz1mozi.mybatis.delivery.controller;
 import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
 import com.moz1mozi.mybatis.delivery.dto.UpdateAddressDto;
 import com.moz1mozi.mybatis.delivery.service.ShippingAddressService;
+import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,13 +41,12 @@ public class ShippingAddressController {
     //배송지 목록 조회
     @GetMapping("/api/v1/address/{memberId}/addresses")
     public ResponseEntity<List<ShippingAddressDto>> getAllAddresses(@PathVariable Long memberId) {
-        Long member = memberService.getMemberId(memberId);
-        List<ShippingAddressDto> addresses = shippingAddressService.getAllAddresses(member);
+        MemberDto member = memberService.getMemberId(memberId);
+        List<ShippingAddressDto> addresses = shippingAddressService.getAllAddresses(member.getMemberId());
         return ResponseEntity.ok(addresses);
     }
 
-
-    //배송지 등록
+    //배송지 단일 조회
     @GetMapping("/api/v1/address/{addressId}")
     public ResponseEntity<ShippingAddressDto> getAddress(@PathVariable Long addressId) {
         ShippingAddressDto address = shippingAddressService.getAddress(addressId);

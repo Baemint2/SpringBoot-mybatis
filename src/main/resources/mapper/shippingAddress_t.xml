@@ -44,6 +44,12 @@
         WHERE ADDRESS_ID = #{addressId};
     </select>
 
+    <select id="getDefaultAddressByMemberId" resultType="ShippingAddressDto">
+        SELECT ADDRESS_ID, MEMBER_ID, RECIPIENT_NAME, MOBILE, ZIPCODE, STREETADDRESS, DETAILADDRESS, DEFAULT_ADDRESS
+        FROM SHIPPING_ADDRESS_T
+        WHERE MEMBER_ID = #{memberId} AND DEFAULT_ADDRESS = 'Y';
+    </select>
+
     <update id="updateShippingAddressById"
             parameterType="ShippingAddressDto">
         UPDATE SHIPPING_ADDRESS_T

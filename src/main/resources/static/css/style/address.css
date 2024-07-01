@@ -1,0 +1,11 @@
+.addressContainer button {
+    width: 100px;
+}
+
+#modifyAddressNickname {
+    width: 150px;
+}
+
+#modifyAddressMobile {
+    width: 150px;
+}

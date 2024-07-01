@@ -17,6 +17,9 @@ public interface ShippingAddressMapper {
     // 배송지 단일 조회
     ShippingAddressDto getShippingAddressById(Long addressId);
 
+    // 기본 배송지 조회
+    ShippingAddressDto getDefaultAddressByMemberId(Long memberId);
+
     List<Long> getAddressIdByMemberId(Long memberId);
 
     // 배송지 수정

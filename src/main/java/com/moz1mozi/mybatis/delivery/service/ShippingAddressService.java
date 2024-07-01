@@ -3,7 +3,7 @@ package com.moz1mozi.mybatis.delivery.service;
 import com.moz1mozi.mybatis.delivery.dto.UpdateAddressDto;
 import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
 import com.moz1mozi.mybatis.delivery.mapper.ShippingAddressMapper;
-import com.moz1mozi.mybatis.exception.CustomException;
+import com.moz1mozi.mybatis.common.exception.CustomException;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,10 +43,16 @@ public class ShippingAddressService {
     }
 
     @Transactional(readOnly = true)
-    public ShippingAddressDto getAddress(Long addressId) {
+    public ShippingAddressDto getAddress(Long memberId) {
 
-        return Optional.ofNullable(shippingAddressMapper.getShippingAddressById(addressId))
+        return Optional.ofNullable(shippingAddressMapper.getShippingAddressById(memberId))
                     .orElseThrow(() -> new CustomException("addressNotFound","배송지가 존재하지 않습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public ShippingAddressDto getDefaultAddress(Long memberId) {
+        return Optional.ofNullable(shippingAddressMapper.getDefaultAddressByMemberId(memberId))
+                .orElseThrow(() -> new CustomException("addressNotFound","기본 배송지가 존재하지 않습니다."));
     }
 
     // 배송지 수정
