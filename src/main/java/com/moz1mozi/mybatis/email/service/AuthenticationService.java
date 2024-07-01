@@ -3,7 +3,6 @@ package com.moz1mozi.mybatis.email.service;
 import com.moz1mozi.mybatis.email.dto.EmailVerificationDto;
 import com.moz1mozi.mybatis.email.mapper.EmailVerificationMapper;
 import com.moz1mozi.mybatis.member.service.MemberService;
-import com.moz1mozi.mybatis.utils.VerificationCodeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.moz1mozi.mybatis.utils.VerificationCodeUtils.generateVerificationCode;
+import static com.moz1mozi.mybatis.common.utils.RandomCodeUtils.generateVerificationCode;
 
 @Slf4j
 @Service

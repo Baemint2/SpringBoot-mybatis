@@ -4,7 +4,7 @@ import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
 import com.moz1mozi.mybatis.cart.dto.TotalCartDto;
 import com.moz1mozi.mybatis.cart.service.CartService;
-import com.moz1mozi.mybatis.exception.OutOfStockException;
+import com.moz1mozi.mybatis.common.exception.OutOfStockException;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import com.moz1mozi.mybatis.product.service.ProductService;

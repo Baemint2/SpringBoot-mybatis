@@ -4,7 +4,7 @@ import com.moz1mozi.mybatis.cart.dao.CartMapper;
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
 import com.moz1mozi.mybatis.cart.dto.TotalCartDto;
-import com.moz1mozi.mybatis.exception.CustomException;
+import com.moz1mozi.mybatis.common.exception.CustomException;
 import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

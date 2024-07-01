@@ -1,7 +1,7 @@
 package com.moz1mozi.mybatis.product.service;
 
 import com.moz1mozi.mybatis.cart.dao.CartMapper;
-import com.moz1mozi.mybatis.exception.OutOfStockException;
+import com.moz1mozi.mybatis.common.exception.OutOfStockException;
 import com.moz1mozi.mybatis.image.service.ImageService;
 import com.moz1mozi.mybatis.member.dao.MemberMapper;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +37,8 @@ public class ProductService {
     @Transactional
     public Long insertProduct(ProductDto productDto, List<MultipartFile> files, String username) throws IOException {
         Long sellerId = memberMapper.findByMemberIdByUsername(username);
-        MemberDto role = memberMapper.findByUsername(username);
+        MemberDto role = memberMapper.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         if (!"판매자".equals(role.getRole().getDisplayName())) {
             throw new IllegalArgumentException("상품 업로드는 판매자만 가능합니다.");
         }

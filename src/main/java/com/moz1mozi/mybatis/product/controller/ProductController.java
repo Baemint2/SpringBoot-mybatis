@@ -1,7 +1,7 @@
 package com.moz1mozi.mybatis.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.moz1mozi.mybatis.exception.OutOfStockException;
+import com.moz1mozi.mybatis.common.exception.OutOfStockException;
 import com.moz1mozi.mybatis.member.dto.MemberDto;
 import com.moz1mozi.mybatis.member.service.MemberService;
 import com.moz1mozi.mybatis.product.dto.*;
