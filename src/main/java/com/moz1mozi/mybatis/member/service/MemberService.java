@@ -118,6 +118,13 @@ public class MemberService {
         MemberDto member = memberMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
+        validatePassword(passwordChangeDto, member);
+
+        String encodedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
+        memberMapper.updatePassword(username, encodedPassword);
+    }
+
+    private void validatePassword(PasswordChangeDto passwordChangeDto, MemberDto member) {
         if(!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getPassword())) {
             throw new InvalidCurrentPasswordException("invalidCurrentPassword", "현재비밀번호가 일치하지 않습니다.");
         }
@@ -128,9 +135,6 @@ public class MemberService {
         if(!passwordChangeDto.getNewPassword().equals(passwordChangeDto.getConfirmPassword())) {
             throw new PasswordsDoNotMatchException("NotMatchPassword", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
         }
-
-        String encodedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
-        memberMapper.updatePassword(username, encodedPassword);
     }
 
     //아이디 찾기
