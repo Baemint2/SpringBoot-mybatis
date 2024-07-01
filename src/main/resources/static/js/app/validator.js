@@ -11,7 +11,7 @@ export const validator = {
             _this.checkDuplicate('nickname', this.value, 'nickname-error', '이미 사용중인 닉네임입니다.');
         });
         document.getElementById('confirmPassword')?.addEventListener('blur', function () {
-            _this.passwordMatch("modal-current-pass", this.value, "modal-currentPassword-error", "이미 사용중인 비밀번호입니다.");
+            _this.passwordMatch("modal-current-pass", this.value, "modal-currentPassword-error", "비밀번호가 일치하지 않습니다.");
         });
     },
     checkDuplicate: function (field, value, errorElementId, errorMessage) {
@@ -19,10 +19,7 @@ export const validator = {
             .then(response => response.json())
             .then(data => {
                 const isDuplicate = data[`is${field.charAt(0).toUpperCase() + field.slice(1)}Duplicate`];
-                console.log(data)
-                console.log(isDuplicate)
                 const errorElement = document.getElementById(errorElementId)
-                console.log(errorElement)
                 if (isDuplicate) {
                     errorElement.textContent = errorMessage;
                     errorElement.style.display = 'block';

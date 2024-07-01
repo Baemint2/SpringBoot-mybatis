@@ -29,6 +29,20 @@
     padding-top: 20px;
 }
 
+.modal-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body div:first-child {
+    display: flex;
+    flex-direction: column;
+}
+.modal-body > :nth-child(5) {
+    display: flex;
+    flex-direction: column;
+}
+
 .modal-button {
     width: auto;
     padding: 5px 15px;

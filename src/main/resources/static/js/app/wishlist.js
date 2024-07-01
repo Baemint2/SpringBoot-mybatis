@@ -2,7 +2,7 @@ const wishlist = {
     init: function () {
         this.bindEvents();
 
-        document.getElementById('show-wishlist').addEventListener("click", function () {
+        document.getElementById('show-wishlist')?.addEventListener("click", function () {
             wishlist.fetchWishlist();
         })
     },

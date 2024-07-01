@@ -40,7 +40,7 @@ const address = {
             const btnCancel = document.querySelectorAll('.cancel-address-modal');
             const btnOpenModal = document.querySelector('.open');
 
-            btnAddressManager.addEventListener("click", function () {
+            btnAddressManager?.addEventListener("click", function () {
                 toggleModal("addressModal", true);
                 address.loadAddresses();
             });
@@ -57,7 +57,7 @@ const address = {
                 });
             });
 
-            btnOpenModal.addEventListener("click", function () {
+            btnOpenModal?.addEventListener("click", function () {
                 toggleModal("addressModal", false);
                 toggleModal("addAddressModal", true);
             });
@@ -168,8 +168,11 @@ const address = {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(updateAddressData)
         }).then(response => {
+            console.log(response);
             if (!response.ok) {
+
                 throw new Error("네트워크 에러가 발생했습니다.")
+
             }
             alert("배송지가 수정되었습니다.")
             toggleModal("modifyAddressModal", false);
@@ -262,6 +265,5 @@ window.execPostCode = function (isModify) {
 
 document.addEventListener("DOMContentLoaded", function () {
     address.init();
-
 
 });

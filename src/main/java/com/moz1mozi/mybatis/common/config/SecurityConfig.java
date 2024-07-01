@@ -73,7 +73,6 @@ public class SecurityConfig {
                         .accessDeniedPage("/accessDenied"))
                 .rememberMe(rememberMe -> rememberMe.rememberMeParameter("remember-me")
                         .rememberMeServices(rememberMeServices)
-                        .tokenValiditySeconds(604800)
                         .useSecureCookie(false));
         return http.build();
     }

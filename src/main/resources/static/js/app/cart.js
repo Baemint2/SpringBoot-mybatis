@@ -1,3 +1,5 @@
+import { cartToOrder } from "./cartToOrder.js";
+
 const cart = {
     init: function () {
         const _this = this;
@@ -6,8 +8,8 @@ const cart = {
             _this.addItems();
         });
 
-        document.getElementById("btn-delete-selected").addEventListener('click', function () {
-            _this.deleteSelectedItems();
+        document.getElementById("btn-delete-selected")?.addEventListener('click', function (evt) {
+            _this.deleteSelectedItems(evt);
         })
 
     },
@@ -24,14 +26,13 @@ const cart = {
         });
     },
     addItems: function () {
-        const productId = document.getElementById("productId").value;
-        const quantity = document.getElementById("quantity").value;
-        const price = document.querySelector(".formattedPrice").innerText.replace(/\D/g, '');
-
-        const data = { productId, quantity, price };
-        console.log(data);
-
-        fetch('', {
+        const data = {
+            productId: document.getElementById("productId").value,
+            quantity: document.getElementById("quantity").value,
+            price: document.querySelector(".formattedPrice").innerText.replace(/\D/g, ''),
+        }
+        console.log(data.price)
+        fetch('/api/v1/cart', {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data)
@@ -56,11 +57,8 @@ const cart = {
         fetch(`/api/v1/product/${productId}/stock`)
             .then(response => response.json())
             .then(stock => {
-                console.log(stock)
                 const selector = `.container .stock`;
-                console.log(`Using selector: ${selector}`); // 선택자 확인 로그
                 const stockElement = document.querySelector(selector);
-                console.log(stockElement)
                 if (stockElement) {
                     stockElement.innerHTML = `<strong class="mr-3" ">Quantity: ${stock}</strong>`;
                 } else {
@@ -87,7 +85,8 @@ const cart = {
 
     btnDecrease: function () {
         document.querySelectorAll('.decrease-btn').forEach(button => {
-            button.addEventListener("click", function () {
+            button.addEventListener("click", function (evt) {
+                evt.preventDefault();
                 const quantityElement = this.parentElement.querySelector('.quantity');
                 let quantity = parseInt(quantityElement.textContent);
                 if(quantity > 1) { // 최소 수량 1
@@ -100,7 +99,8 @@ const cart = {
 
     btnIncrease: function () {
         document.querySelectorAll('.increase-btn').forEach(button => {
-            button.addEventListener("click", function () {
+            button.addEventListener("click", function (evt) {
+                evt.preventDefault();
                 const quantityElement = this.parentElement.querySelector('.quantity');
                 let quantity = parseInt(quantityElement.textContent);
                 quantity++;
@@ -110,7 +110,8 @@ const cart = {
     },
     changeStock: function () {
         document.querySelectorAll('.change-stock').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function (evt) {
+                evt.preventDefault();
                 const stockContainer = this.closest('.stockContainer');
                 const productId = stockContainer.getAttribute('data-product-id');
                 const newQuantityElement = stockContainer.querySelector('.quantity');
@@ -150,7 +151,8 @@ const cart = {
 
     bindDeleteEvents: function () {
       document.querySelectorAll(".delete-cart-item-btn").forEach(button => {
-          button.addEventListener("click", function () {
+          button.addEventListener("click", function (evt) {
+              evt.preventDefault();
               const cartItemId = this.getAttribute('data-cart-item-id');
               console.log(this.getAttribute('data-cart-item-id'));
               cart.deleteCartItem(cartItemId);
@@ -179,7 +181,8 @@ const cart = {
         }).catch( error =>
             alert(`오류가 발생했습니다. ${error.message}`));
     },
-    deleteSelectedItems: function () {
+    deleteSelectedItems: function (evt) {
+        evt.preventDefault();
         const selectedItems = document.querySelectorAll('input[type="checkbox"]:checked');
         let cartItems = Array.from(selectedItems).map(item => item.getAttribute('data-cart-item-id'));
 
@@ -230,6 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
     cart.btnIncrease();
     cart.changeStock();
     cart.bindDeleteEvents();
+    cartToOrder.init();
 })
 
 

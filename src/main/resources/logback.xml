@@ -7,7 +7,7 @@
     <!-- springProfile 태그를 사용하여 profile 별 property 값 설정 -->
     <springProfile name="local">
         <!-- local log file path -->
-        <property name="LOG_PATH" value="/Users/baeyeong-ug/Desktop/log"/>
+        <property name="LOG_PATH" value="/Users/baeyeong-ug/Desktop/logkl"/>
     </springProfile>
 <!--    <springProfile name="dev">-->
 <!--        &lt;!&ndash; dev log file path &ndash;&gt;-->
@@ -39,7 +39,7 @@
         <!-- 파일경로 설정 -->
         <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="com.moz1mozi.mybatis.logback.MyLogbackLayout"/>
+            <layout class="com.moz1mozi.mybatis.common.logback.MyLogbackLayout"/>
         </encoder>
         <!-- 출력패턴 설정 -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
