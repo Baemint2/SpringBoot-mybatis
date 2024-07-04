@@ -52,7 +52,7 @@ public class OrderController {
         model.addAttribute("prices", prices);
 
         model.addAttribute("address", address);
-        return "order/detail"; // Redirect to the order detail view
+        return "order/detail";
     }
 
 

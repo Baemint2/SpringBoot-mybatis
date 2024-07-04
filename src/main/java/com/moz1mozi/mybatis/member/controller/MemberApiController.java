@@ -43,9 +43,8 @@ public class MemberApiController {
 
 
     //회원 탈퇴
-    @DeleteMapping("/withdrawal/{username}")
-    public ResponseEntity<?> withdrawal(@PathVariable String username,
-                                        @RequestBody MemberWithdrawalDto withdrawalDto,
+    @DeleteMapping("/withdrawal")
+    public ResponseEntity<?> withdrawal(@RequestBody MemberWithdrawalDto withdrawalDto,
                                         HttpServletRequest request) {
         boolean withdrawalMember = memberService.deleteMember(withdrawalDto.getUsername(), withdrawalDto.getPassword());
         if(withdrawalMember) {
