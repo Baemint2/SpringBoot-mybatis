@@ -11,9 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Builder
-public class FindMemberDto {
-    private String username;
-    private String nickname;
-    private String email;
-    private Date createDt;
+public class FindUserDto {
+    private String userName;
+    private String userNickname;
+    private String userEmail;
+    private Date userCreateDt;
 }
