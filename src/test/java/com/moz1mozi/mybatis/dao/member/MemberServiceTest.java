@@ -1,18 +1,20 @@
 package com.moz1mozi.mybatis.dao.member;
 
 import com.moz1mozi.mybatis.common.exception.CustomException;
-import com.moz1mozi.mybatis.member.dto.FindMemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
-import com.moz1mozi.mybatis.member.dto.Role;
+import com.moz1mozi.mybatis.user.dto.FindUserDto;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.dto.PasswordChangeDto;
+import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.dto.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
 
@@ -26,7 +28,7 @@ class MemberServiceTest {
 
 
     @Autowired
-    private MemberMapper memberMapper;
+    private UserMapper userMapper;
 
     @Autowired
     private MemberService memberService;
@@ -34,81 +36,84 @@ class MemberServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    @Test
-//    void 회원등록테스트() {
-//        MemberDto member = MemberDto.builder()
-//                .username("mary")
-//                .nickname("마리")
-//                .password("1234")
-//                .email("test@test.com")
-//                .createdAt(Date.from(Instant.now()))
-//                .role(Role.BUYER)
-//                .build();
-//       memberService.insertMember(member);
-//        MemberDto savedMember = memberMapper.findByUsername(member.getUsername());
-//        assertNotNull(savedMember);
-//        assertEquals(member.getUsername(), savedMember.getUsername());
-//    }
+    @Test
+    void 회원등록테스트() throws IOException {
+        UserDto user = UserDto.builder()
+                .userName("tester100")
+                .userNickname("tester100")
+                .userPw("1234")
+                .confirmPassword("1234")
+                .userEmail("test100@test.com")
+                .userCreatedAt(Date.from(Instant.now()))
+                .userRole(Role.BUYER)
+                .build();
+        log.info(user.getUserPw());
+       memberService.insertMember(user, null);
+        UserDto savedMember = userMapper.findByUsername(user.getUserName()).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        assertNotNull(savedMember);
+        assertEquals(user.getUserName(), savedMember.getUserName());
+    }
 
     @Test
+    @Transactional
     void 유저찾기() {
-        MemberDto member = MemberDto.builder()
-                .username("moz1mozi")
-                .password("1234")
-                .email("moz1mozi@mozi.com")
-                .createdAt(Date.from(Instant.now()))
-                .role(Role.SELLER)
+        UserDto user = UserDto.builder()
+                .userName("moz1mozi")
+                .userPw("1234")
+                .userEmail("moz1mozi@mozi.com")
+                .userCreatedAt(Date.from(Instant.now()))
+                .userRole(Role.SELLER)
                 .build();
 
-        MemberDto byUsername = memberService.findByUsername(member.getUsername());
-        assertEquals("moz1mozi", byUsername);
+        UserDto byUsername = memberService.findByUsername(user.getUserName());
+        assertEquals(user.getUserName(), byUsername.getUserName());
     }
 
     @Test
     void 비밀번호변경_테스트() {
-        String username = "admin";
+        String username = "tester100";
         String currentPassword = "1234";
         String encodedPassword = passwordEncoder.encode(currentPassword);
-        MemberDto existingMember = memberService.findByUsername(username);
-//        assertThat(passwordEncoder.matches(currentPassword, existingMember.getPassword())).isTrue();
+        UserDto existingMember = memberService.findByUsername(username);
+        assertThat(passwordEncoder.matches(currentPassword, existingMember.getUserPw())).isTrue();
         System.out.println(encodedPassword);
 
         //When
         String newPassword = "qwer";
         String encodedNewPassword = passwordEncoder.encode(newPassword);
         PasswordChangeDto passwordChangeDto =  PasswordChangeDto.builder()
-                .username(username)
+                .userName(username)
                 .currentPassword(encodedPassword)
                 .newPassword(encodedNewPassword)
                 .confirmPassword(encodedNewPassword)
                 .build();
-
+        log.info("현재 비밀번호 : {}, 이것도 현재 비밀번호 : {}", encodedPassword, passwordChangeDto.getCurrentPassword());
         memberService.changePassword(username, passwordChangeDto);
 
-        MemberDto updatedUser = memberMapper.findByUsername(username).orElseThrow();
-//        assertThat(passwordEncoder.matches(newPassword, updatedUser.getPassword())).isTrue();
+        UserDto updatedUser = userMapper.findByUsername(username).orElseThrow();
+        assertThat(passwordEncoder.matches(newPassword, updatedUser.getUserPw())).isTrue();
     }
 
     @Test
     void 아이디찾기_성공_테스트() {
         String email = "emozi@emozi.com";
-        FindMemberDto findMemberDto = FindMemberDto.builder()
-                .email(email)
+        FindUserDto findUserDto = FindUserDto.builder()
+                .userEmail(email)
                 .build();
 
-        String username = memberService.findByUsernameEmail(findMemberDto);
+        String username = memberService.findByUsernameEmail(findUserDto);
         assertNotNull(username);
     }
 
     @Test
     void 아이디찾기_실패_테스트() {
         String email = "notExists@email.com";
-        FindMemberDto findMemberDto = FindMemberDto.builder()
-                .email(email)
+        FindUserDto findUserDto = FindUserDto.builder()
+                .userEmail(email)
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> {
-            memberService.findByUsernameEmail(findMemberDto);
+            memberService.findByUsernameEmail(findUserDto);
         });
     }
 
@@ -118,8 +123,8 @@ class MemberServiceTest {
         String nickname = "이모지히";
         memberService.updateNickname(username, nickname);
 
-        MemberDto member = memberService.findByUsername(username);
-        assertEquals(nickname, member.getNickname());
+        UserDto user = memberService.findByUsername(username);
+        assertEquals(nickname, user.getUserNickname());
     }
 
     @Test
