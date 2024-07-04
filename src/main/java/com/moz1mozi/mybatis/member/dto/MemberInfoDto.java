@@ -7,13 +7,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Builder
-public class FindMemberDto {
+public class MemberInfoDto {
+    private Long userId;
     private String userName;
-    private String userNickname;
+    private String userPw;
     private String userEmail;
-    private Date userCreateDt;
+    private String userNickname;
+    private Date userCreatedAt;
+    private Date userModifiedAt;
+    private Role userRole;
 }
