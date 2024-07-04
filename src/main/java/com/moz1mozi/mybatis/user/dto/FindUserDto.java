@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.member.dto;
+package com.moz1mozi.mybatis.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Getter
 @Builder
-public class FindMemberDto {
+public class FindUserDto {
     private String userName;
     private String userNickname;
     private String userEmail;

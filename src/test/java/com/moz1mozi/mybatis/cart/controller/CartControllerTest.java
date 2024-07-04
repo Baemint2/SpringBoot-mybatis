@@ -4,8 +4,8 @@ import com.moz1mozi.mybatis.cart.dao.CartMapper;
 import com.moz1mozi.mybatis.cart.service.CartService;
 import com.moz1mozi.mybatis.category.dao.CategoryMapper;
 import com.moz1mozi.mybatis.image.dao.ImageMapper;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class CartControllerTest {
     private CartMapper cartMapper;
 
     @MockBean
-    private MemberMapper memberMapper;
+    private UserMapper userMapper;
 
     @MockBean
     private CategoryMapper categoryMapper;

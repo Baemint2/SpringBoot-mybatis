@@ -2,8 +2,8 @@ package com.moz1mozi.mybatis.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moz1mozi.mybatis.common.exception.OutOfStockException;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import com.moz1mozi.mybatis.wishlist.service.WishListService;
@@ -40,7 +40,7 @@ public class ProductController {
     @GetMapping("/product")
     public String products(Model model, Principal principal) {
         String username = principal.getName();
-        MemberDto loggedUser = memberService.findByUsername(username);
+        UserDto loggedUser = memberService.findByUsername(username);
         model.addAttribute("loggedUser", loggedUser);
         return "product/product-insert";
     }
@@ -51,9 +51,9 @@ public class ProductController {
                                 Principal principal) {
         if(principal != null) {
             String currentUsername = principal.getName();
-            MemberDto loggedUser = memberService.findByUsername(currentUsername);
+            UserDto loggedUser = memberService.findByUsername(currentUsername);
             model.addAttribute("loggedUser", loggedUser);
-            Long memberId = loggedUser.getMemberId();
+            Long memberId = loggedUser.getUserId();
             boolean isLiked = wishListService.isLiked(memberId, productId);
             model.addAttribute("isLiked", isLiked);
 

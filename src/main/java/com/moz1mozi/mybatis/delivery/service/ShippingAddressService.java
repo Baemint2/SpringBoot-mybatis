@@ -4,7 +4,7 @@ import com.moz1mozi.mybatis.delivery.dto.UpdateAddressDto;
 import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
 import com.moz1mozi.mybatis.delivery.mapper.ShippingAddressMapper;
 import com.moz1mozi.mybatis.common.exception.CustomException;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

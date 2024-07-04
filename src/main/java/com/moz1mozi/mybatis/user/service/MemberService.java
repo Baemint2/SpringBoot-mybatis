@@ -1,13 +1,12 @@
-package com.moz1mozi.mybatis.member.service;
+package com.moz1mozi.mybatis.user.service;
 
 import com.moz1mozi.mybatis.common.exception.CustomException;
 import com.moz1mozi.mybatis.common.exception.InvalidCurrentPasswordException;
 import com.moz1mozi.mybatis.common.exception.PasswordsDoNotMatchException;
 import com.moz1mozi.mybatis.image.service.ImageService;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dao.MemberWithdrawalMapper;
-import com.moz1mozi.mybatis.member.dto.*;
-import com.moz1mozi.mybatis.member.utils.MemberUtils;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.mapper.UserWithdrawalMapper;
+import com.moz1mozi.mybatis.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,22 +21,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.moz1mozi.mybatis.member.utils.MemberUtils.mapStringToRole;
-import static com.moz1mozi.mybatis.member.utils.MemberUtils.validateMemberData;
+import static com.moz1mozi.mybatis.user.utils.MemberUtils.mapStringToRole;
+import static com.moz1mozi.mybatis.user.utils.MemberUtils.validateMemberData;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberMapper memberMapper;
-    private final MemberWithdrawalMapper memberWithdrawalMapper;
+    private final UserMapper userMapper;
+    private final UserWithdrawalMapper userWithdrawalMapper;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
 
     @Transactional
-    public Long insertMember(MemberDto member, MultipartFile profileImage) throws IOException {
-        validateMemberData(member, memberMapper, true);
+    public Long insertMember(UserDto user, MultipartFile profileImage) throws IOException {
+        validateMemberData(user, userMapper, true);
 
         String profileImageUrl = null;
         if(profileImage != null && !profileImage.isEmpty()) {
@@ -45,87 +44,87 @@ public class MemberService {
            profileImageUrl = "/members/" + storedFileName;
         }
 
-        Role role = mapStringToRole(member.getRole().getDisplayName());
+        Role role = mapStringToRole(user.getUserRole().getDisplayName());
         log.info("role ={}", role);
-        MemberDto siteUser = MemberDto.builder()
-                .username(member.getUsername())
-                .password(passwordEncoder.encode(member.getPassword()))
-                .nickname(member.getNickname())
-                .email(member.getEmail())
-                .mobile(member.getMobile())
-                .profileImagePath(profileImageUrl)
-                .createdAt(Date.from(Instant.now()))
-                .role(role)
+        UserDto siteUser = UserDto.builder()
+                .userName(user.getUserName())
+                .userPw(passwordEncoder.encode(user.getUserPw()))
+                .userNickname(user.getUserNickname())
+                .userEmail(user.getUserEmail())
+                .userMobile(user.getUserMobile())
+                .userProfileImagePath(profileImageUrl)
+                .userCreatedAt(Date.from(Instant.now()))
+                .userRole(role)
                 .build();
 
-        memberMapper.insertMember(siteUser);
-        return siteUser.getMemberId();
+        userMapper.insertMember(siteUser);
+        return siteUser.getUserId();
     }
 
     @Transactional
     public boolean deleteMember(String username, String password) {
-        MemberDto member = memberMapper.findByUsername(username)
+        UserDto user = userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
-       log.info("유저 찾기 = {}", member.getUsername());
-       if(passwordEncoder.matches(password, member.getPassword())) {
-           memberWithdrawalMapper.insertMemberWithdrawal(member.getUsername());
-           memberMapper.deleteMember(member.getUsername());
+       log.info("유저 찾기 = {}", user.getUserName());
+       if(passwordEncoder.matches(password, user.getUserPw())) {
+           userWithdrawalMapper.insertMemberWithdrawal(user.getUserName());
+           userMapper.deleteMember(user.getUserName());
            return true;
        }
        return false;
     }
 
     @Transactional(readOnly = true)
-    public MemberDto findByUsername(String username) {
-        return memberMapper.findByUsername(username)
+    public UserDto findByUsername(String username) {
+        return userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
 
-    public MemberDto getEmail(String email) {
-        return memberMapper.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
+    public UserDto getEmail(String email) {
+        return userMapper.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
 
     public boolean checkUserExists(String nickname, String email, String username) {
         if(username != null) {
             //username 제공된 경우
-            return memberMapper.findByNicknameAndEmailAndUsername(nickname, email, username).isPresent();
+            return userMapper.findByNicknameAndEmailAndUsername(nickname, email, username).isPresent();
         } else {
-            return memberMapper.findByNicknameAndEmail(nickname, email).isPresent();
+            return userMapper.findByNicknameAndEmail(nickname, email).isPresent();
         }
     }
 
     @Transactional(readOnly = true)
     public Long getMemberIdByUsername(String username) {
-        return Optional.ofNullable(memberMapper.findByMemberIdByUsername(username))
+        return Optional.ofNullable(userMapper.findByMemberIdByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
 
     @Transactional(readOnly = true)
-    public MemberDto getMemberId(Long memberId) {
-        return memberMapper.findByMemberId(memberId)
+    public UserDto getMemberId(Long memberId) {
+        return userMapper.findByMemberId(memberId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
 
     @Transactional(readOnly = true)
     public List<Long> getMemberAddress(Long memberId) {
-        return Optional.ofNullable(memberMapper.findMemberIdByAddressId(memberId))
+        return Optional.ofNullable(userMapper.findMemberIdByAddressId(memberId))
                 .orElseThrow(() -> new CustomException("addressNotFound","배송지가 존재하지 않습니다."));
     }
 
     // 비밀번호 변경
     @Transactional
     public void changePassword(String username, PasswordChangeDto passwordChangeDto) {
-        MemberDto member = memberMapper.findByUsername(username)
+        UserDto member = userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         validatePassword(passwordChangeDto, member);
 
         String encodedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
-        memberMapper.updatePassword(username, encodedPassword);
+        userMapper.updatePassword(username, encodedPassword);
     }
 
-    private void validatePassword(PasswordChangeDto passwordChangeDto, MemberDto member) {
-        if(!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getPassword())) {
+    private void validatePassword(PasswordChangeDto passwordChangeDto, UserDto member) {
+        if(!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getUserPw())) {
             throw new InvalidCurrentPasswordException("invalidCurrentPassword", "현재비밀번호가 일치하지 않습니다.");
         }
 
@@ -139,8 +138,8 @@ public class MemberService {
 
     //아이디 찾기
     @Transactional(readOnly = true)
-    public String findByUsernameEmail(FindMemberDto findMemberDto) {
-        return Optional.ofNullable(memberMapper.findUsernameByEmail(findMemberDto.getEmail()))
+    public String findByUsernameEmail(FindUserDto findMemberDto) {
+        return Optional.ofNullable(userMapper.findUsernameByEmail(findMemberDto.getUserEmail()))
                                 .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
 
     }
@@ -148,7 +147,7 @@ public class MemberService {
     //닉네임 변경
     @Transactional
     public void updateNickname(String username, String nickname) {
-        if(memberMapper.findByUsername(username).isEmpty()) {
+        if(userMapper.findByUsername(username).isEmpty()) {
             throw new UsernameNotFoundException("사용자가 존재하지 않습니다.");
         }
         //중복 검사
@@ -156,35 +155,35 @@ public class MemberService {
             throw new CustomException("isNicknameDuplicate","이미 사용중인 닉네임입니다.");
         }
 
-        memberMapper.updateNickname(username, nickname);
+        userMapper.updateNickname(username, nickname);
     }
 
     //프로필 이미지 변경
     @Transactional
     public void updateProfileImage(String username, MultipartFile profileImage) throws IOException {
-        MemberDto existingMember = memberMapper.findByUsername(username)
+        UserDto existingMember = userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         if(profileImage != null && !profileImage.isEmpty()) {
             String storedFilename = imageService.storeProfileImage(profileImage);
             String storedUrl = "/members/" + storedFilename;
-            existingMember.setProfileImagePath(storedUrl);
-            memberMapper.updateProfileImage(existingMember.getUsername(), storedUrl);
+            existingMember.setUserProfileImagePath(storedUrl);
+            userMapper.updateProfileImage(existingMember.getUserName(), storedUrl);
         }
     }
 
     //사용자명 중복 검사
     public boolean usernameDuplicate(String username) {
-        return memberMapper.existsByUsername(username);
+        return userMapper.existsByUsername(username);
     }
 
     //이메일 중복 검사
     public boolean emailDuplicate(String email) {
-        return memberMapper.existsByEmail(email);
+        return userMapper.existsByEmail(email);
     }
 
     //닉네임 중복 검사
     public boolean nicknameDuplicate(String nickname) {
-        return memberMapper.existsByNickname(nickname);
+        return userMapper.existsByNickname(nickname);
     }
 
 

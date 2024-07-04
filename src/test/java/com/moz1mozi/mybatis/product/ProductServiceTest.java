@@ -2,7 +2,7 @@ package com.moz1mozi.mybatis.product;
 
 import com.moz1mozi.mybatis.image.dto.ImageDto;
 import com.moz1mozi.mybatis.image.service.ImageService;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
 import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
@@ -37,7 +37,7 @@ class ProductServiceTest {
     @Autowired
     private ProductMapper productMapper;
     @Autowired
-    private MemberMapper memberMapper;
+    private UserMapper userMapper;
     @Autowired
     private ImageService imageService;
 

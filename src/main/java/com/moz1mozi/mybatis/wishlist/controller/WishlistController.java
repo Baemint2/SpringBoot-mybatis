@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.wishlist.controller;
 
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import com.moz1mozi.mybatis.wishlist.dto.WishlistDto;
 import com.moz1mozi.mybatis.wishlist.service.WishListService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class WishlistController {
     @PostMapping("/api/v1/wishlist/toggle/{productId}")
     public ResponseEntity<?> toggleWishlist(@PathVariable Long productId, Principal principal) {
         String username = principal.getName();
-        Long memberId = memberService.findByUsername(username).getMemberId();
+        Long memberId = memberService.findByUsername(username).getUserId();
         boolean isLiked = wishListService.toggleLike(memberId, productId);
         return ResponseEntity.ok(isLiked);
     }
@@ -33,7 +33,7 @@ public class WishlistController {
     @GetMapping("/api/v1/wishlist")
     public ResponseEntity<List<WishlistDto>> getWishlist(Principal principal) {
         String username = principal.getName();
-        Long memberId = memberService.findByUsername(username).getMemberId();
+        Long memberId = memberService.findByUsername(username).getUserId();
         List<WishlistDto> wishlist = wishListService.getWishlistByMember(memberId);
         return ResponseEntity.ok(wishlist);
     }

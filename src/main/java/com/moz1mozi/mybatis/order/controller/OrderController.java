@@ -3,8 +3,8 @@ package com.moz1mozi.mybatis.order.controller;
 import com.moz1mozi.mybatis.cart.service.CartService;
 import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
 import com.moz1mozi.mybatis.delivery.service.ShippingAddressService;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -27,8 +27,8 @@ public class OrderController {
 
     @GetMapping("/order/detail")
     public String showOrderPage(Model model, Principal principal) {
-        MemberDto member = memberService.findByUsername(principal.getName());
-        List<Long> addressId = memberService.getMemberAddress(member.getMemberId());
+        UserDto member = memberService.findByUsername(principal.getName());
+        List<Long> addressId = memberService.getMemberAddress(member.getUserId());
 
         log.info("RESULT: {}", addressId);
 //        log.info("addressId : {}", addressId);

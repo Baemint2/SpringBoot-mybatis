@@ -11,10 +11,10 @@
         <result property="prodPrice" column="PROD_PRICE"/>
         <result property="stockQuantity" column="STOCK_QUANTITY"/>
         <result property="role" column="Role"/>
-        <association property="memberDto" javaType="MemberDto">
-            <id property="memberId" column="MEMBER_ID"/>
-            <result property="username" column="USERNAME"/>
-            <result property="nickname" column="nickname"/>
+        <association property="UserDto" javaType="UserDto">
+            <id property="userId" column="user_id"/>
+            <result property="userName" column="user_name"/>
+            <result property="userNickname" column="user_nickname"/>
         </association>
         <association property="imageDto" javaType="ImageDto">
             <id property="imageId" column="IMAGE_ID"/>

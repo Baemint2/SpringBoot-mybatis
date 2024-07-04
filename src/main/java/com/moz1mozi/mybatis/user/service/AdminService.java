@@ -1,13 +1,12 @@
-package com.moz1mozi.mybatis.member.service;
+package com.moz1mozi.mybatis.user.service;
 
 import com.moz1mozi.mybatis.common.config.IsAdmin;
-import com.moz1mozi.mybatis.common.exception.CustomException;
 import com.moz1mozi.mybatis.email.service.EmailService;
 import com.moz1mozi.mybatis.image.service.ImageService;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
-import com.moz1mozi.mybatis.member.dto.Role;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.dto.UserInfoDto;
+import com.moz1mozi.mybatis.user.dto.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -24,26 +23,26 @@ import java.util.Date;
 import java.util.List;
 
 import static com.moz1mozi.mybatis.common.utils.RandomCodeUtils.generateTempPassword;
-import static com.moz1mozi.mybatis.member.utils.MemberUtils.mapStringToRole;
-import static com.moz1mozi.mybatis.member.utils.MemberUtils.validateMemberData;
+import static com.moz1mozi.mybatis.user.utils.MemberUtils.mapStringToRole;
+import static com.moz1mozi.mybatis.user.utils.MemberUtils.validateMemberData;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final MemberMapper memberMapper;
+    private final UserMapper userMapper;
     private final ImageService imageService;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
     @Transactional
-    public Long insertMember(MemberDto member, MultipartFile profileImage) throws IOException {
+    public Long insertMember(UserDto user, MultipartFile profileImage) throws IOException {
         String tempPassword = generateTempPassword();
         String encodedPassword = passwordEncoder.encode(tempPassword);
-        member.setPassword(encodedPassword);
+        user.setUserPw(encodedPassword);
 
-        validateMemberData(member, memberMapper, false);
+        validateMemberData(user, userMapper, false);
 
         String profileImageUrl = null;
         if(profileImage != null && !profileImage.isEmpty()) {
@@ -51,31 +50,31 @@ public class AdminService {
             profileImageUrl = "/members/" + storedFileName;
         }
 
-        Role role = mapStringToRole(member.getRole().getDisplayName());
+        Role role = mapStringToRole(user.getUserRole().getDisplayName());
         log.info("role ={}", role);
 
 
-        MemberDto siteUser = MemberDto.builder()
-                .username(member.getUsername())
-                .password(encodedPassword)
-                .nickname(member.getNickname())
-                .email(member.getEmail())
-                .mobile(member.getMobile())
-                .profileImagePath(profileImageUrl)
-                .createdAt(Date.from(Instant.now()))
-                .role(role)
+        UserDto siteUser = UserDto.builder()
+                .userName(user.getUserName())
+                .userPw(encodedPassword)
+                .userNickname(user.getUserNickname())
+                .userEmail(user.getUserEmail())
+                .userMobile(user.getUserMobile())
+                .userProfileImagePath(profileImageUrl)
+                .userCreatedAt(Date.from(Instant.now()))
+                .userRole(role)
                 .build();
 
-        memberMapper.insertMember(siteUser);
+        userMapper.insertMember(siteUser);
 
-        emailService.sendTempPasswordEmail(member.getEmail(), tempPassword);
-        return siteUser.getMemberId();
+        emailService.sendTempPasswordEmail(user.getUserEmail(), tempPassword);
+        return siteUser.getUserId();
     }
 
 
 
-    public List<MemberInfoDto> getMemberInfo() {
-        return memberMapper.selectMemberInfo();
+    public List<UserInfoDto> getMemberInfo() {
+        return userMapper.selectMemberInfo();
     }
 
     @IsAdmin
@@ -92,7 +91,7 @@ public class AdminService {
             }
         }
 
-        memberMapper.deleteMember(username);
+        userMapper.deleteMember(username);
         log.info("관리자: {} 삭제한 유저: {}", adminName, username);
     }
 }

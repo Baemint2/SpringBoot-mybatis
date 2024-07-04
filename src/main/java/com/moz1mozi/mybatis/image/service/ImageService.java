@@ -2,9 +2,7 @@
 
     import com.moz1mozi.mybatis.image.dao.ImageMapper;
     import com.moz1mozi.mybatis.image.dto.ImageDto;
-    import com.moz1mozi.mybatis.member.dao.MemberMapper;
-    import com.moz1mozi.mybatis.member.dto.MemberDto;
-    import com.moz1mozi.mybatis.member.service.MemberService;
+    import com.moz1mozi.mybatis.user.mapper.UserMapper;
     import lombok.RequiredArgsConstructor;
     import org.springframework.beans.factory.annotation.Value;
     import org.springframework.stereotype.Service;
@@ -27,7 +25,7 @@
     public class ImageService {
 
         private final ImageMapper imageMapper;
-        private final MemberMapper memberMapper;
+        private final UserMapper userMapper;
 
         @Value("${file.upload-dir.images}")
         private String uploadDir;

@@ -5,8 +5,8 @@ import com.moz1mozi.mybatis.cart.dto.CartDto;
 import com.moz1mozi.mybatis.cart.dto.TotalCartDto;
 import com.moz1mozi.mybatis.cart.service.CartService;
 import com.moz1mozi.mybatis.common.exception.OutOfStockException;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +33,8 @@ public class CartController {
     @GetMapping("/member/cart")
     public String myCart(Model model, Principal principal) {
         String username = principal.getName();
-        MemberDto loggedUser = memberService.findByUsername(username);
-        Long memberId = loggedUser.getMemberId();
+        UserDto loggedUser = memberService.findByUsername(username);
+        Long memberId = loggedUser.getUserId();
         log.info("로그인한 멤버 : {}", memberId);
         model.addAttribute("loggedUser", loggedUser);
 
@@ -53,7 +53,7 @@ public class CartController {
     public ResponseEntity<?> addCartItems(@RequestBody CartDto cartDto, Principal principal) {
         try {
             String username = principal.getName();
-            Long memberId = memberService.findByUsername(username).getMemberId();
+            Long memberId = memberService.findByUsername(username).getUserId();
             int updateStock = productService.addToCartAndUpdateStockQuantity(cartDto.getProductId(), cartDto.getQuantity());
             Integer cartItemId = cartService.addOrUpdateCartItem(memberId, cartDto.getProductId(), cartDto.getQuantity(), cartDto.getPrice());
 
@@ -69,7 +69,7 @@ public class CartController {
     @GetMapping("/api/v1/cart")
     public ResponseEntity<?> getCartTotal(Principal principal) {
         String username = principal.getName();
-        Long memberId = memberService.findByUsername(username).getMemberId();
+        Long memberId = memberService.findByUsername(username).getUserId();
 
         TotalCartDto totalPrice = cartService.getTotalPrice(memberId);
         return ResponseEntity.ok(totalPrice);

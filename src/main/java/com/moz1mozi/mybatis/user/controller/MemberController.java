@@ -1,17 +1,12 @@
-package com.moz1mozi.mybatis.member.controller;
+package com.moz1mozi.mybatis.user.controller;
 
-import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
 import com.moz1mozi.mybatis.delivery.service.ShippingAddressService;
-import com.moz1mozi.mybatis.member.dto.FindMemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.service.MemberSecurityService;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.service.MemberSecurityService;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bouncycastle.math.raw.Mod;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,15 +42,15 @@ public class MemberController {
     }
 
     @PostMapping("/find/username")
-    public String findUsernamePost(@ModelAttribute MemberDto memberDto, BindingResult result,
+    public String findUsernamePost(@ModelAttribute UserDto userDto, BindingResult result,
                                    RedirectAttributes ra) {
         if (result.hasErrors()) {
             return "member/find-username";
         }
 
-        MemberDto findUsername = memberService.getEmail(memberDto.getEmail());
+        UserDto findUsername = memberService.getEmail(userDto.getUserEmail());
         if (findUsername != null) {
-            ra.addFlashAttribute("findUsername", findUsername.getUsername());
+            ra.addFlashAttribute("findUsername", findUsername.getUserName());
         } else {
             ra.addFlashAttribute("error", "해당 이메일로 가입된 아이디가 없습니다.");
         }
@@ -74,18 +69,18 @@ public class MemberController {
     }
 
     @PostMapping("/find/password")
-    public String findPasswordPost(@ModelAttribute MemberDto memberDto, BindingResult result,
+    public String findPasswordPost(@ModelAttribute UserDto userDto, BindingResult result,
                                    RedirectAttributes ra, HttpSession session) {
 
         if(result.hasErrors()) {
             return "member/find-password";
         }
 
-        MemberDto findUsername = memberService.findByUsername(memberDto.getUsername());
+        UserDto findUsername = memberService.findByUsername(userDto.getUserName());
         if(findUsername != null) {
             //사용자 인증
-            memberSecurityService.authenticateUserAfterReset(findUsername.getUsername(), session);
-            ra.addFlashAttribute("username", findUsername.getUsername());
+            memberSecurityService.authenticateUserAfterReset(findUsername.getUserName(), session);
+            ra.addFlashAttribute("username", findUsername.getUserName());
             return "redirect:/member/change-password";
         } else {
             ra.addFlashAttribute("error", "일치하는 회원 정보가 없습니다.");
@@ -96,8 +91,8 @@ public class MemberController {
     @GetMapping("/change-password")
     public String changePassword(HttpSession session, Principal principal, Model model) {
         if(principal != null) {
-            MemberDto member = memberService.findByUsername(principal.getName());
-            model.addAttribute("username", member.getUsername());
+            UserDto user = memberService.findByUsername(principal.getName());
+            model.addAttribute("username", user.getUserName());
         } else if (session.getAttribute("username") != null) {
             String findUsername = (String) session.getAttribute("username");
             model.addAttribute("username", findUsername);
@@ -109,12 +104,12 @@ public class MemberController {
 
     @GetMapping("/info")
     public String info(Model model, Principal principal) {
-        MemberDto member = memberService.findByUsername(principal.getName());
-        List<Long> addressId = memberService.getMemberAddress(member.getMemberId());
+        UserDto user = memberService.findByUsername(principal.getName());
+        List<Long> addressId = memberService.getMemberAddress(user.getUserId());
 
         log.info("RESULT: {}", addressId);
 //        log.info("addressId : {}", addressId);
-        model.addAttribute("loggedUser", member);
+        model.addAttribute("loggedUser", user);
         model.addAttribute("addressId", addressId);
         return "member/info";
     }

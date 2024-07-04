@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.member.dto;
+package com.moz1mozi.mybatis.user.dto;
 
 import lombok.Getter;
 

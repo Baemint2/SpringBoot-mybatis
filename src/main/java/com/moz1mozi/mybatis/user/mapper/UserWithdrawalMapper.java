@@ -1,8 +1,8 @@
-package com.moz1mozi.mybatis.member.dao;
+package com.moz1mozi.mybatis.user.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface MemberWithdrawalMapper {
+public interface UserWithdrawalMapper {
     int insertMemberWithdrawal(String username);
 }

@@ -1,8 +1,8 @@
-package com.moz1mozi.mybatis.member.dao;
+package com.moz1mozi.mybatis.user.mapper;
 
-import com.moz1mozi.mybatis.member.dto.FindMemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberInfoDto;
+import com.moz1mozi.mybatis.user.dto.FindUserDto;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.dto.UserInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,30 +10,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Mapper
-public interface MemberMapper {
-    Long insertMember(MemberDto member);
+public interface UserMapper {
+    Long insertMember(UserDto member);
 
     // 회원 정보 조회
-    List<MemberInfoDto> selectMemberInfo();
+    List<UserInfoDto> selectMemberInfo();
 
     Long deleteMember(String username);
 
-    Optional<MemberDto> findByUsername(String username);
+    Optional<UserDto> findByUsername(String username);
 
 
-    Optional<MemberDto> findByEmail(String email);
+    Optional<UserDto> findByEmail(String email);
 
-    Optional<MemberDto> findByMemberId(Long memberId);
+    Optional<UserDto> findByMemberId(Long memberId);
 
     Long findByMemberIdByUsername(String username);
 
     List<Long> findMemberIdByAddressId(Long memberId);
 
     // 닉네임와 이메일로 해당하는 회원의 정보 찾기
-    Optional<FindMemberDto> findByNicknameAndEmail(@Param("nickname")String nickname, @Param("email") String email);
+    Optional<FindUserDto> findByNicknameAndEmail(@Param("nickname")String nickname, @Param("email") String email);
 
     // 닉네임, 이메일, 아이디에 해당하는 회원의 정보 찾기
-    Optional<FindMemberDto> findByNicknameAndEmailAndUsername(@Param("nickname") String nickname, @Param("email") String email, @Param("username") String username);
+    Optional<FindUserDto> findByNicknameAndEmailAndUsername(@Param("nickname") String nickname, @Param("email") String email, @Param("username") String username);
 
     // 이메일로 아이디(username) 찾기
     String findUsernameByEmail(String email);

@@ -1,12 +1,12 @@
-package com.moz1mozi.mybatis.member.controller;
+package com.moz1mozi.mybatis.user.controller;
 
 import com.moz1mozi.mybatis.email.service.AuthenticationService;
 import com.moz1mozi.mybatis.email.service.EmailService;
-import com.moz1mozi.mybatis.member.dto.FindMemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.dto.MemberWithdrawalDto;
-import com.moz1mozi.mybatis.member.dto.PasswordChangeDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.dto.FindUserDto;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.dto.MemberWithdrawalDto;
+import com.moz1mozi.mybatis.user.dto.PasswordChangeDto;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class MemberApiController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@Valid @RequestPart("member") MemberDto memberDto,
+    public ResponseEntity<Map<String, String>> signup(@Valid @RequestPart("member") UserDto memberDto,
                                                       @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         Long memberId = memberService.insertMember(memberDto, file);
         log.info("회원가입 = {}", memberId);
@@ -62,8 +62,8 @@ public class MemberApiController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<MemberDto> getMemberInfo(Principal principal) {
-        MemberDto member = memberService.findByUsername(principal.getName());
+    public ResponseEntity<UserDto> getMemberInfo(Principal principal) {
+        UserDto member = memberService.findByUsername(principal.getName());
         if(member != null) {
             return ResponseEntity.ok(member);
         } else {
@@ -82,12 +82,12 @@ public class MemberApiController {
     }
 
     @PostMapping("/verify-user")
-    public ResponseEntity<?> verifyUser(@RequestBody FindMemberDto findMemberDto) {
-        boolean userExists = memberService.checkUserExists(findMemberDto.getNickname(), findMemberDto.getEmail(), findMemberDto.getUsername());
+    public ResponseEntity<?> verifyUser(@RequestBody FindUserDto findUserDto) {
+        boolean userExists = memberService.checkUserExists(findUserDto.getUserNickname(), findUserDto.getUserEmail(), findUserDto.getUserName());
         if(!userExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "일치하는 회원 정보가 없습니다."));
         }
-        authenticationService.sendAndSaveVerificationCode(findMemberDto.getEmail());
+        authenticationService.sendAndSaveVerificationCode(findUserDto.getUserEmail());
         return ResponseEntity.ok().body(Map.of("message", "인증 코드가 발송되었습니다."));
     }
 
@@ -95,7 +95,7 @@ public class MemberApiController {
     @PutMapping("/updatePassword")
     public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordChangeDto password, HttpSession session) {
         try {
-            memberService.changePassword(password.getUsername(), password);
+            memberService.changePassword(password.getUserName(), password);
             session.invalidate(); // 세션 종료
             return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 업데이트 되었습니다. 다시 로그인 해주세요."));
         } catch (Exception ex) {

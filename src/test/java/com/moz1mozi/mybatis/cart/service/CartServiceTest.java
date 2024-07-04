@@ -3,7 +3,7 @@ package com.moz1mozi.mybatis.cart.service;
 import com.moz1mozi.mybatis.cart.dao.CartMapper;
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

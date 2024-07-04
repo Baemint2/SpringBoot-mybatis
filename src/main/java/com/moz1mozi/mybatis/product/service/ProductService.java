@@ -3,8 +3,8 @@ package com.moz1mozi.mybatis.product.service;
 import com.moz1mozi.mybatis.cart.dao.CartMapper;
 import com.moz1mozi.mybatis.common.exception.OutOfStockException;
 import com.moz1mozi.mybatis.image.service.ImageService;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.dto.UserDto;
 import com.moz1mozi.mybatis.product.dao.ProductMapper;
 import com.moz1mozi.mybatis.product.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -30,16 +30,16 @@ public class ProductService {
 
     private final ProductMapper productMapper;
     private final CartMapper cartMapper;
-    private final MemberMapper memberMapper;
+    private final UserMapper userMapper;
     private final ImageService imageService;
 
     //상품 등록
     @Transactional
     public Long insertProduct(ProductDto productDto, List<MultipartFile> files, String username) throws IOException {
-        Long sellerId = memberMapper.findByMemberIdByUsername(username);
-        MemberDto role = memberMapper.findByUsername(username)
+        Long sellerId = userMapper.findByMemberIdByUsername(username);
+        UserDto role = userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-        if (!"판매자".equals(role.getRole().getDisplayName())) {
+        if (!"판매자".equals(role.getUserRole().getDisplayName())) {
             throw new IllegalArgumentException("상품 업로드는 판매자만 가능합니다.");
         }
 

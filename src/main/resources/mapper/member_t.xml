@@ -2,137 +2,155 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moz1mozi.mybatis.member.dao.MemberMapper">
+<mapper namespace="com.moz1mozi.mybatis.user.mapper.UserMapper">
     <insert id="insertMember"
-            parameterType="MemberDto">
-        <selectKey keyProperty="memberId" resultType="long" order="AFTER">
+            parameterType="UserDto">
+        <selectKey keyProperty="userId" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO MEMBER_T (
-        USERNAME,
-        PASSWORD,
-        EMAIL,
-        NICKNAME,
-        MOBILE,
-        PROFILE_IMAGE_PATH,
-        ROLE,
-        CREATED_AT,
-        MODIFIED_AT
-        ) VALUES (#{username}, #{password}, #{email}, #{nickname}, #{mobile}, #{profileImagePath} ,#{role, typeHandler=com.moz1mozi.mybatis.common.typehandler.RoleTypeHandler}, now(), now())
+        INSERT INTO User (
+        user_name,
+        user_pw,
+        user_email,
+        user_nickname,
+        user_mobile,
+        user_profile_image_path,
+        user_role,
+        user_created_at,
+        user_modified_at
+        ) VALUES (
+            #{userName},
+            #{userPw},
+            #{userEmail},
+            #{userNickname},
+            #{userMobile},
+            #{userProfileImagePath},
+            #{userRole, typeHandler=com.moz1mozi.mybatis.common.typehandler.RoleTypeHandler}, now(), now())
     </insert>
 
     <delete id="deleteMember">
         DELETE
-          FROM MEMBER_T
-         WHERE USERNAME = #{username}
+          FROM User u
+         WHERE u.user_name = #{userName}
     </delete>
 
     <select id="selectMemberInfo"
-            resultType="MemberInfoDto">
-        SELECT MEMBER_ID, USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, CREATED_AT, MODIFIED_AT
-        FROM MEMBER_T;
+            resultType="UserInfoDto">
+            SELECT u.user_id, u.user_name, u.user_pw, u.user_email,
+                   u.user_nickname, u.user_mobile, u.user_role,
+                   u.user_created_at, u.user_modified_at
+              FROM User u;
     </select>
 
     <select id="findByUsername"
-            parameterType="MemberDto">
-        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, PROFILE_IMAGE_PATH, ROLE, MEMBER_ID
-          FROM MEMBER_T
-         WHERE USERNAME = #{username}
+            parameterType="UserDto">
+        SELECT u.user_name, u.user_pw, u.user_email, u.user_nickname,
+               u.user_mobile, u.user_profile_image_path, u.user_role, u.user_id
+          FROM User u
+         WHERE u.user_name = #{userName}
     </select>
 
     <select id="findByEmail"
-            parameterType="MemberDto">
-        SELECT USERNAME, PASSWORD, EMAIL, NICKNAME, MOBILE, ROLE, MEMBER_ID
-        FROM MEMBER_T
-        WHERE EMAIL = #{email}
+            parameterType="UserDto">
+        SELECT u.user_name, u.user_pw, u.user_email, u.user_nickname,
+               u.user_mobile, u.user_role, u.user_id
+        FROM User u
+        WHERE 1 = 1
+          AND u.user_email = #{userEmail}
     </select>
 
     <select id="findByNicknameAndEmail"
-            parameterType="FindMemberDto">
-        SELECT USERNAME, nickname, email, CREATED_AT
-          FROM MEMBER_T
-         WHERE nickname = #{nickname} AND email = #{email}
+            parameterType="FindUserDto">
+        SELECT u.user_name, u.user_nickname,
+               u.user_email, u.user_created_at
+          FROM User u
+         WHERE 1 = 1
+           AND u.user_nickname = #{userNickname}
+           AND u.user_email = #{userEmail}
     </select>
 
     <select id="findByNicknameAndEmailAndUsername"
-            parameterType="FindMemberDto">
-        SELECT USERNAME, nickname, email, CREATED_AT
-        FROM MEMBER_T
-        WHERE nickname = #{nickname} AND email = #{email} AND Username = #{username}
+            parameterType="FindUserDto">
+        SELECT u.user_name, u.user_nickname, u.user_email, u.user_created_at
+        FROM User u
+        WHERE 1 = 1
+          AND u.user_nickname = #{userNickname}
+          AND u.user_email = #{userEmail}
+          AND u.user_name = #{userName}
     </select>
 
 
     <select id="findByRoleWithUsername"
-            parameterType="MemberDto">
-        SELECT USERNAME, PASSWORD, ROLE
-          FROM MEMBER_T
-         WHERE USERNAME = #{username}
+            parameterType="UserDto">
+        SELECT u.user_name, u.user_pw, u.user_role
+          FROM User u
+         WHERE u.user_name = #{userName}
     </select>
 
     <select id="findByMemberIdByUsername"
-            parameterType="MemberDto">
-        SELECT MEMBER_ID
-          FROM MEMBER_T
-         WHERE USERNAME = #{username}
+            parameterType="UserDto">
+        SELECT u.user_id
+          FROM User u
+         WHERE u.user_name = #{userName}
     </select>
 
     <select id="findByMemberId"
-            parameterType="MemberDto">
-        SELECT MEMBER_ID, USERNAME
-        FROM MEMBER_T
-        WHERE MEMBER_ID = #{memberId}
+            parameterType="UserDto">
+        SELECT u.user_id, u.user_name
+        FROM User u
+        WHERE u.user_id = #{userId}
     </select>
 
     <select id="findMemberIdByAddressId"
-            parameterType="MemberDto">
-        SELECT SA.ADDRESS_ID, M.USERNAME, M.MOBILE, M.MEMBER_ID
-        FROM MEMBER_T M
-        INNER JOIN SHIPPING_ADDRESS_T SA ON M.MEMBER_ID = SA.MEMBER_ID
-        WHERE M.MEMBER_ID = #{memberId};
+            parameterType="UserDto">
+        SELECT SA.ADDRESS_ID, u.user_name, u.user_mobile, u.user_id
+        FROM User u
+        INNER JOIN SHIPPING_ADDRESS_T SA ON u.user_id = SA.user_id
+        WHERE u.user_id = #{userId};
     </select>
 
     <!-- 중복 검사 -->
     <select id="existsByEmail"
             resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
-          FROM MEMBER_T
-         WHERE EMAIL = #{email}
+          FROM User u
+         WHERE u.user_email = #{userEmail}
     </select>
     <select id="existsByUsername"
             resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
-          FROM MEMBER_T
-         WHERE USERNAME = #{username}
+          FROM User u
+         WHERE u.user_name = #{userName}
     </select>
 
     <select id="existsByNickname"
             resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
-          FROM MEMBER_T
-         WHERE NICKNAME = #{nickname}
+          FROM User u
+         WHERE u.user_nickname = #{userNickname}
     </select>
 
     <update id="updatePassword">
-        UPDATE MEMBER_T
-           SET PASSWORD = #{password}
-         WHERE USERNAME = #{username}
+        UPDATE User u
+           SET u.user_pw = #{userPw}
+         WHERE u.user_name = #{userName}
     </update>
 
     <update id="updateNickname">
-        UPDATE MEMBER_T
-        SET NICKNAME = #{nickname}
-        WHERE USERNAME = #{username}
+        UPDATE User u
+        SET u.user_nickname = #{userNickname}
+        WHERE u.user_name = #{userName}
     </update>
 
     <update id="updateProfileImage">
-        UPDATE MEMBER_T
-           SET PROFILE_IMAGE_PATH = #{profileImagePath}
-         WHERE USERNAME = #{username}
+        UPDATE User u
+           SET u.user_profile_image_path = #{userProfileImagePath}
+         WHERE u.user_name = #{userName}
     </update>
     <select id="findUsernameByEmail"
             resultType="String">
-        SELECT USERNAME
-        FROM MEMBER_T
-        WHERE email = #{email};
+        SELECT user_name
+        FROM User u
+        WHERE u.user_email = #{userEmail};
     </select>
 </mapper>

@@ -1,26 +1,26 @@
-package com.moz1mozi.mybatis.member.utils;
+package com.moz1mozi.mybatis.user.utils;
 
 import com.moz1mozi.mybatis.common.exception.CustomException;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.dto.Role;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.dto.Role;
 
 public class MemberUtils {
 
-    public static void validateMemberData(MemberDto member, MemberMapper memberMapper, boolean checkPassword) {
-        if(checkPassword && !member.getPassword().equals(member.getConfirmPassword())) {
+    public static void validateMemberData(UserDto member, UserMapper userMapper, boolean checkPassword) {
+        if(checkPassword && !member.getUserPw().equals(member.getConfirmPassword())) {
             throw new CustomException("confirmPassword", "비밀번호가 일치하지 않습니다");
         }
 
-        if(memberMapper.existsByEmail(member.getEmail())) {
+        if(userMapper.existsByEmail(member.getUserEmail())) {
             throw new CustomException("email", "이미 등록된 이메일입니다.");
         }
 
-        if(memberMapper.existsByUsername(member.getUsername())) {
+        if(userMapper.existsByUsername(member.getUserName())) {
             throw new CustomException("username", "이미 등록된 사용자명입니다.");
         }
 
-        if(memberMapper.existsByNickname(member.getNickname())) {
+        if(userMapper.existsByNickname(member.getUserNickname())) {
             throw new CustomException("nickname", "이미 등록된 닉네임입니다.");
         }
     }

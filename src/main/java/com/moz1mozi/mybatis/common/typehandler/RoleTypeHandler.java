@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.common.typehandler;
 
-import com.moz1mozi.mybatis.member.dto.Role;
+import com.moz1mozi.mybatis.user.dto.Role;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;

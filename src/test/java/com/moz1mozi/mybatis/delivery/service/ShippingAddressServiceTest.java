@@ -3,9 +3,9 @@ package com.moz1mozi.mybatis.delivery.service;
 import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
 import com.moz1mozi.mybatis.delivery.dto.UpdateAddressDto;
 import com.moz1mozi.mybatis.delivery.mapper.ShippingAddressMapper;
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +27,18 @@ class ShippingAddressServiceTest {
     @Autowired
     private MemberService memberService;
     @Autowired
-    private MemberMapper memberMapper;
+    private UserMapper userMapper;
 
 
     @Test
     void 배송지_등록() {
         long addressId = 1L;
         String username = "mary";
-        MemberDto user = memberService.findByUsername(username);
-        log.info("memberId: {}", user.getMemberId());
+        UserDto user = memberService.findByUsername(username);
+        log.info("memberId: {}", user.getUserId());
         ShippingAddressDto addressDto = ShippingAddressDto.builder()
                 .addressId(addressId)
-                .memberId(user.getMemberId())
+                .memberId(user.getUserId())
                 .recipientName("김말이")
                 .mobile("01012345678")
                 .zipcode("04006")
@@ -53,8 +53,8 @@ class ShippingAddressServiceTest {
     @Test
     void 배송지_조회() {
         String username = "mary";
-        MemberDto name = memberService.findByUsername(username);
-        List<ShippingAddressDto> result = shippingAddressService.getAllAddresses(name.getMemberId());
+        UserDto name = memberService.findByUsername(username);
+        List<ShippingAddressDto> result = shippingAddressService.getAllAddresses(name.getUserId());
         assertThat(result.get(0).getRecipientName()).isEqualTo("혬찌");
     }
 

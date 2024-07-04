@@ -1,7 +1,7 @@
 package com.moz1mozi.mybatis;
 
-import com.moz1mozi.mybatis.member.dto.MemberDto;
-import com.moz1mozi.mybatis.member.service.MemberService;
+import com.moz1mozi.mybatis.user.dto.UserDto;
+import com.moz1mozi.mybatis.user.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ public class indexController {
     public String index(Principal principal, Model model) {
         if(principal != null) {
             String username = principal.getName();
-            MemberDto loggedUser = memberService.findByUsername(username);
+            UserDto loggedUser = memberService.findByUsername(username);
             model.addAttribute("loggedUser", loggedUser);
         }
 

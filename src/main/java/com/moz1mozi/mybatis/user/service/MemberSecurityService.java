@@ -1,7 +1,7 @@
-package com.moz1mozi.mybatis.member.service;
+package com.moz1mozi.mybatis.user.service;
 
-import com.moz1mozi.mybatis.member.dao.MemberMapper;
-import com.moz1mozi.mybatis.member.dto.MemberDto;
+import com.moz1mozi.mybatis.user.mapper.UserMapper;
+import com.moz1mozi.mybatis.user.dto.UserDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,25 +20,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class MemberSecurityService implements UserDetailsService {
 
-    private final MemberMapper memberMapper;
+    private final UserMapper userMapper;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberDto byUsername = memberMapper.findByUsername(username)
+        UserDto byUsername = userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        log.info("username = {}", byUsername.getUsername());
-        log.info("password = {}" , byUsername.getPassword());
+        log.info("username = {}", byUsername.getUserName());
+        log.info("password = {}" , byUsername.getUserPw());
 
-        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + byUsername.getRole().getDisplayName());
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + byUsername.getUserRole().getDisplayName());
         List<GrantedAuthority> authorities = Collections.singletonList(authority);
-        return new User(byUsername.getUsername(), byUsername.getPassword(), authorities);
+        return new User(byUsername.getUserName(), byUsername.getUserPw(), authorities);
 
     }
 

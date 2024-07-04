@@ -34,11 +34,11 @@ public interface ProductMapper {
     Long countByCondition(ProductSearchDto productSearchDto);
 
     // 판매자 권한 비교
-    @Select("SELECT m.username FROM MEMBER_T M JOIN PRODUCT_T P ON M.MEMBER_ID = P.SELLER_ID WHERE P.PRODUCT_ID = #{productId}")
+    @Select("SELECT m.user_name FROM User M JOIN PRODUCT_T P ON M.user_id = P.SELLER_ID WHERE P.PRODUCT_ID = #{productId}")
     String findSellerUsernameByProductId(@Param("productId")Long productId);
 
     // 어드민 권한 비교
-    @Select("SELECT ROLE FROM MEMBER_T WHERE ROLE = #{role} ")
+    @Select("SELECT user_role FROM User WHERE user_role = #{role} ")
     String findAdminByRole(@Param("role")String role);
 
     // 재고 업데이트
