@@ -12,12 +12,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberInfoDto {
-    private Long memberId;
-    private String username;
-    private String password;
-    private String email;
-    private String nickname;
-    private Date createdAt;
-    private Date modifiedAt;
-    private Role role;
+    private Long userId;
+    private String userName;
+    private String userPw;
+    private String userEmail;
+    private String userNickname;
+    private Date userCreatedAt;
+    private Date userModifiedAt;
+    private Role userRole;
 }

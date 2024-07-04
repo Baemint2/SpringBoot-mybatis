@@ -9,16 +9,16 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDto {
-        private Long memberId;
-        private String username;
-        private String password;
+        private Long userId;
+        private String userName;
+        private String userPw;
         private String confirmPassword;
-        private String email;
-        private String nickname;
-        private String profileImagePath;
-        private String mobile;
-        private Date createdAt;
-        private Date modifiedAt;
-        private Role role;
+        private String userEmail;
+        private String userNickname;
+        private String userProfileImagePath;
+        private String userMobile;
+        private Date userCreatedAt;
+        private Date userModifiedAt;
+        private Role userRole;
         private Long addressId;
 }

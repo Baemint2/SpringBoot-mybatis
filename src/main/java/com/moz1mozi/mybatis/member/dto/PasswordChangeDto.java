@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PasswordChangeDto {
 
-    private String username;
+    private String userName;
     private String currentPassword;
     @NotEmpty(message = "새 비밀번호는 공백일 수 없습니다.")
     private String newPassword;
