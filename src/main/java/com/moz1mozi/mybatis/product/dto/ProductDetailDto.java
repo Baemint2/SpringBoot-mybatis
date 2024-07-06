@@ -20,7 +20,7 @@ public class ProductDetailDto {
     private int prodPrice;
     private int stockQuantity;
     private Role role;
-    private UserDto memberDto;
+    private UserDto userDto;
     private ImageDto imageDto;
     private CategoryDto categoryDto;
 }

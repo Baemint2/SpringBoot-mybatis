@@ -65,7 +65,7 @@ public class AdminService {
                 .userRole(role)
                 .build();
 
-        userMapper.insertMember(siteUser);
+        userMapper.insertUser(siteUser);
 
         emailService.sendTempPasswordEmail(user.getUserEmail(), tempPassword);
         return siteUser.getUserId();
@@ -91,7 +91,7 @@ public class AdminService {
             }
         }
 
-        userMapper.deleteMember(username);
+        userMapper.deleteUser(username);
         log.info("관리자: {} 삭제한 유저: {}", adminName, username);
     }
 }

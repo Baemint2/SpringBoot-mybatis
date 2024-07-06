@@ -1,6 +1,6 @@
 let currentSearchConditions = {
     prodName: null,
-    nickname: null,
+    userNickname: null,
     startPrice: null,
     endPrice: null,
     pageSize: 6,
@@ -40,10 +40,10 @@ const categories = [
 
 
 function fetchAndDisplayPosts(page) {
-    const {prodName, nickname, startPrice, endPrice, pageSize, category} = currentSearchConditions;
+    const {prodName, userNickname, startPrice, endPrice, pageSize, category} = currentSearchConditions;
     let queryString = `page=${page}&pageSize=${pageSize}`;
     queryString += prodName ? `&prodName=${encodeURIComponent(prodName)}` : '';
-    queryString += nickname ? `&nickname=${encodeURIComponent(nickname)}` : '';
+    queryString += userNickname ? `&userNickname=${encodeURIComponent(userNickname)}` : '';
     queryString += startPrice ? `&startPrice=${encodeURIComponent(startPrice)}` : '';
     queryString += endPrice ? `&endPrice=${encodeURIComponent(endPrice)}` : '';
     queryString += category ? `&categoryId=${encodeURIComponent(category)}` : '';
@@ -57,7 +57,7 @@ function fetchAndDisplayPosts(page) {
             history.pushState({
                 page: page,
                 prodName: prodName,
-                nickname: nickname,
+                userNickname: userNickname,
                 startPrice: startPrice,
                 endPrice: endPrice,
                 pageSize: pageSize,
@@ -100,7 +100,7 @@ function createProductCard(product) {
             <img src="${product.imageDto.storedUrl}" class="card-img-top" alt="${product.prodName}">
             <div class="card-body">
                 <small>[${categoryName}]</small>
-                <h5 class="card-title">${product.memberDto.nickname}</h5>
+                <h5 class="card-title">${product.userDto.userNickname}</h5>
                 <p class="card-text">${product.prodName}</p>
                 <p class="card-text">${formattedNumber}원</p>
             </div>
@@ -148,7 +148,7 @@ function createPaginationButton(isActive, pageNumber, text, container, isCurrent
         link.addEventListener('click', (e) => {
             e.preventDefault();
             if (!isCurrentPage) {
-                fetchAndDisplayPosts(pageNumber, currentSearchConditions.prodName, currentSearchConditions.nickname, currentSearchConditions.startPrice, currentSearchConditions.endPrice, pageSize);
+                fetchAndDisplayPosts(pageNumber, currentSearchConditions.prodName, currentSearchConditions.userNickname, currentSearchConditions.startPrice, currentSearchConditions.endPrice, pageSize);
             }
         });
     }
@@ -188,7 +188,7 @@ function updateSearchConditions() {
 
     currentSearchConditions = {
         prodName: null,
-        nickname: null,
+        userNickname: null,
         startPrice: null,
         endPrice: null,
         pageSize: 6,
@@ -198,7 +198,7 @@ function updateSearchConditions() {
     if (searchType === "productName") {
         currentSearchConditions.prodName = document.getElementById('productName').value;
     } else if (searchType === "seller") {
-        currentSearchConditions.nickname = document.getElementById("seller").value;
+        currentSearchConditions.userNickname = document.getElementById("seller").value;
     } else if (searchType === "priceRange") {
         currentSearchConditions.startPrice = document.getElementById("startPrice").value;
         currentSearchConditions.endPrice = document.getElementById("endPrice").value;
@@ -247,8 +247,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.onpopstate = function (event) {
         if(event.state) {
             console.log(event.state);
-            const { page, prodName, nickname, startPrice, endPrice, pageSize, category } = event.state;
-            currentSearchConditions = { prodName, nickname, startPrice, endPrice, pageSize, category };
+            const { page, prodName, userNickname, startPrice, endPrice, pageSize, category } = event.state;
+            currentSearchConditions = { prodName, userNickname, startPrice, endPrice, pageSize, category };
             fetchAndDisplayPosts(page);
         }
     }

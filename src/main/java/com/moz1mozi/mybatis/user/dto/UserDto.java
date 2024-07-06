@@ -20,5 +20,24 @@ public class UserDto {
         private Date userCreatedAt;
         private Date userModifiedAt;
         private Role userRole;
+
+        @Override
+        public String toString() {
+                return "UserDto{" +
+                        "userId=" + userId +
+                        ", userName='" + userName + '\'' +
+                        ", userPw='" + userPw + '\'' +
+                        ", confirmPassword='" + confirmPassword + '\'' +
+                        ", userEmail='" + userEmail + '\'' +
+                        ", userNickname='" + userNickname + '\'' +
+                        ", userProfileImagePath='" + userProfileImagePath + '\'' +
+                        ", userMobile='" + userMobile + '\'' +
+                        ", userCreatedAt=" + userCreatedAt +
+                        ", userModifiedAt=" + userModifiedAt +
+                        ", userRole=" + userRole +
+                        ", addressId=" + addressId +
+                        '}';
+        }
+
         private Long addressId;
 }

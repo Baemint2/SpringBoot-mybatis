@@ -83,11 +83,11 @@ class MemberServiceTest {
         String encodedNewPassword = passwordEncoder.encode(newPassword);
         PasswordChangeDto passwordChangeDto =  PasswordChangeDto.builder()
                 .userName(username)
-                .currentPassword(encodedPassword)
-                .newPassword(encodedNewPassword)
-                .confirmPassword(encodedNewPassword)
+                .currentPassword(currentPassword)
+                .newPassword(newPassword)
+                .confirmPassword(newPassword)
                 .build();
-        log.info("현재 비밀번호 : {}, 이것도 현재 비밀번호 : {}", encodedPassword, passwordChangeDto.getCurrentPassword());
+        log.info("현재 유저의 비밀번호: {}, 현재 비밀번호 : {}, 이것도 현재 비밀번호 : {}",existingMember.getUserPw() , passwordChangeDto.getCurrentPassword(), passwordChangeDto.getConfirmPassword());
         memberService.changePassword(username, passwordChangeDto);
 
         UserDto updatedUser = userMapper.findByUsername(username).orElseThrow();
@@ -120,7 +120,7 @@ class MemberServiceTest {
     @Test
     void 닉네임변경_성공_테스트() {
         String username = "emozi";
-        String nickname = "이모지히";
+        String nickname = "이모히지";
         memberService.updateNickname(username, nickname);
 
         UserDto user = memberService.findByUsername(username);

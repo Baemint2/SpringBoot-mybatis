@@ -6,7 +6,7 @@
     <insert id="insertMemberWithdrawal">
         INSERT INTO MEMBER_WITHDRAWAL_T (USERNAME, DELETED_AT)
         SELECT USERNAME, NOW()
-        FROM MEMBER_T
+        FROM User
         WHERE USERNAME = #{USERNAME}
     </insert>
 </mapper>

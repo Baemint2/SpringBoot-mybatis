@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class MemberWithdrawalDto {
-    private String username;
-    private String password;
+    private String userName;
+    private String userPw;
 }

@@ -64,6 +64,7 @@ public class SecurityConfig {
                 )
                 .formLogin(login -> login
                         .loginPage("/member/login")
+                        .loginProcessingUrl("/member/login") // 로그인 처리 URL (폼 제출 경로)
                         .successHandler(customSuccessHandler))
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))

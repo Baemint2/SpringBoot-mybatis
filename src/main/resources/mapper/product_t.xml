@@ -11,7 +11,7 @@
         <result property="prodPrice" column="PROD_PRICE"/>
         <result property="stockQuantity" column="STOCK_QUANTITY"/>
         <result property="role" column="Role"/>
-        <association property="UserDto" javaType="UserDto">
+        <association property="userDto" javaType="UserDto">
             <id property="userId" column="user_id"/>
             <result property="userName" column="user_name"/>
             <result property="userNickname" column="user_nickname"/>
@@ -72,10 +72,10 @@
 
     <select id="findAllProducts"
             resultType="ProductListDto">
-        SELECT P.PROD_NAME, P.PROD_PRICE, I.STORED_URL, MT.USERNAME
+        SELECT P.PROD_NAME, P.PROD_PRICE, I.STORED_URL, u.user_name
         FROM PRODUCT_T P
         LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
-        LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
+        LEFT JOIN User u ON P.SELLER_ID = u.user_id
     </select>
 
     <select id="getProductByNo" resultMap="ProductMap">
@@ -84,7 +84,7 @@
                C.CATEGORY_NAME
         FROM PRODUCT_T P
         LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
-        LEFT JOIN MEMBER_T M ON P.SELLER_ID = M.MEMBER_ID
+        LEFT JOIN User u ON P.SELLER_ID = u.user_id
         LEFT JOIN CATEGORY_T C ON P.CATEGORY_ID = C.CATEGORY_ID
         WHERE P.PRODUCT_ID = #{productId};
     </select>
@@ -113,10 +113,10 @@
             parameterType="ProductSearchDto"
             resultMap="ProductMap">
         SELECT P.PRODUCT_ID, I.STORED_URL, P.PROD_NAME, P.DESCRIPTION, P.PROD_PRICE,
-        P.STOCK_QUANTITY, MT.NICKNAME, P.CATEGORY_ID, C.CATEGORY_NAME
+        P.STOCK_QUANTITY, U.user_nickname, P.CATEGORY_ID, C.CATEGORY_NAME
         FROM PRODUCT_T P
         LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
-        LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
+        LEFT JOIN User u ON P.SELLER_ID = u.user_id
         LEFT JOIN CATEGORY_T C ON P.CATEGORY_ID = C.CATEGORY_ID
         WHERE 1=1
         <if test="searchDto.prodName != null">
@@ -144,7 +144,7 @@
         SELECT COUNT(*)
           FROM PRODUCT_T P
           LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
-          LEFT JOIN MEMBER_T MT ON P.SELLER_ID = MT.MEMBER_ID
+          LEFT JOIN User u ON P.SELLER_ID = u.user_id
          WHERE 1=1
         <if test="prodName != null">
             AND PROD_NAME LIKE CONCAT('%', #{prodName}, '%')

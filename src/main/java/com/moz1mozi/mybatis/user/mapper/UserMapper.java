@@ -11,44 +11,44 @@ import java.util.Optional;
 
 @Mapper
 public interface UserMapper {
-    Long insertMember(UserDto member);
+    Long insertUser(UserDto user);
 
     // 회원 정보 조회
     List<UserInfoDto> selectMemberInfo();
 
-    Long deleteMember(String username);
+    Long deleteUser(String userName);
 
-    Optional<UserDto> findByUsername(String username);
+    Optional<UserDto> findByUsername(String userName);
 
 
     Optional<UserDto> findByEmail(String email);
 
-    Optional<UserDto> findByMemberId(Long memberId);
+    Optional<UserDto> findByUserId(Long userId);
 
-    Long findByMemberIdByUsername(String username);
+    Long findByUserIdByUsername(String userName);
 
-    List<Long> findMemberIdByAddressId(Long memberId);
+    List<Long> findUserIdByAddressId(Long userId);
 
     // 닉네임와 이메일로 해당하는 회원의 정보 찾기
-    Optional<FindUserDto> findByNicknameAndEmail(@Param("nickname")String nickname, @Param("email") String email);
+    Optional<FindUserDto> findByNicknameAndEmail(@Param("userNickname")String nickname, @Param("userEmail") String email);
 
     // 닉네임, 이메일, 아이디에 해당하는 회원의 정보 찾기
-    Optional<FindUserDto> findByNicknameAndEmailAndUsername(@Param("nickname") String nickname, @Param("email") String email, @Param("username") String username);
+    Optional<FindUserDto> findByNicknameAndEmailAndUsername(@Param("userNickname") String nickname, @Param("userEmail") String email, @Param("userName") String userName);
 
-    // 이메일로 아이디(username) 찾기
+    // 이메일로 아이디(userName) 찾기
     String findUsernameByEmail(String email);
 
     // 비밀번호 변경
-    void updatePassword(@Param("username")String username, @Param("password")String password);
+    void updatePassword(@Param("userName")String userName, @Param("userPw")String password);
 
     // 닉네임 변경
-    void updateNickname(@Param("username")String username, @Param("nickname")String nickname);
+    void updateNickname(@Param("userName")String userName, @Param("userNickname")String nickname);
 
     // 프로필 이미지 변경
-    void updateProfileImage(@Param("username") String username, @Param("profileImagePath")String profileImage);
+    void updateProfileImage(@Param("userName") String userName, @Param("userProfileImagePath")String profileImage);
 
     // 중복 검사
     boolean existsByEmail(String email);
-    boolean existsByUsername(String username);
+    boolean existsByUsername(String userName);
     boolean existsByNickname(String nickname);
 }

@@ -46,7 +46,7 @@ public class MemberApiController {
     @DeleteMapping("/withdrawal")
     public ResponseEntity<?> withdrawal(@RequestBody MemberWithdrawalDto withdrawalDto,
                                         HttpServletRequest request) {
-        boolean withdrawalMember = memberService.deleteMember(withdrawalDto.getUsername(), withdrawalDto.getPassword());
+        boolean withdrawalMember = memberService.deleteMember(withdrawalDto.getUserName(), withdrawalDto.getUserPw());
         if(withdrawalMember) {
             SecurityContextHolder.clearContext();
 

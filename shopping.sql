@@ -8,7 +8,7 @@ create table BOARD_T
     CREATED_AT  datetime      null
 );
 
-create table MEMBER_T
+create table User
 (
     MEMBER_ID   bigint auto_increment
         primary key,

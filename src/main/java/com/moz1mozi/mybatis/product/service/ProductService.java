@@ -36,7 +36,7 @@ public class ProductService {
     //상품 등록
     @Transactional
     public Long insertProduct(ProductDto productDto, List<MultipartFile> files, String username) throws IOException {
-        Long sellerId = userMapper.findByMemberIdByUsername(username);
+        Long sellerId = userMapper.findByUserIdByUsername(username);
         UserDto role = userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         if (!"판매자".equals(role.getUserRole().getDisplayName())) {

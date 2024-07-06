@@ -5,7 +5,6 @@ import com.moz1mozi.mybatis.common.exception.InvalidCurrentPasswordException;
 import com.moz1mozi.mybatis.common.exception.PasswordsDoNotMatchException;
 import com.moz1mozi.mybatis.image.service.ImageService;
 import com.moz1mozi.mybatis.user.mapper.UserMapper;
-import com.moz1mozi.mybatis.user.mapper.UserWithdrawalMapper;
 import com.moz1mozi.mybatis.user.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,6 @@ import static com.moz1mozi.mybatis.user.utils.MemberUtils.validateMemberData;
 public class MemberService {
 
     private final UserMapper userMapper;
-    private final UserWithdrawalMapper userWithdrawalMapper;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
 
@@ -57,7 +55,7 @@ public class MemberService {
                 .userRole(role)
                 .build();
 
-        userMapper.insertMember(siteUser);
+        userMapper.insertUser(siteUser);
         return siteUser.getUserId();
     }
 
@@ -67,8 +65,7 @@ public class MemberService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
        log.info("유저 찾기 = {}", user.getUserName());
        if(passwordEncoder.matches(password, user.getUserPw())) {
-           userWithdrawalMapper.insertMemberWithdrawal(user.getUserName());
-           userMapper.deleteMember(user.getUserName());
+           userMapper.deleteUser(user.getUserName());
            return true;
        }
        return false;
@@ -95,36 +92,36 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Long getMemberIdByUsername(String username) {
-        return Optional.ofNullable(userMapper.findByMemberIdByUsername(username))
+        return Optional.ofNullable(userMapper.findByUserIdByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
 
     @Transactional(readOnly = true)
     public UserDto getMemberId(Long memberId) {
-        return userMapper.findByMemberId(memberId)
+        return userMapper.findByUserId(memberId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
 
     @Transactional(readOnly = true)
     public List<Long> getMemberAddress(Long memberId) {
-        return Optional.ofNullable(userMapper.findMemberIdByAddressId(memberId))
+        return Optional.ofNullable(userMapper.findUserIdByAddressId(memberId))
                 .orElseThrow(() -> new CustomException("addressNotFound","배송지가 존재하지 않습니다."));
     }
 
     // 비밀번호 변경
     @Transactional
     public void changePassword(String username, PasswordChangeDto passwordChangeDto) {
-        UserDto member = userMapper.findByUsername(username)
+        UserDto user = userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        validatePassword(passwordChangeDto, member);
+        validatePassword(passwordChangeDto, user);
 
         String encodedPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
         userMapper.updatePassword(username, encodedPassword);
     }
 
-    private void validatePassword(PasswordChangeDto passwordChangeDto, UserDto member) {
-        if(!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), member.getUserPw())) {
+    private void validatePassword(PasswordChangeDto passwordChangeDto, UserDto user) {
+        if(!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), user.getUserPw())) {
             throw new InvalidCurrentPasswordException("invalidCurrentPassword", "현재비밀번호가 일치하지 않습니다.");
         }
 
