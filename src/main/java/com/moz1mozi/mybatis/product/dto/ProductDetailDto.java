@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class ProductDetailDto {
-    private long productId;
+    private long prodId;
     private String prodName;
-    private String description;
+    private String prodDescription;
     private int prodPrice;
-    private int stockQuantity;
+    private int prodStockQuantity;
     private Role role;
     private UserDto userDto;
     private ImageDto imageDto;

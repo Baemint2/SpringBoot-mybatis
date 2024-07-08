@@ -48,10 +48,10 @@ create table PRODUCT_IMAGE
     CREATED_AT         datetime     not null,
     MODIFIED_AT        datetime     null,
     constraint product_image_ibfk_1
-        foreign key (PRODUCT_ID) references PRODUCT_T (PRODUCT_ID)
+        foreign key (PRODUCT_ID) references Product (PRODUCT_ID)
 );
 
 create index PRODUCT_ID
-    on PRODUCT_IMAGE (PRODUCT_ID);
+    on ProductImage (PRODUCT_ID);
 
 

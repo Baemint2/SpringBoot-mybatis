@@ -67,10 +67,10 @@
             if(imageDtos.isEmpty()) {
                 List<ImageDto> newImageDtos = new ArrayList<>();
                 ImageDto imageDto = ImageDto.builder()
-                        .originalFileName(originalFileName)
-                        .storedFileName(storedFileName)
-                        .productId(prodId)
-                        .storedUrl(storedUrl)
+                        .piOriginalFileName(originalFileName)
+                        .piStoredFileName(storedFileName)
+                        .prodId(prodId)
+                        .piStoredUrl(storedUrl)
                         .createdAt(now)
                         .build();
                 newImageDtos.add(imageDto);
@@ -78,11 +78,11 @@
             } else {
                 List<ImageDto> updateImageDtos = new ArrayList<>();
                 for (ImageDto imageDto : imageDtos) {
-                    if (!storedUrl.equals(imageDto.getStoredUrl())) {
-                        imageDto.setOriginalFileName(originalFileName);
-                        imageDto.setStoredFileName(storedFileName);
-                        imageDto.setProductId(prodId);
-                        imageDto.setStoredUrl(storedUrl);
+                    if (!storedUrl.equals(imageDto.getPiStoredUrl())) {
+                        imageDto.setPiOriginalFileName(originalFileName);
+                        imageDto.setPiStoredFileName(storedFileName);
+                        imageDto.setProdId(prodId);
+                        imageDto.setPiStoredUrl(storedUrl);
                         imageDto.setModifiedAt(now);
                         updateImageDtos.add(imageDto);
                     }

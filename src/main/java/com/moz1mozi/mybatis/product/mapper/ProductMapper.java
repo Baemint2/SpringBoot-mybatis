@@ -34,8 +34,8 @@ public interface ProductMapper {
     Long countByCondition(ProductSearchDto productSearchDto);
 
     // 판매자 권한 비교
-    @Select("SELECT m.user_name FROM User M JOIN PRODUCT_T P ON M.user_id = P.SELLER_ID WHERE P.PRODUCT_ID = #{productId}")
-    String findSellerUsernameByProductId(@Param("productId")Long productId);
+    @Select("SELECT m.user_name FROM User M JOIN Product P ON M.user_id = P.seller_id WHERE P.prod_id = #{prodId}")
+    String findSellerUsernameByProductId(@Param("prodId")Long prodId);
 
     // 어드민 권한 비교
     @Select("SELECT user_role FROM User WHERE user_role = #{role} ")
@@ -45,12 +45,12 @@ public interface ProductMapper {
     void updateStockQuantity(StockUpdateDto stockUpdateDto);
 
     // 재고 확인
-    int getStockByProductId(Long productId);
+    int getStockByProductId(Long prodId);
 
     // 실제 재고
-    int getActualStockByProductId(Long productId);
+    int getActualStockByProductId(Long prodId);
 
     // 수량 증가
-    void increaseStockQuantity(@Param("productId")Long productId, @Param("quantity") Integer quantity);
+    void increaseStockQuantity(@Param("prodId")Long prodId, @Param("quantity") Integer quantity);
 
 }

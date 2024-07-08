@@ -29,7 +29,7 @@ class ImageServiceTest {
 
         ProductDto productDto = ProductDto.builder()
                 .prodName("모지화장품")
-                .description("안녕하세요 첫 출시 해봤습니다.")
+                .prod_description("안녕하세요 첫 출시 해봤습니다.")
                 .prodPrice(5000)
                 .stockQuantity(5)
                 .createdAt(Date.from(Instant.now()))

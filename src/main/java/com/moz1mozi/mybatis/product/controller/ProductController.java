@@ -97,7 +97,7 @@ public class ProductController {
         if (files == null || files.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("message", "상품 이미지는 필수입니다."));
         }
-        log.info("카테고리 ID : {}", productDto.getCategoryId());
+        log.info("카테고리 ID : {}", productDto.getCateId());
         String username = authentication.getName();
         Long productId = productService.insertProduct(productDto, files, username);
         log.info("상품등록 = {}", productId);
@@ -168,9 +168,9 @@ public class ProductController {
     // 수량 업데이트
     @PutMapping("/api/v1/product/stock/update")
     public ResponseEntity<?> adjustStock(@RequestBody StockUpdateDto stockUpdateDto) {
-        log.info("{} {} {}", stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment(), stockUpdateDto.isIncrease());
+        log.info("{} {} {}", stockUpdateDto.getProdId(), stockUpdateDto.getAdjustment(), stockUpdateDto.isIncrease());
         try {
-            productService.adjustStockQuantity(stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment(), stockUpdateDto.isIncrease());
+            productService.adjustStockQuantity(stockUpdateDto.getProdId(), stockUpdateDto.getAdjustment(), stockUpdateDto.isIncrease());
             return ResponseEntity.ok().build();
         } catch (OutOfStockException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());

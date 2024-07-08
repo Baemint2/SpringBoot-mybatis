@@ -11,10 +11,10 @@ import java.util.Date;
 @Builder
 public class ImageDto {
     private long imageId;
-    private long productId;
-    private String originalFileName;
-    private String storedFileName;
-    private String storedUrl;
+    private long prodId;
+    private String piOriginalFileName;
+    private String piStoredFileName;
+    private String piStoredUrl;
     private Date createdAt;
     private Date modifiedAt;
 }

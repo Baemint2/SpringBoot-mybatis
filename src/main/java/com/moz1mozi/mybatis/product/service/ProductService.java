@@ -45,7 +45,7 @@ public class ProductService {
 
         productDto.setSellerId(sellerId);
         productMapper.insertProduct(productDto);
-        long productId = productDto.getProductId(); // 상품 ID를 조회하거나, insertProduct 메서드 내에서 ProductDto에 상품 ID를 설정
+        long productId = productDto.getProdId(); // 상품 ID를 조회하거나, insertProduct 메서드 내에서 ProductDto에 상품 ID를 설정
         // 이미지 리스트가 존재하는 경우, 각 이미지 정보를 저장
         if(files != null && !files.isEmpty()) {
             imageService.uploadFile(files, productId);
@@ -81,7 +81,7 @@ public class ProductService {
             imageService.uploadFile(files, prodId);
         }
 
-        return existingProduct.getProductId();
+        return existingProduct.getProdId();
     }
 
     // 상품 검색 기능(새로운 클래스 적용해보기)
@@ -95,7 +95,7 @@ public class ProductService {
                 .endPrice(endPrice)
                 .page(page) // 페이지 번호
                 .pageSize(pageSize) // 페이지 크기
-                .categoryId(categoryId)
+                .cateId(categoryId)
                 .build();
         int offset = (searchDto.getPage() - 1) * searchDto.getPageSize();
 
@@ -184,10 +184,10 @@ public class ProductService {
     public void updateStockQuantity(Long productId, int adjustment) {
         log.info("재고 수량 업데이트 되나요?");
         StockUpdateDto stockUpdateDto = StockUpdateDto.builder()
-                .productId(productId)
+                .prodId(productId)
                 .adjustment(adjustment)
                 .build();
-        log.info("{} {}", stockUpdateDto.getProductId(), stockUpdateDto.getAdjustment());
+        log.info("{} {}", stockUpdateDto.getProdId(), stockUpdateDto.getAdjustment());
         productMapper.updateStockQuantity(stockUpdateDto);
     }
 

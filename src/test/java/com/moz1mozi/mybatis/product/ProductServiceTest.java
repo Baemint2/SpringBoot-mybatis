@@ -45,7 +45,7 @@ class ProductServiceTest {
     void 상품등록테스트() {
         ProductDto productDto = ProductDto.builder()
                 .prodName("모지화장품")
-                .description("안녕하세요 첫 출시 해봤습니다.")
+                .prod_description("안녕하세요 첫 출시 해봤습니다.")
                 .prodPrice(5000)
                 .stockQuantity(5)
                 .categoryId(10L)
@@ -65,7 +65,7 @@ class ProductServiceTest {
     public void testInsertProductWithImage() {
         ProductDto productDto = ProductDto.builder()
                 .prodName("Test Product")
-                .description("Test Description")
+                .prod_description("Test Description")
                 .prodPrice(10000)
                 .stockQuantity(10)
                 .createdAt(new Date())
@@ -117,11 +117,11 @@ class ProductServiceTest {
 
         // 수정할 상품 정보를 담은 DTO,
         ProductUpdateDto productUpdateDto = ProductUpdateDto.builder()
-                .productId(prodId)
+                .prodId(prodId)
                 .prodName("수수정된 상품")
-                .description("진짜진짜 수정된")
+                .prodDescription("진짜진짜 수정된")
                 .prodPrice(20000)
-                .stockQuantity(20)
+                .prodStockQuantity(20)
                 .build();
 
         byte[] content = "example file content".getBytes();
@@ -134,20 +134,20 @@ class ProductServiceTest {
         ProductDto updatedProduct = productMapper.selectProductById(prodId);
         assertNotNull(updatedProduct);
         assertEquals("수수정된 상품", updatedProduct.getProdName());
-        assertEquals("진짜진짜 수정된", updatedProduct.getDescription());
+        assertEquals("진짜진짜 수정된", updatedProduct.getProd_description());
         assertEquals(20000, updatedProduct.getProdPrice());
-        assertEquals(20, updatedProduct.getStockQuantity());
+        assertEquals(20, updatedProduct.getProdStockQuantity());
     }
 
     @Test
     void 상품검색_상품명_테스트() throws ExecutionException, InterruptedException {
         ProductSearchDto productSearchDto = ProductSearchDto.builder()
-                .categoryId(6L)
+                .cateId(6L)
                 .page(1)  // 페이지 번호 지정
                 .pageSize(10)  // 페이지 크기 지정
                 .build();
         CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto.getProdName(), productSearchDto.getNickname(), productSearchDto.getStartPrice(),
-                                                                            productSearchDto.getEndPrice(), productSearchDto.getPage(), productSearchDto.getPageSize(), productSearchDto.getCategoryId());
+                                                                            productSearchDto.getEndPrice(), productSearchDto.getPage(), productSearchDto.getPageSize(), productSearchDto.getCateId());
         ProductPageDto results = futureResults.get();
         assertTrue(results.getTotalProducts() > 0);
     }

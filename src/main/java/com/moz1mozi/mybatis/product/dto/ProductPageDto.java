@@ -17,7 +17,7 @@ public class ProductPageDto {
     private int totalPages;
     private long totalProducts;
     private int pageSize;
-    private Long categoryId;
+    private Long cateId;
 
 
 }

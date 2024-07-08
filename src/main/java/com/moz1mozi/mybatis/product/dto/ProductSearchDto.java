@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder(toBuilder = true)
 public class ProductSearchDto {
-    private String productId;
+    private String prodId;
     private String prodName;
     private String nickname;
     private Integer startPrice;
     private Integer endPrice;
     private Integer page;
     private Integer pageSize;
-    private Long categoryId;
+    private Long cateId;
     private String categoryName;
     public ProductSearchDto withPaging(int page, int pageSize) {
         return this.toBuilder()
