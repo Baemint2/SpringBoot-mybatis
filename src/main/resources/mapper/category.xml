@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moz1mozi.mybatis.category.dao.CategoryMapper">
+<mapper namespace="com.moz1mozi.mybatis.category.mapper.CategoryMapper">
 
     <select id="selectAllCategories" resultType="CategoryDto">
         SELECT CATEGORY_ID, CATEGORY_NAME, PARENT_ID,

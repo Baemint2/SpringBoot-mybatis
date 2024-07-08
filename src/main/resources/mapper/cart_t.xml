@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.moz1mozi.mybatis.cart.dao.CartMapper">
+<mapper namespace="com.moz1mozi.mybatis.cart.mapper.CartMapper">
     <insert id="insertCartItem"
             parameterType="CartDto">
         <selectKey keyProperty="cartItemId" resultType="long" order="AFTER">

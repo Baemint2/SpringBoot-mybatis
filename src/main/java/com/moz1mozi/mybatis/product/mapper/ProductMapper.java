@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.product.dao;
+package com.moz1mozi.mybatis.product.mapper;
 
 import com.moz1mozi.mybatis.product.dto.*;
 import org.apache.ibatis.annotations.Mapper;

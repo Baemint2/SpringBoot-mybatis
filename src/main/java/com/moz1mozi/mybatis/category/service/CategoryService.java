@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.category.service;
 
-import com.moz1mozi.mybatis.category.dao.CategoryMapper;
+import com.moz1mozi.mybatis.category.mapper.CategoryMapper;
 import com.moz1mozi.mybatis.category.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

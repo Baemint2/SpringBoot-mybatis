@@ -1,6 +1,6 @@
     package com.moz1mozi.mybatis.image.service;
 
-    import com.moz1mozi.mybatis.image.dao.ImageMapper;
+    import com.moz1mozi.mybatis.image.mapper.ImageMapper;
     import com.moz1mozi.mybatis.image.dto.ImageDto;
     import com.moz1mozi.mybatis.user.mapper.UserMapper;
     import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.cart.dao;
+package com.moz1mozi.mybatis.cart.mapper;
 
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;

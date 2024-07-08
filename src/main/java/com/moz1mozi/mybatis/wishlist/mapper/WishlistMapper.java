@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.wishlist.dao;
+package com.moz1mozi.mybatis.wishlist.mapper;
 
 import com.moz1mozi.mybatis.wishlist.dto.WishlistDto;
 import org.apache.ibatis.annotations.Mapper;

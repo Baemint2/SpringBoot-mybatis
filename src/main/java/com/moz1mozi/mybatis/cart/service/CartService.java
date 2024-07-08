@@ -1,11 +1,11 @@
 package com.moz1mozi.mybatis.cart.service;
 
-import com.moz1mozi.mybatis.cart.dao.CartMapper;
+import com.moz1mozi.mybatis.cart.mapper.CartMapper;
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
 import com.moz1mozi.mybatis.cart.dto.TotalCartDto;
 import com.moz1mozi.mybatis.common.exception.CustomException;
-import com.moz1mozi.mybatis.product.dao.ProductMapper;
+import com.moz1mozi.mybatis.product.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

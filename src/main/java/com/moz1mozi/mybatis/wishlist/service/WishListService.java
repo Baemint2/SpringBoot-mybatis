@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.wishlist.service;
 
-import com.moz1mozi.mybatis.wishlist.dao.WishlistMapper;
+import com.moz1mozi.mybatis.wishlist.mapper.WishlistMapper;
 import com.moz1mozi.mybatis.wishlist.dto.WishlistDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

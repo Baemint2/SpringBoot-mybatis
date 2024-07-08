@@ -3,7 +3,7 @@ package com.moz1mozi.mybatis.product;
 import com.moz1mozi.mybatis.image.dto.ImageDto;
 import com.moz1mozi.mybatis.image.service.ImageService;
 import com.moz1mozi.mybatis.user.mapper.UserMapper;
-import com.moz1mozi.mybatis.product.dao.ProductMapper;
+import com.moz1mozi.mybatis.product.mapper.ProductMapper;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;

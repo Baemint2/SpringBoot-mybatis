@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.category.dao;
+package com.moz1mozi.mybatis.category.mapper;
 
 import com.moz1mozi.mybatis.category.dto.CategoryDto;
 import org.apache.ibatis.annotations.Mapper;

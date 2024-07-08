@@ -1,4 +1,4 @@
-package com.moz1mozi.mybatis.image.dao;
+package com.moz1mozi.mybatis.image.mapper;
 
 import com.moz1mozi.mybatis.image.dto.ImageDto;
 import org.apache.ibatis.annotations.Mapper;

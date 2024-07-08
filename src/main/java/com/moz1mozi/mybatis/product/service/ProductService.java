@@ -1,11 +1,11 @@
 package com.moz1mozi.mybatis.product.service;
 
-import com.moz1mozi.mybatis.cart.dao.CartMapper;
+import com.moz1mozi.mybatis.cart.mapper.CartMapper;
 import com.moz1mozi.mybatis.common.exception.OutOfStockException;
 import com.moz1mozi.mybatis.image.service.ImageService;
 import com.moz1mozi.mybatis.user.mapper.UserMapper;
 import com.moz1mozi.mybatis.user.dto.UserDto;
-import com.moz1mozi.mybatis.product.dao.ProductMapper;
+import com.moz1mozi.mybatis.product.mapper.ProductMapper;
 import com.moz1mozi.mybatis.product.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

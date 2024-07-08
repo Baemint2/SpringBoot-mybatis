@@ -1,12 +1,12 @@
 package com.moz1mozi.mybatis.cart.controller;
 
-import com.moz1mozi.mybatis.cart.dao.CartMapper;
+import com.moz1mozi.mybatis.cart.mapper.CartMapper;
 import com.moz1mozi.mybatis.cart.service.CartService;
-import com.moz1mozi.mybatis.category.dao.CategoryMapper;
-import com.moz1mozi.mybatis.image.dao.ImageMapper;
+import com.moz1mozi.mybatis.category.mapper.CategoryMapper;
+import com.moz1mozi.mybatis.image.mapper.ImageMapper;
 import com.moz1mozi.mybatis.user.mapper.UserMapper;
 import com.moz1mozi.mybatis.user.service.MemberService;
-import com.moz1mozi.mybatis.product.dao.ProductMapper;
+import com.moz1mozi.mybatis.product.mapper.ProductMapper;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
