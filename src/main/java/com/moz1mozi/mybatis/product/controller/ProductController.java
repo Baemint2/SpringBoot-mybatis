@@ -146,15 +146,15 @@ public class ProductController {
     @GetMapping("/api/v1/product/search")
     public CompletableFuture<ResponseEntity<ProductPageDto>> searchProduct(
             @RequestParam(required = false) String prodName,
-            @RequestParam(required = false) String nickname,
+            @RequestParam(required = false) String userNickname,
             @RequestParam(required = false) Integer startPrice,
             @RequestParam(required = false) Integer endPrice,
-            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long cateId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "pageSize", defaultValue = "6") int pageSize) {
 
-        log.info("설정된 카테고리값 = {}", categoryId);
-        return productService.searchProductsWithPagingAsync(prodName, nickname, startPrice, endPrice, page, pageSize, categoryId)
+        log.info("설정된 카테고리값 = {}", cateId);
+        return productService.searchProductsWithPagingAsync(prodName, userNickname, startPrice, endPrice, page, pageSize, cateId)
                 .thenApply(ResponseEntity::ok);
     }
 

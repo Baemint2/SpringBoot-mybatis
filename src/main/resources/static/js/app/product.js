@@ -15,10 +15,10 @@ const product = {
     productSave: function () {
         const data = {
             prodName: document.getElementById("prodName").value,
-            description: document.getElementById("description").value,
+            prodDescription: document.getElementById("description").value,
             prodPrice: document.getElementById("prodPrice").value,
-            stockQuantity: document.getElementById("stockQuantity").value,
-            categoryId: document.getElementById("mediumCategory").value
+            prodStockQuantity: document.getElementById("stockQuantity").value,
+            cateId: document.getElementById("mediumCategory").value
         }
         console.log(data)
         const formData = new FormData();

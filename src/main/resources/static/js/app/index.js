@@ -46,7 +46,7 @@ function fetchAndDisplayPosts(page) {
     queryString += userNickname ? `&userNickname=${encodeURIComponent(userNickname)}` : '';
     queryString += startPrice ? `&startPrice=${encodeURIComponent(startPrice)}` : '';
     queryString += endPrice ? `&endPrice=${encodeURIComponent(endPrice)}` : '';
-    queryString += category ? `&categoryId=${encodeURIComponent(category)}` : '';
+    queryString += category ? `&cateId=${encodeURIComponent(category)}` : '';
 
     fetch(`/api/v1/product/search?${queryString}`)
         .then(response => response.json())
@@ -97,7 +97,7 @@ function createProductCard(product) {
     const categoryName = product.categoryDto?.categoryName || '카테고리 없음';
     anchor.innerHTML = `
         <div class="card mb-3">
-            <img src="${product.imageDto.storedUrl}" class="card-img-top" alt="${product.prodName}">
+            <img src="${product.imageDto.piStoredUrl}" class="card-img-top" alt="${product.prodName}">
             <div class="card-body">
                 <small>[${categoryName}]</small>
                 <h5 class="card-title">${product.userDto.userNickname}</h5>

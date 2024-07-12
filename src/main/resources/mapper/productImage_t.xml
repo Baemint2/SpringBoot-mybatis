@@ -5,30 +5,30 @@
 <mapper namespace="com.moz1mozi.mybatis.image.mapper.ImageMapper">
     <insert id="insertProductImage"
             parameterType="ImageDto">
-        INSERT INTO PRODUCT_IMAGE (PRODUCT_ID, ORIGINAL_FILE_NAME, STORED_FILE_NAME, STORED_URL, CREATED_AT, MODIFIED_AT)
+        INSERT INTO ProductImage (prod_id, pi.original_file_name, pi.stored_file_name, pi.stored_url, created_at, modified_at)
         VALUES
         <foreach collection="list" item="image" separator=",">
-            (#{image.productId}, #{image.originalFileName}, #{image.storedFileName}, #{image.storedUrl}, now(), now())
+            (#{image.prodId}, #{image.piOriginalFileName}, #{image.piStoredFileName}, #{image.piStoredUrl}, now(), now())
         </foreach>
     </insert>
 
     <update id="updateProductImage" parameterType="list">
         <foreach collection="list" item="imageDto" index="index" separator=";">
-            UPDATE PRODUCT_IMAGE
-            SET STORED_URL = #{imageDto.storedUrl},
-            ORIGINAL_FILE_NAME = #{imageDto.originalFileName},
-            STORED_FILE_NAME = #{imageDto.storedFileName},
-            MODIFIED_AT = now()
-            WHERE PRODUCT_ID = #{imageDto.productId}
+            UPDATE ProductImage pi
+            SET pi.pi_stored_url = #{imageDto.piStoredUrl},
+            pi.pi_original_file_name = #{imageDto.piOriginalFileName},
+            pi.pi_stored_file_name = #{imageDto.piStoredFileName},
+            pi.modified_at = now()
+            WHERE pi.prod_id = #{imageDto.prodId}
         </foreach>
     </update>
 
 
     <select id="findByProductId"
             resultType="ImageDto">
-        select I.STORED_URL as storedUrl
-        FROM PRODUCT_IMAGE I
-        LEFT JOIN PRODUCT_T P ON P.PRODUCT_ID = I.PRODUCT_ID
-        WHERE I.PRODUCT_ID = #{productId};
+        select i.pi.stored_url
+        FROM ProductImage i
+        LEFT JOIN Product p ON p.prod_id = i.prod_id
+        WHERE i.prod_id = #{prodId};
     </select>
 </mapper>

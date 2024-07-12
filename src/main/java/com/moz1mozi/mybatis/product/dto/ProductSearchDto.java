@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ProductSearchDto {
     private String prodId;
     private String prodName;
-    private String nickname;
+    private String userNickname;
     private Integer startPrice;
     private Integer endPrice;
     private Integer page;

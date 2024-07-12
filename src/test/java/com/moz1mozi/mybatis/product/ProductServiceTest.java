@@ -45,10 +45,10 @@ class ProductServiceTest {
     void 상품등록테스트() {
         ProductDto productDto = ProductDto.builder()
                 .prodName("모지화장품")
-                .prod_description("안녕하세요 첫 출시 해봤습니다.")
+                .prodDescription("안녕하세요 첫 출시 해봤습니다.")
                 .prodPrice(5000)
-                .stockQuantity(5)
-                .categoryId(10L)
+                .prodStockQuantity(5)
+                .cateId(10L)
                 .createdAt(Date.from(Instant.now()))
                 .build();
 
@@ -65,9 +65,9 @@ class ProductServiceTest {
     public void testInsertProductWithImage() {
         ProductDto productDto = ProductDto.builder()
                 .prodName("Test Product")
-                .prod_description("Test Description")
+                .prodDescription("Test Description")
                 .prodPrice(10000)
-                .stockQuantity(10)
+                .prodStockQuantity(10)
                 .createdAt(new Date())
                 .modifiedAt(new Date())
                 .build();
@@ -134,7 +134,7 @@ class ProductServiceTest {
         ProductDto updatedProduct = productMapper.selectProductById(prodId);
         assertNotNull(updatedProduct);
         assertEquals("수수정된 상품", updatedProduct.getProdName());
-        assertEquals("진짜진짜 수정된", updatedProduct.getProd_description());
+        assertEquals("진짜진짜 수정된", updatedProduct.getProdDescription());
         assertEquals(20000, updatedProduct.getProdPrice());
         assertEquals(20, updatedProduct.getProdStockQuantity());
     }
@@ -146,7 +146,7 @@ class ProductServiceTest {
                 .page(1)  // 페이지 번호 지정
                 .pageSize(10)  // 페이지 크기 지정
                 .build();
-        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto.getProdName(), productSearchDto.getNickname(), productSearchDto.getStartPrice(),
+        CompletableFuture<ProductPageDto> futureResults = productService.searchProductsWithPagingAsync(productSearchDto.getProdName(), productSearchDto.getUserNickname(), productSearchDto.getStartPrice(),
                                                                             productSearchDto.getEndPrice(), productSearchDto.getPage(), productSearchDto.getPageSize(), productSearchDto.getCateId());
         ProductPageDto results = futureResults.get();
         assertTrue(results.getTotalProducts() > 0);

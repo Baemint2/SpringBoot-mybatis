@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductListDto {
     private int prodId;
-    private String nickname;
+    private String userNickname;
     private String prodName;
     private int prodPrice;
     private String storedUrl;

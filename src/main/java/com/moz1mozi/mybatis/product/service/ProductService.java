@@ -86,16 +86,16 @@ public class ProductService {
 
     // 상품 검색 기능(새로운 클래스 적용해보기)
     @Async
-    public CompletableFuture<ProductPageDto> searchProductsWithPagingAsync(String prodName, String nickname, Integer startPrice, Integer endPrice,
-                                                                           int page, int pageSize, Long categoryId) {
+    public CompletableFuture<ProductPageDto> searchProductsWithPagingAsync(String prodName, String userNickname, Integer startPrice, Integer endPrice,
+                                                                           int page, int pageSize, Long cateId) {
         ProductSearchDto searchDto = ProductSearchDto.builder()
                 .prodName(prodName)
-                .nickname(nickname)
+                .userNickname(userNickname)
                 .startPrice(startPrice)
                 .endPrice(endPrice)
                 .page(page) // 페이지 번호
                 .pageSize(pageSize) // 페이지 크기
-                .cateId(categoryId)
+                .cateId(cateId)
                 .build();
         int offset = (searchDto.getPage() - 1) * searchDto.getPageSize();
 
@@ -107,7 +107,7 @@ public class ProductService {
             int totalResults = totalResultsLong.intValue();
             int totalPages = (int) Math.ceil((double) totalResults / pagedSearchDto.getPageSize());
 
-            return new ProductPageDto(products, pagedSearchDto.getPage(), totalPages, totalResults, pagedSearchDto.getPageSize(), categoryId);
+            return new ProductPageDto(products, pagedSearchDto.getPage(), totalPages, totalResults, pagedSearchDto.getPageSize(), cateId);
         });
     }
 

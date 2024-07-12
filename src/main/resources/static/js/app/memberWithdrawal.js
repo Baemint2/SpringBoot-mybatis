@@ -6,9 +6,9 @@ export const withdrawal = {
     withdrawal: function () {
         const btnWithdrawal = document.getElementById('btn-withdrawal');
         const modal = document.getElementById('modal-withdrawal-confirm');
-        const originalModalContent = modal.querySelector('.modal-content').innerHTML;
+        const originalModalContent = modal?.querySelector('.modal-content').innerHTML;
 
-        btnWithdrawal.addEventListener('click', function () {
+        btnWithdrawal?.addEventListener('click', function () {
             resetModal();
             modal.style.display = 'block';
         });
@@ -56,7 +56,7 @@ export const withdrawal = {
                     const password = document.getElementById('password').value;
                     console.log(password);
 
-                    fetch(`/api/v1/member/withdrawal/${username}`, {
+                    fetch(`/api/v1/member/withdrawal`, {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json"
