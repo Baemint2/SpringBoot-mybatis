@@ -22,19 +22,19 @@ public class WishlistController {
     private final WishListService wishListService;
     private final MemberService memberService;
 
-    @PostMapping("/api/v1/wishlist/toggle/{productId}")
-    public ResponseEntity<?> toggleWishlist(@PathVariable Long productId, Principal principal) {
+    @PostMapping("/api/v1/wishlist/toggle/{prodId}")
+    public ResponseEntity<?> toggleWishlist(@PathVariable Long prodId, Principal principal) {
         String username = principal.getName();
-        Long memberId = memberService.findByUsername(username).getUserId();
-        boolean isLiked = wishListService.toggleLike(memberId, productId);
+        Long userId = memberService.findByUsername(username).getUserId();
+        boolean isLiked = wishListService.toggleLike(userId, prodId);
         return ResponseEntity.ok(isLiked);
     }
 
     @GetMapping("/api/v1/wishlist")
     public ResponseEntity<List<WishlistDto>> getWishlist(Principal principal) {
         String username = principal.getName();
-        Long memberId = memberService.findByUsername(username).getUserId();
-        List<WishlistDto> wishlist = wishListService.getWishlistByMember(memberId);
+        Long userId = memberService.findByUsername(username).getUserId();
+        List<WishlistDto> wishlist = wishListService.getWishlistByMember(userId);
         return ResponseEntity.ok(wishlist);
     }
 

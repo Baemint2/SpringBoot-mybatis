@@ -7,10 +7,10 @@ import java.util.List;
 
 @Mapper
 public interface WishlistMapper {
-    int checkLike(Long memberId, Long productId);
-    void addLike(Long memberId, Long productId);
-    void removeLike(Long memberId, Long productId);
-    boolean isLiked(Long memberId, Long productId);
+    int checkLike(Long userId, Long prodId);
+    void addLike(Long userId, Long prodId);
+    void removeLike(Long userId, Long prodId);
+    boolean isLiked(Long userId, Long prodId);
 
-    List<WishlistDto> getWishlistByMemberId(Long memberId);
+    List<WishlistDto> getWishlistByMemberId(Long userId);
 }

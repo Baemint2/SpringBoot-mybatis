@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class WishlistDto {
-    private Long wishlistId;
-    private Long memberId;
-    private Long productId;
-    private boolean isLiked;
+    private Long wishId;
+    private Long userId;
+    private Long prodId;
+    private boolean wishIsLiked;
     private ProductDto productDto;
     private ImageDto imageDto;
 }

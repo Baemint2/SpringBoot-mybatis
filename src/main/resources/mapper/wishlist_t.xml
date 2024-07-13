@@ -5,48 +5,65 @@
 <mapper namespace="com.moz1mozi.mybatis.wishlist.mapper.WishlistMapper">
     <select id="checkLike" resultType="int">
         SELECT COUNT(*)
-          FROM WISHLIST_T
-         WHERE MEMBER_ID = #{memberId} AND PRODUCT_ID = #{productId}
+          FROM Wishlist w
+         WHERE 1 = 1
+           AND w.user_id = #{userId}
+           AND w.prod_id = #{prodId}
     </select>
 
     <insert id="addLike">
-        INSERT INTO WISHLIST_T (MEMBER_ID, PRODUCT_ID, ISLIKED)
-        VALUES (#{memberId}, #{productId}, TRUE)
+        INSERT INTO Wishlist (
+              user_id
+            , prod_id
+            , wish_is_liked )
+            VALUES (
+              #{userId}
+            , #{prodId}
+            , TRUE )
     </insert>
 
     <delete id="removeLike">
-        DELETE FROM WISHLIST_T
-         WHERE MEMBER_ID = #{memberId}
-           AND PRODUCT_ID = #{productId}
+        DELETE
+          FROM Wishlist w
+         WHERE 1 = 1
+           AND w.user_id = #{userId}
+           AND w.prod_id = #{prodId}
     </delete>
 
     <select id="isLiked"
             resultType="boolean">
-        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
-          FROM WISHLIST_T
-         WHERE MEMBER_ID = #{memberId} AND PRODUCT_ID = #{productId}
+        SELECT
+          CASE WHEN COUNT(*) > 0
+               THEN TRUE
+          ELSE FALSE END
+          FROM Wishlist w
+         WHERE 1 = 1
+           AND w.user_id = #{userId}
+           AND w.prod_id = #{prodId}
     </select>
 
     <resultMap id="WishlistMap" type="WishlistDto">
-        <result property="wishlistId" column="WISHLIST_ID"/>
-        <result property="memberId" column="MEMBER_ID"/>
-        <result property="productId" column="PRODUCT_ID"/>
+        <result property="wishId" column="wish_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="prodId" column="prod_id"/>
         <association property="productDto">
-            <id property="productId" column="PRODUCT_ID"/>
-            <result property="prodName" column="PROD_NAME"/>
-            <result property="prodPrice" column="PROD_PRICE"/>
+            <id property="prodId" column="prod_id"/>
+            <result property="prodName" column="prod_name"/>
+            <result property="prodPrice" column="prod_price"/>
         </association>
         <association property="imageDto">
-            <result property="storedUrl" column="STORED_URL"/>
+            <result property="piStoredUrl" column="pi_stored_url"/>
         </association>
     </resultMap>
 
     <select id="getWishlistByMemberId"
             resultMap="WishlistMap">
-        SELECT P.PROD_NAME, P.PROD_PRICE, PI.STORED_URL, W.MEMBER_ID, P.PRODUCT_ID
-        FROM WISHLIST_T W
-        INNER JOIN PRODUCT_T P ON W.PRODUCT_ID = P.PRODUCT_ID
-        LEFT JOIN PRODUCT_IMAGE PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-        WHERE W.MEMBER_ID = #{member_id}
+        SELECT p.prod_name, p.prod_price, p.prod_id,
+               pi.pi_stored_url,
+               w.user_id
+        FROM Wishlist w
+        INNER JOIN Product p on w.prod_id = p.prod_id
+        LEFT JOIN ProductImage pi on p.prod_id = pi.prod_id
+        WHERE W.user_id = #{userId}
     </select>
 </mapper>

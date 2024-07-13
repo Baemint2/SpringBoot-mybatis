@@ -10,8 +10,8 @@ const wishlist = {
         const wishlistToggleBtn = document.getElementById('wishlist-toggle');
         if(wishlistToggleBtn) {
             wishlistToggleBtn.addEventListener('click', () => {
-                const productId = wishlistToggleBtn.getAttribute('data-product-id');
-                this.toggleWishlist(productId, wishlistToggleBtn);
+                const prodId = wishlistToggleBtn.getAttribute('data-product-id');
+                this.toggleWishlist(prodId, wishlistToggleBtn);
             });
         }
     },
@@ -42,18 +42,18 @@ const wishlist = {
                 const row = document.createElement('tr');
                 row.innerHTML = `
             <td>
-                <a href="/product/detail/${item.productId}" class="wishlist-item-link">
+                <a href="/product/detail/${item.prodId}" class="wishlist-item-link">
                     <img src="${item.imageDto.storedUrl}" alt="${item.prodName}" class="img-thumbnail" style="width: 100px; height: 100px;">
                 </a>
             </td>
             <td>
-                <a href="/product/detail/${item.productId}" class="wishlist-item-link">
+                <a href="/product/detail/${item.prodId}" class="wishlist-item-link">
                     <div>${item.productDto.prodName}</div>
                     <div>${item.productDto.prodPrice}원</div>
                 </a>
             </td>
             <td>
-                <button class="btn-remove" data-product-id="${item.productId}">찜 해제</button>
+                <button class="btn-remove" data-product-id="${item.prodId}">찜 해제</button>
             </td>
             `;
                 // 찜 해제 버튼에 클릭 이벤트 리스너 추가
@@ -61,7 +61,7 @@ const wishlist = {
                 btnRemove.addEventListener('click', (e) => {
                     e.preventDefault(); // 기본 이벤트를 취소 (링크 이동 방지)
                     e.stopPropagation(); // 이벤트 전파를 중단 (상위 링크로의 이벤트 전파 방지)
-                    this.toggleWishlist(item.productId);
+                    this.toggleWishlist(item.prodId);
                 });
 
                 tbody.appendChild(row);
@@ -72,8 +72,8 @@ const wishlist = {
         }
     },
 
-    toggleWishlist: function (productId, button) {
-        fetch(`/api/v1/wishlist/toggle/${productId}`, {
+    toggleWishlist: function (prodId, button) {
+        fetch(`/api/v1/wishlist/toggle/${prodId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
