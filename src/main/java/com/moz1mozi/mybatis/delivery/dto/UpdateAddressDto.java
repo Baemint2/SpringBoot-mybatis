@@ -12,11 +12,11 @@ import java.util.Date;
 @Getter
 @Builder
 public class UpdateAddressDto {
-    private String recipientName;
-    private String mobile;
-    private String zipcode;
-    private String streetaddress;
-    private String detailaddress;
-    private String defaultAddress;
+    private String saRecipientName;
+    private String saMobile;
+    private String saZipcode;
+    private String saStreet;
+    private String saDetail;
+    private String saDefault;
     private Date modifiedDt;
 }

@@ -12,21 +12,21 @@ import java.util.Date;
 public class ShippingAddressDto {
     private long addressId;
     private long userId;
-    private String recipientName;
-    private String mobile;
-    private String zipcode;
-    private String streetaddress;
-    private String detailaddress;
-    private String defaultAddress;
+    private String saRecipientName;
+    private String saMobile;
+    private String saZipcode;
+    private String saStreet;
+    private String saDetail;
+    private String saDefault;
     private Date createDt;
     private Date modifiedDt;
 
     public void updateAddress(UpdateAddressDto updateAddressDto) {
-        this.recipientName = updateAddressDto.getRecipientName();
-        this.mobile = updateAddressDto.getMobile();
-        this.zipcode = updateAddressDto.getZipcode();
-        this.detailaddress = updateAddressDto.getDetailaddress();
-        this.streetaddress = updateAddressDto.getStreetaddress();
-        this.defaultAddress = updateAddressDto.getDefaultAddress();
+        this.saRecipientName = updateAddressDto.getSaRecipientName();
+        this.saMobile = updateAddressDto.getSaMobile();
+        this.saZipcode = updateAddressDto.getSaZipcode();
+        this.saDetail = updateAddressDto.getSaDetail();
+        this.saStreet = updateAddressDto.getSaStreet();
+        this.saDefault = updateAddressDto.getSaDefault();
     }
 }

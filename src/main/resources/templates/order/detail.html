@@ -8,10 +8,10 @@
 <div>
     <div>
         <h2>배송지 정보</h2>
-        <p>배송지 명: <span th:text="${address.recipientName}"></span></p>
-        <p>전화번호: <span th:text="${address.mobile}"></span></p>
-        <p>주소: <span th:text="${address.streetaddress}"></span></p>
-        <p>우편번호: <span th:text="${address.zipcode}"></span></p>
+        <p>배송지 명: <span th:text="${address.saRecipientName}"></span></p>
+        <p>전화번호: <span th:text="${address.saMobile}"></span></p>
+        <p>주소: <span th:text="${address.saStreet}"></span></p>
+        <p>우편번호: <span th:text="${address.saZipcode}"></span></p>
     </div>
     <h2>주문 상품</h2>
     <table>
@@ -33,8 +33,7 @@
         </tr>
         </tbody>
     </table>
-
-
+</div>
 </body>
 <script src="/js/app/address.js"></script>
 </html>

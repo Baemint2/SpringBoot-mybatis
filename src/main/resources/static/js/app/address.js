@@ -15,11 +15,11 @@ function returnToAddressManager() {
 
 function clearAddressForm() {
    document.getElementById("addressNickname").value = "";
-   document.getElementById("zipcode").value = "";
-   document.getElementById("streetAddress").value = "";
-   document.getElementById("detailAddress").value = "";
-   document.getElementById("addressMobile").value = "";
-   document.getElementById("defaultAddress").checked = false;
+   document.getElementById("saZipcode").value = "";
+   document.getElementById("saStreet").value = "";
+   document.getElementById("saDetail").value = "";
+   document.getElementById("saMobile").value = "";
+   document.getElementById("saDefault").checked = false;
 }
 
 const address = {
@@ -71,12 +71,12 @@ const address = {
 
     submitAddress: function () {
         const addressData = {
-            recipientName: document.getElementById("addressNickname").value,
-            zipcode: document.getElementById("zipcode").value,
-            streetaddress: document.getElementById("streetAddress").value,
-            detailaddress: document.getElementById("detailAddress").value,
-            mobile: document.getElementById("addressMobile").value,
-            defaultAddress: document.getElementById("defaultAddress").checked ? "Y" : "N"
+            saRecipientName: document.getElementById("addressNickname").value,
+            saZipcode: document.getElementById("saZipcode").value,
+            saStreet: document.getElementById("saStreet").value,
+            saDetail: document.getElementById("saDetail").value,
+            saMobile: document.getElementById("saMobile").value,
+            saDefault: document.getElementById("saDefault").checked ? "Y" : "N"
         }
         console.log(addressData);
         fetch("/api/v1/address", {
@@ -111,12 +111,12 @@ const address = {
           fetch(`/api/v1/address/${addressId}`)
               .then(response => response.json())
               .then(address => {
-                  document.getElementById("modifyAddressNickname").value = address.recipientName;
-                  document.getElementById("modifyZipcode").value = address.zipcode;
-                  document.getElementById("modifyStreetAddress").value = address.streetaddress;
-                  document.getElementById("modifyDetailAddress").value = address.detailaddress;
-                  document.getElementById("modifyAddressMobile").value = address.mobile;
-                  document.getElementById("modifyDefaultAddress").checked = address.defaultAddress === "Y";
+                  document.getElementById("modifyAddressNickname").value = address.saRecipientName;
+                  document.getElementById("modifyZipcode").value = address.saZipcode;
+                  document.getElementById("modifyStreetAddress").value = address.saStreet;
+                  document.getElementById("modifyDetailAddress").value = address.saDetail;
+                  document.getElementById("modifyAddressMobile").value = address.saMobile;
+                  document.getElementById("modifyDefaultAddress").checked = address.saDefault === "Y";
                   toggleModal("modifyAddressModal", true);
               })
               .catch(error => console.error('Error:', error));
@@ -156,12 +156,12 @@ const address = {
     },
     addressUpdate: function (addressId) {
         const updateAddressData = {
-            recipientName: document.getElementById("modifyAddressNickname").value,
-            zipcode: document.getElementById("modifyZipcode").value,
-            streetaddress: document.getElementById("modifyStreetAddress").value,
-            detailaddress: document.getElementById("modifyDetailAddress").value,
-            mobile: document.getElementById("modifyAddressMobile").value,
-            defaultAddress: document.getElementById("modifyDefaultAddress").checked ? "Y" : "N"
+            saRecipientName: document.getElementById("modifyAddressNickname").value,
+            saZipcode: document.getElementById("modifyZipcode").value,
+            saStreet: document.getElementById("modifyStreetAddress").value,
+            saDetail: document.getElementById("modifyDetailAddress").value,
+            saMobile: document.getElementById("modifyAddressMobile").value,
+            saDefault: document.getElementById("modifyDefaultAddress").checked ? "Y" : "N"
         }
         fetch(`/api/v1/address/${addressId}`, {
             method: 'PUT',
@@ -190,23 +190,23 @@ const address = {
             addressDiv.className = "addressContainer";
 
             const recipientP = document.createElement("p");
-            recipientP.textContent = `받는 분 : ${address.recipientName}`;
+            recipientP.textContent = `받는 분 : ${address.saRecipientName}`;
             addressDiv.appendChild(recipientP);
 
             const mobileP = document.createElement("p");
-            mobileP.textContent = `전화번호 : ${address.mobile}` ;
+            mobileP.textContent = `전화번호 : ${address.saMobile}` ;
             addressDiv.appendChild(mobileP);
 
             const zipcodeP = document.createElement("p");
-            zipcodeP.textContent = `우편번호: ${address.zipcode}`;
+            zipcodeP.textContent = `우편번호: ${address.saZipcode}`;
             addressDiv.appendChild(zipcodeP);
 
             const addressP = document.createElement("p");
-            addressP.textContent = `주소: ${address.streetaddress}, ${address.detailaddress}`;
+            addressP.textContent = `주소: ${address.saStreet}, ${address.saDetail}`;
             addressDiv.appendChild(addressP);
 
             const defaultAddressP = document.createElement("p");
-            defaultAddressP.textContent = `기본 주소: ${address.defaultAddress === 'Y' ? '예' : '아니오'}`;
+            defaultAddressP.textContent = `기본 주소: ${address.saDefault === 'Y' ? '예' : '아니오'}`;
             addressDiv.appendChild(defaultAddressP);
 
             const modifyBtn = document.createElement("button");
@@ -256,8 +256,8 @@ window.execPostCode = function (isModify) {
             console.log(data)
 
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            console.log(document.getElementById('zipcode').value = data.zonecode);
-            console.log(document.getElementById("streetAddress").value = roadAddr);
+            console.log(document.getElementById('saZipcode').value = data.zonecode);
+            console.log(document.getElementById("saStreet").value = roadAddr);
 
         }
     }).open();

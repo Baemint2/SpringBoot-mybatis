@@ -48,7 +48,7 @@
                     <tr>
                         <th>비밀번호</th>
                         <td>
-                            <a href="/member/change-password" role="button" class="btn btn-primary">
+                            <a href="/user/change-password" role="button" class="btn btn-primary">
                                 비밀번호 변경
                             </a>
                         </td>
@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-auto">
-                                                <input type="text" id="zipcode" name="zipcode"
+                                                <input type="text" id="saZipcode" name="saZipcode"
                                                        class="form-control mb-1">
                                             </div>
                                             <div class="col">
@@ -110,15 +110,15 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <input type="text" id="streetAddress" name="streetAddress"
+                                        <input type="text" id="saStreet" name="saStreet"
                                                class="form-control mb-1">
-                                        <input type="text" id="detailAddress" name="detailAddress" class="form-control">
+                                        <input type="text" id="saDetail" name="saDetail" class="form-control">
                                         <div class="mt-4 mb-4">
-                                            <label for="addressMobile">전화번호</label>
-                                            <input type="text" id="addressMobile" name="addressMobile">
+                                            <label for="saMobile">전화번호</label>
+                                            <input type="text" id="saMobile" name="saMobile">
                                         </div>
                                         <div>
-                                            <input type="checkbox" id="defaultAddress"> 기본 배송지 선택
+                                            <input type="checkbox" id="saDefault"> 기본 배송지 선택
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -146,7 +146,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-auto">
-                                                <input type="text" id="modifyZipcode" name="zipcode"
+                                                <input type="text" id="modifyZipcode" name="saZipcode"
                                                        class="form-control mb-1">
                                             </div>
                                             <div class="col">
@@ -160,7 +160,7 @@
                                         <input type="text" id="modifyDetailAddress" name="modifyDetailAddress"
                                                class="form-control">
                                         <div class="mt-3 mb-2">
-                                            <label for="addressMobile">전화번호</label>
+                                            <label for="modifyAddressMobile">전화번호</label>
                                             <input type="text" id="modifyAddressMobile" name="modifyAddressMobile"
                                                    maxlength="11">
                                         </div>
@@ -257,7 +257,7 @@
 
         <script src="/js/app/address.js"></script>
         <script type="module" src="/js/app/wishlist.js"></script>
-        <script type="module" src="/js/app/member.js"></script>
+        <script type="module" src="/js/app/user.js"></script>
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     </section>
 </div>

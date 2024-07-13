@@ -4,7 +4,7 @@ import com.moz1mozi.mybatis.delivery.dto.ShippingAddressDto;
 import com.moz1mozi.mybatis.delivery.dto.UpdateAddressDto;
 import com.moz1mozi.mybatis.delivery.service.ShippingAddressService;
 import com.moz1mozi.mybatis.user.dto.UserDto;
-import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class ShippingAddressController {
 
     private final ShippingAddressService shippingAddressService;
-    private final MemberService memberService;
+    private final UserService userService;
 
     @GetMapping("/addressBook")
     public String addressBook(Model model) {
@@ -33,7 +33,7 @@ public class ShippingAddressController {
     @PostMapping("/api/v1/address")
     public ResponseEntity<?> insertAddress(@RequestBody ShippingAddressDto shippingAddressDto, Principal principal) {
         String name = principal.getName();
-        String username = memberService.findByUsername(name).getUserName();
+        String username = userService.findByUsername(name).getUserName();
         shippingAddressService.addAddress(username, shippingAddressDto);
         return ResponseEntity.ok().body(Map.of("message", "배송지 등록이 성공적으로 되었습니다.", "address", "shippingAddressDto"));
     }
@@ -41,7 +41,7 @@ public class ShippingAddressController {
     //배송지 목록 조회
     @GetMapping("/api/v1/address/{userId}/addresses")
     public ResponseEntity<List<ShippingAddressDto>> getAllAddresses(@PathVariable Long userId) {
-        UserDto member = memberService.getMemberId(userId);
+        UserDto member = userService.getMemberId(userId);
         List<ShippingAddressDto> addresses = shippingAddressService.getAllAddresses(member.getUserId());
         return ResponseEntity.ok(addresses);
     }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moz1mozi.mybatis.delivery.mapper.ShippingAddressMapper">
+
+    <insert id="insertShippingAddress"
+        parameterType="ShippingAddressDto">
+        <selectKey keyProperty="addressId" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO ShippingAddress (
+        user_id,
+        sa_recipient_name,
+        sa_mobile,
+        sa_zipcode,
+        sa_street,
+        sa_detail,
+        sa_default,
+        create_dt,
+        modified_dt
+        ) VALUES (
+          #{userId}
+        , #{address.saRecipientName}
+        , #{address.saMobile}
+        , #{address.saZipcode}
+        , #{address.saStreet}
+        , #{address.saDetail}
+        , #{address.saDefault}
+        , NOW()
+        , NOW())
+    </insert>
+
+    <select id="getAddressIdByMemberId">
+        SELECT sa.address_id
+          FROM ShippingAddress sa
+         WHERE 1 = 1
+           AND sa.user_id = #{userId}
+    </select>
+
+    <select id="getShippingAddressByMemberId"
+            resultType="ShippingAddressDto">
+        SELECT sa.address_id, sa.user_id, sa.sa_recipient_name, sa.sa_mobile,
+               sa.sa_zipcode, sa.sa_street, sa.sa_detail, sa.sa_default
+        FROM ShippingAddress sa
+        WHERE 1 = 1
+          AND sa.user_id = #{userId}
+    </select>
+
+    <select id="getShippingAddressById"
+            resultType="ShippingAddressDto">
+        SELECT sa.address_id, sa.user_id, sa.sa_recipient_name, sa.sa_mobile,
+               sa.sa_zipcode, sa.sa_street, sa.sa_detail, sa.sa_default
+          FROM ShippingAddress sa
+         WHERE 1 = 1
+           AND sa.address_id = #{addressId}
+    </select>
+
+    <select id="getDefaultAddressByMemberId" resultType="ShippingAddressDto">
+        SELECT sa.address_id, sa.user_id, sa.sa_recipient_name, sa.sa_mobile,
+               sa.sa_zipcode, sa.sa_street, sa.sa_detail, sa.sa_default
+          FROM ShippingAddress sa
+         WHERE 1 = 1
+           AND sa.user_id = #{userId}
+           AND DEFAULT_ADDRESS = 'Y'
+    </select>
+
+    <update id="updateShippingAddressById"
+            parameterType="ShippingAddressDto">
+        UPDATE ShippingAddress sa
+        SET sa.sa_recipient_name = #{saRecipientName},
+            sa.sa_mobile = #{saMobile},
+            sa.sa_zipcode = #{saZipcode},
+            sa.sa_street = #{saStreet},
+            sa.sa_detail = #{saDetail},
+            sa.sa_default = #{saDefault},
+            sa.modified_dt = now()
+        where sa.address_id = #{addressId}
+    </update>
+
+    <delete id="deleteShippingAddressById"
+            parameterType="long">
+        DELETE
+          FROM ShippingAddress sa
+         WHERE sa.address_id = #{addressId}
+    </delete>
+</mapper>
