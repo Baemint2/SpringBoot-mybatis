@@ -15,7 +15,7 @@ export const validator = {
         });
     },
     checkDuplicate: function (field, value, errorElementId, errorMessage) {
-        fetch(`/api/v1/member/${field}/check?${field}=${value}`)
+        fetch(`/api/v1/user/${field}/check?${field}=${value}`)
             .then(response => response.json())
             .then(data => {
                 const isDuplicate = data[`is${field.charAt(0).toUpperCase() + field.slice(1)}Duplicate`];

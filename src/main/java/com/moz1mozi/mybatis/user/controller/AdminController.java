@@ -4,7 +4,7 @@ import com.moz1mozi.mybatis.common.config.IsAdmin;
 import com.moz1mozi.mybatis.user.dto.UserDto;
 import com.moz1mozi.mybatis.user.dto.UserInfoDto;
 import com.moz1mozi.mybatis.user.service.AdminService;
-import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,33 +21,33 @@ import java.util.Map;
 @Slf4j
 public class AdminController {
     private final AdminService adminService;
-    private final MemberService memberService;
+    private final UserService userService;
 
     @IsAdmin
-    @GetMapping("/admin/memberInfo")
+    @GetMapping("/admin/userInfo")
     public ResponseEntity<List<UserInfoDto>> getMemberInfo() {
-        List<UserInfoDto> memberInfo = adminService.getMemberInfo();
-        return ResponseEntity.ok(memberInfo);
+        List<UserInfoDto> userInfo = adminService.getMemberInfo();
+        return ResponseEntity.ok(userInfo);
     }
 
     @IsAdmin
-    @GetMapping("/admin/register-member")
+    @GetMapping("/admin/register-user")
     public String showRegister() {
-        return "admin/register-member";
+        return "admin/register-user";
     }
 
     @IsAdmin
-    @PostMapping("/api/v1/admin/register-member")
-    public ResponseEntity<Map<String, String>> registerMember(@RequestPart("member") UserDto memberDto,
+    @PostMapping("/api/v1/admin/register-user")
+    public ResponseEntity<Map<String, String>> registerMember(@RequestPart("user") UserDto userDto,
                                                              @RequestPart(value = "file", required = false)MultipartFile file) throws IOException {
-        adminService.insertMember(memberDto, file);
+        adminService.insertMember(userDto, file);
         return ResponseEntity.ok(Map.of("message", "회원등록이 완료되었습니다."));
     }
 
     @IsAdmin
-    @DeleteMapping("/api/v1/admin/member/{username}")
-    public ResponseEntity<?> removeMember(@PathVariable String username) {
-        adminService.removeMember(username);
+    @DeleteMapping("/api/v1/admin/user/{userName}")
+    public ResponseEntity<?> removeMember(@PathVariable String userName) {
+        adminService.removeMember(userName);
         return ResponseEntity.ok().body("회원 탈퇴가 정상적으로 되었습니다.");
     }
 }

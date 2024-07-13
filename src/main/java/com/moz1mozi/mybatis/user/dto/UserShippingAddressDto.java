@@ -7,7 +7,7 @@ import lombok.*;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberShippingAddressDto {
+public class UserShippingAddressDto {
 
     private Long userId;
 

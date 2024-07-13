@@ -11,7 +11,7 @@
 <section>
     <div class="container my-3 login-container">
         <div class="my-3">
-            <form class="login-form" th:action="@{/member/login}" method="post">
+            <form class="login-form" th:action="@{/user/login}" method="post">
                 <a class="nav-header" href="/"><h1>모지히의 이게모지</h1></a>
                 <div th:if="${param.error}">
                     <div class="alert alert-danger">
@@ -32,9 +32,9 @@
                 </div>
                 <button class="btn btn-primary" type="submit">로그인</button>
                 <ul class="find-wrap" id="find-wrap">
-                    <li><a class="find-text" href="/member/find/password">비밀번호 찾기</a></li>
-                    <li><a class="find-text" href="/member/find/username">아이디 찾기</a></li>
-                    <li><a class="find-text" href="/member/signup">회원가입</a></li>
+                    <li><a class="find-text" href="/user/find/password">비밀번호 찾기</a></li>
+                    <li><a class="find-text" href="/user/find/username">아이디 찾기</a></li>
+                    <li><a class="find-text" href="/user/signup">회원가입</a></li>
                 </ul>
                 <sec:remember-me/>
             </form>

@@ -1,11 +1,11 @@
 import {validator} from "./validator.js";
-import {withdrawal} from "./memberWithdrawal.js";
+import {withdrawal} from "./userWithdrawal.js";
 import {emailVerify} from "./emailVerification.js";
 
 
 // let globalAddressData = {};
 
-const member = {
+const user = {
     init: function () {
         const _this = this;
         document.getElementById("btn-signup")?.addEventListener("click", function () {
@@ -38,19 +38,19 @@ const member = {
         }
 
         const formData = new FormData();
-        formData.append('member', new Blob([JSON.stringify(data)], {type: "application/json"}));
+        formData.append('user', new Blob([JSON.stringify(data)], {type: "application/json"}));
 
 
         const file = document.getElementById("file-input").files[0];
             formData.append('file', file); // 'files' 대신 'file' 사용
 
-        fetch("/api/v1/member/signup", {
+        fetch("/api/v1/user/signup", {
             method: "POST",
             body: formData
         }).then(response => {
             if (response.ok) {
                 alert("회원가입이 완료되었습니다.")
-                location.href = "/member/login";
+                location.href = "/user/login";
             } else {
                 throw new Error("회원가입 처리 중 문제가 발생했습니다.")
             }
@@ -108,7 +108,7 @@ const member = {
                 return;
             }
 
-            fetch('/api/v1/member/updateNickname', {
+            fetch('/api/v1/user/updateNickname', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -141,12 +141,12 @@ const member = {
     },
         changeAddress: function () {
         const data = {
-            zipcode: document.getElementById("zipcode").value,
-            streetAddress: document.getElementById("streetAddress").value,
-            detailAddress: document.getElementById("detailAddress").value,
+            saZipcode: document.getElementById("saZipcode").value,
+            saStreet: document.getElementById("saStreet").value,
+            saDetail: document.getElementById("saDetail").value,
         }
 
-        fetch("/api/v1/member/updateAddress", {
+        fetch("/api/v1/user/updateAddress", {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ const member = {
                     confirmPassword: document.getElementById("modal-confirm-pass").value
                 }
                 // 서버로 데이터 전송
-                fetch("/api/v1/member/updatePassword", {
+                fetch("/api/v1/user/updatePassword", {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -192,7 +192,7 @@ const member = {
                             return response.json().then(data => Promise.reject(data));
                         }
                         alert("비밀번호가 성공적으로 변경 되었습니다.");
-                        location.href = "/member/login";
+                        location.href = "/user/login";
                         return response.json();
                     })
                     .catch(error => {
@@ -221,7 +221,7 @@ const member = {
             formData.append('file', file);
         }
 
-        fetch("/api/v1/member/updateProfile", {
+        fetch("/api/v1/user/updateProfile", {
             method: "PUT",
             body: formData
         }).then(response => {
@@ -249,7 +249,7 @@ const member = {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    member.init();
+    user.init();
     validator.init();
     withdrawal.init();
     emailVerify.init();

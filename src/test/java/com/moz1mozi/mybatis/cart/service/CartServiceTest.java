@@ -3,7 +3,7 @@ package com.moz1mozi.mybatis.cart.service;
 import com.moz1mozi.mybatis.cart.mapper.CartMapper;
 import com.moz1mozi.mybatis.cart.dto.CartDetailDto;
 import com.moz1mozi.mybatis.cart.dto.CartDto;
-import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.service.UserService;
 import com.moz1mozi.mybatis.product.mapper.ProductMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ class CartServiceTest {
     private CartService cartService;
 
     @Autowired
-    private MemberService memberService;
+    private UserService userService;
 
     @Autowired
     private ProductMapper productMapper;
@@ -49,7 +49,7 @@ class CartServiceTest {
     @Test
     void 내장바구니() {
 
-        memberService.findByUsername("emozi");
+        userService.findByUsername("emozi");
         List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(userId);
         assertNotNull(itemsByMemberId);
     }

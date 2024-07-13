@@ -20,13 +20,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static com.moz1mozi.mybatis.user.utils.MemberUtils.mapStringToRole;
-import static com.moz1mozi.mybatis.user.utils.MemberUtils.validateMemberData;
+import static com.moz1mozi.mybatis.user.utils.UserUtils.mapStringToRole;
+import static com.moz1mozi.mybatis.user.utils.UserUtils.validateMemberData;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class UserService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;

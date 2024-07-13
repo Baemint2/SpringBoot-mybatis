@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class MemberWithdrawalDto {
+public class UserWithdrawalDto {
     private String userName;
     private String userPw;
 }

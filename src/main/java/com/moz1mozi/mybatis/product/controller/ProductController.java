@@ -3,7 +3,7 @@ package com.moz1mozi.mybatis.product.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moz1mozi.mybatis.common.exception.OutOfStockException;
 import com.moz1mozi.mybatis.user.dto.UserDto;
-import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.service.UserService;
 import com.moz1mozi.mybatis.product.dto.*;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import com.moz1mozi.mybatis.wishlist.service.WishListService;
@@ -33,14 +33,14 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
-    private final MemberService memberService;
+    private final UserService userService;
     private final WishListService wishListService;
     private final Validator validator;
 
     @GetMapping("/product")
     public String products(Model model, Principal principal) {
         String username = principal.getName();
-        UserDto loggedUser = memberService.findByUsername(username);
+        UserDto loggedUser = userService.findByUsername(username);
         model.addAttribute("loggedUser", loggedUser);
         return "product/product-insert";
     }
@@ -51,7 +51,7 @@ public class ProductController {
                                 Principal principal) {
         if(principal != null) {
             String currentUsername = principal.getName();
-            UserDto loggedUser = memberService.findByUsername(currentUsername);
+            UserDto loggedUser = userService.findByUsername(currentUsername);
             model.addAttribute("loggedUser", loggedUser);
             Long userId = loggedUser.getUserId();
             boolean isLiked = wishListService.isLiked(userId, prodId);

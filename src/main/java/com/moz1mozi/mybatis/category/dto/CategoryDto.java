@@ -14,9 +14,9 @@ import java.util.List;
 @Getter
 @Builder
 public class CategoryDto {
-    private Long categoryId;
-    private String categoryName;
-    private Long parentId;
+    private Long cateId;
+    private String cateName;
+    private Long parentCateId;
     private Date createdAt;
     private Date modifiedAt;
     private List<CategoryDto> subCategories;

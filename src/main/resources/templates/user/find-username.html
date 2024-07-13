@@ -11,7 +11,7 @@
 <section>
     <div class="container my-3 find-container">
         <div class="my-3">
-            <form class="find-form" th:action="@{/member/find/username}" method="post" autocomplete="off">
+            <form class="find-form" th:action="@{/user/find/username}" method="post" autocomplete="off">
                 <a class="find-header" href="/"><h1>아이디 찾기</h1></a>
                 <div th:if="${param.error}">
                     <div class="alert alert-danger">
@@ -51,7 +51,7 @@
             </form>
         </div>
     </div>
-    <script type="module" src="/js/app/member.js"></script>
+    <script type="module" src="/js/app/user.js"></script>
 </section>
 </body>
 </html>

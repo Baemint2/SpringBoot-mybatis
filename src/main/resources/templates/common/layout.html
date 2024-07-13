@@ -21,24 +21,24 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a href="/member/info" class="nav-link"><span th:text="${loggedUser.userNickname}">사용자 이름</span>님</a>
+                    <a href="/user/info" class="nav-link"><span th:text="${loggedUser.userNickname}">사용자 이름</span>님</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a href="/member/cart" role="button" class="nav-link">장바구니</a>
+                    <a href="/user/cart" role="button" class="nav-link">장바구니</a>
                 </li>
                 <li class="">
                 </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
-                    <a href="/member/signup" role="button" class="btn btn-secondary">회원가입</a>
+                    <a href="/user/signup" role="button" class="btn btn-secondary">회원가입</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a href="/member/login" role="button" class="btn btn-success">로그인</a>
+                    <a href="/user/login" role="button" class="btn btn-success">로그인</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('관리자')">
                     <a href="/admin">관리자페이지</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a href="/member/logout" role="button" class="btn btn-danger">로그아웃</a>
+                    <a href="/user/logout" role="button" class="btn btn-danger">로그아웃</a>
                 </li>
             </ul>
         </div>

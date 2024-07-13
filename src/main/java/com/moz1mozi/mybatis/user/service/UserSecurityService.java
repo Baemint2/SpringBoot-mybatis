@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MemberSecurityService implements UserDetailsService {
+public class UserSecurityService implements UserDetailsService {
 
     private final UserMapper userMapper;
     @Override

@@ -2,10 +2,10 @@ const admin = {
     init: function () {
         const _this = this;
         document.getElementById("btn-memberList")?.addEventListener("click", function () {
-            _this.memberList();
+            _this.userList();
         });
         document.getElementById("btn-register")?.addEventListener("click", function () {
-            _this.memberResiter();
+            _this.UserRegister();
         })
     },
     formatDate: function(dateString) {
@@ -18,8 +18,8 @@ const admin = {
             minute: '2-digit',
         });
     },
-    memberList: function () {
-        fetch("/admin/memberInfo")
+    userList: function () {
+        fetch("/admin/userInfo")
             .then(response => {
                 if(!response.ok) {
                     throw new Error("네트워크 오류입니다.")
@@ -29,15 +29,15 @@ const admin = {
             }).then(data => {
             const membersList = document.getElementById('membersList');
             membersList.innerHTML = '';
-            data.forEach(member => {
+            data.forEach(user => {
                 const row = `
                     <tr>
-                        <td>${member.userId}</td>
-                        <td>${member.username}</td>
-                        <td>${member.email}</td>
-                        <td>${this.formatDate(member.createdAt)}</td>
-                        <td>${member.role}</td>
-                        <td><button class="btn-remove" data-username="${member.username}">탈퇴</button></td>
+                        <td>${user.userId}</td>
+                        <td>${user.userName}</td>
+                        <td>${user.userEmail}</td>
+                        <td>${this.formatDate(user.userCreatedAt)}</td>
+                        <td>${user.userRole}</td>
+                        <td><button class="btn-remove" data-username="${user.userName}">탈퇴</button></td>
                     </tr>
                 `;
                 membersList.innerHTML += row;
@@ -46,7 +46,7 @@ const admin = {
                 button.addEventListener('click', (e) => {
                     const username = e.target.getAttribute('data-username');
                     if (confirm(`${username} 회원을 정말 탈퇴시키겠습니까?`)) {
-                        this.removeMember(username);
+                        this.removeUser(username);
                     }
                 });
             });
@@ -54,23 +54,23 @@ const admin = {
                 console.error('알 수 없는 오류가 발생했습니다:', error);
             });
     },
-    memberResiter: function () {
+    UserRegister: function () {
         const data = {
-            username: document.getElementById("admin-username").value,
-            nickname: document.getElementById("admin-nickname").value,
-            email: document.getElementById("admin-email").value,
-            mobile: document.getElementById("admin-mobile").value,
-            role: document.querySelector("input[name='role']:checked")?.value || "BUYER"
+            userName: document.getElementById("admin-username").value,
+            userNickname: document.getElementById("admin-nickname").value,
+            userEmail: document.getElementById("admin-email").value,
+            userMobile: document.getElementById("admin-mobile").value,
+            userRole: document.querySelector("input[name='role']:checked")?.value || "BUYER"
         }
 
         const formData = new FormData();
-        formData.append('member', new Blob([JSON.stringify(data)], {type: "application/json"}));
+        formData.append('user', new Blob([JSON.stringify(data)], {type: "application/json"}));
 
 
         const file = document.getElementById("file-input").files[0];
         formData.append('file', file); // 'files' 대신 'file' 사용
 
-        fetch("/api/v1/admin/register-member", {
+        fetch("/api/v1/admin/register-user", {
             method: "POST",
             body: formData
         }).then(response => {
@@ -85,15 +85,15 @@ const admin = {
             console.log(error);
         })
     },
-    removeMember: function (username) {
-        fetch(`/api/v1/admin/member/${username}`, {
+    removeUser: function (userName) {
+        fetch(`/api/v1/admin/user/${userName}`, {
             method: "DELETE"
         }).then(response => {
             if(!response.ok) {
                 throw new Error("회원 탈퇴 처리 중 오류가 발생했습니다.");
             }
             alert("회원 탈퇴가 정상적으로 처리되었습니다.");
-            this.memberList();
+            this.userList();
         })
             .catch(error => {
                 console.error("오류: ", error);

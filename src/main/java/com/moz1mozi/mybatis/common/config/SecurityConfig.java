@@ -63,11 +63,11 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/member/**"))
                 )
                 .formLogin(login -> login
-                        .loginPage("/member/login")
-                        .loginProcessingUrl("/member/login") // 로그인 처리 URL (폼 제출 경로)
+                        .loginPage("/user/login")
+                        .loginProcessingUrl("/user/login") // 로그인 처리 URL (폼 제출 경로)
                         .successHandler(customSuccessHandler))
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true))
                 .exceptionHandling(exception -> exception

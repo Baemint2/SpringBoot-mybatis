@@ -4,9 +4,9 @@ import com.moz1mozi.mybatis.email.service.AuthenticationService;
 import com.moz1mozi.mybatis.email.service.EmailService;
 import com.moz1mozi.mybatis.user.dto.FindUserDto;
 import com.moz1mozi.mybatis.user.dto.UserDto;
-import com.moz1mozi.mybatis.user.dto.MemberWithdrawalDto;
+import com.moz1mozi.mybatis.user.dto.UserWithdrawalDto;
 import com.moz1mozi.mybatis.user.dto.PasswordChangeDto;
-import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,17 +26,17 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/member")
-public class MemberApiController {
+@RequestMapping("/api/v1/user")
+public class UserApiController {
 
-    private final MemberService memberService;
+    private final UserService userService;
     private final EmailService emailService;
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@Valid @RequestPart("member") UserDto memberDto,
+    public ResponseEntity<Map<String, String>> signup(@Valid @RequestPart("user") UserDto memberDto,
                                                       @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
-        Long userId = memberService.insertMember(memberDto, file);
+        Long userId = userService.insertMember(memberDto, file);
         log.info("회원가입 = {}", userId);
         return ResponseEntity.ok(Map.of("message", "회원가입이 성공적으료 완료되었습니다."));
     }
@@ -44,9 +44,9 @@ public class MemberApiController {
 
     //회원 탈퇴
     @DeleteMapping("/withdrawal")
-    public ResponseEntity<?> withdrawal(@RequestBody MemberWithdrawalDto withdrawalDto,
+    public ResponseEntity<?> withdrawal(@RequestBody UserWithdrawalDto withdrawalDto,
                                         HttpServletRequest request) {
-        boolean withdrawalMember = memberService.deleteMember(withdrawalDto.getUserName(), withdrawalDto.getUserPw());
+        boolean withdrawalMember = userService.deleteMember(withdrawalDto.getUserName(), withdrawalDto.getUserPw());
         if(withdrawalMember) {
             SecurityContextHolder.clearContext();
 
@@ -63,7 +63,7 @@ public class MemberApiController {
 
     @GetMapping("/info")
     public ResponseEntity<UserDto> getMemberInfo(Principal principal) {
-        UserDto member = memberService.findByUsername(principal.getName());
+        UserDto member = userService.findByUsername(principal.getName());
         if(member != null) {
             return ResponseEntity.ok(member);
         } else {
@@ -76,14 +76,14 @@ public class MemberApiController {
     @PutMapping("/updateNickname")
     public ResponseEntity<?> updateNickname(@RequestParam String nickname, Principal principal) {
         String username = principal.getName();
-        memberService.updateNickname(username, nickname);
+        userService.updateNickname(username, nickname);
         Map<String, String> response = Collections.singletonMap("nickname", nickname);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/verify-user")
     public ResponseEntity<?> verifyUser(@RequestBody FindUserDto findUserDto) {
-        boolean userExists = memberService.checkUserExists(findUserDto.getUserNickname(), findUserDto.getUserEmail(), findUserDto.getUserName());
+        boolean userExists = userService.checkUserExists(findUserDto.getUserNickname(), findUserDto.getUserEmail(), findUserDto.getUserName());
         if(!userExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "일치하는 회원 정보가 없습니다."));
         }
@@ -95,7 +95,7 @@ public class MemberApiController {
     @PutMapping("/updatePassword")
     public ResponseEntity<?> changePassword(@RequestBody @Valid PasswordChangeDto password, HttpSession session) {
         try {
-            memberService.changePassword(password.getUserName(), password);
+            userService.changePassword(password.getUserName(), password);
             session.invalidate(); // 세션 종료
             return ResponseEntity.ok(Map.of("message", "비밀번호가 성공적으로 업데이트 되었습니다. 다시 로그인 해주세요."));
         } catch (Exception ex) {
@@ -107,7 +107,7 @@ public class MemberApiController {
     public ResponseEntity<?> changeProfileImage(@RequestPart("username") String username,
                                                 @RequestPart(value = "file", required = false) MultipartFile profileImage) {
         try {
-            memberService.updateProfileImage(username, profileImage);
+            userService.updateProfileImage(username, profileImage);
             return ResponseEntity.ok(Map.of("message", "프로필 이미지가 성공적으로 업데이트되었습니다."));
         } catch (IOException ex) {
             return ResponseEntity.internalServerError().body(Map.of("error", "프로필 이미지 업데이트에 실패했습니다."));
@@ -117,21 +117,21 @@ public class MemberApiController {
 
     @GetMapping("/username/check")
     public ResponseEntity<Map<String, Boolean>> checkUsername(@RequestParam("username")String username) {
-        boolean isUsernameDuplicate = memberService.usernameDuplicate(username);
+        boolean isUsernameDuplicate = userService.usernameDuplicate(username);
         log.info("중복된 아이디 = {}", isUsernameDuplicate);
         return ResponseEntity.ok(Map.of("isUsernameDuplicate",isUsernameDuplicate));
     }
 
     @GetMapping("/email/check")
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam("email")String email) {
-        boolean isEmailDuplicate = memberService.emailDuplicate(email);
+        boolean isEmailDuplicate = userService.emailDuplicate(email);
         log.info("중복된 이메일 = {}", isEmailDuplicate);
         return ResponseEntity.ok(Map.of("isEmailDuplicate",isEmailDuplicate));
     }
 
     @GetMapping("/nickname/check")
     public ResponseEntity<Map<String, Boolean>> checkNickname(@RequestParam("nickname")String nickname) {
-        boolean isNicknameDuplicate = memberService.nicknameDuplicate(nickname);
+        boolean isNicknameDuplicate = userService.nicknameDuplicate(nickname);
         log.info("중복된 닉네임 = {}", isNicknameDuplicate);
         return ResponseEntity.ok(Map.of("isNicknameDuplicate", isNicknameDuplicate));
     }

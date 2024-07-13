@@ -26,13 +26,13 @@ public class CategoryService {
 
         Map<Long, CategoryDto> categoryMap = new HashMap<>();
         List<CategoryDto> rootCategories = new ArrayList<>();
-        allCategories.forEach(category -> categoryMap.put(category.getCategoryId(), category));
+        allCategories.forEach(category -> categoryMap.put(category.getCateId(), category));
 
         allCategories.forEach(category -> {
-            if (category.getParentId() == null) {
+            if (category.getParentCateId() == null) {
                 rootCategories.add(category);
             } else {
-                CategoryDto parent = categoryMap.get(category.getParentId());
+                CategoryDto parent = categoryMap.get(category.getParentCateId());
                 if (parent != null) {
                     parent.getSubCategories().add(category);
                 }

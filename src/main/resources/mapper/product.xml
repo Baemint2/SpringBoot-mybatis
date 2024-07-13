@@ -22,7 +22,7 @@
         </association>
         <association property="categoryDto" javaType="CategoryDto">
             <id property="categoryId" column="CATEGORY_ID"/>
-            <result property="categoryName" column="CATEGORY_NAME"/>
+            <result property="cateName" column="cate_name"/>
         </association>
     </resultMap>
 
@@ -87,11 +87,11 @@
     <select id="getProductByNo" resultMap="ProductMap">
         SELECT p.prod_id, u.user_name, i.pi_stored_url, p.prod_name,
                p.prod_description, p.prod_price, p.prod_stock_quantity, u.user_nickname,
-               C.CATEGORY_NAME
+               c.cate_name
         FROM Product p
         LEFT JOIN ProductImage i on p.prod_id = i.prod_id
         LEFT JOIN User u ON p.seller_id = u.user_id
-        LEFT JOIN CATEGORY_T C ON p.cate_id = C.CATEGORY_ID
+        LEFT JOIN Category c ON p.cate_id = c.cate_id
         WHERE p.prod_id = #{prodId};
     </select>
 
@@ -119,11 +119,11 @@
             parameterType="ProductSearchDto"
             resultMap="ProductMap">
         SELECT p.prod_id, i.pi_stored_url, p.prod_name, p.prod_description, p.prod_price,
-        p.prod_stock_quantity, u.user_nickname, p.cate_id, c.category_name
+        p.prod_stock_quantity, u.user_nickname, p.cate_id, c.cate_name
         FROM Product p
         LEFT JOIN ProductImage i ON p.prod_id = i.prod_id
         LEFT JOIN User u ON p.seller_id = u.user_id
-        LEFT JOIN CATEGORY_T C ON p.cate_id = C.CATEGORY_ID
+        LEFT JOIN Category c ON p.cate_id = c.cate_id
         WHERE 1=1
         <if test="searchDto.prodName != null">
             AND p.prod_name LIKE CONCAT('%', #{searchDto.prodName},'%')

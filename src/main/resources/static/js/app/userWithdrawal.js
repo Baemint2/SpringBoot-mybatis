@@ -56,7 +56,7 @@ export const withdrawal = {
                     const password = document.getElementById('password').value;
                     console.log(password);
 
-                    fetch(`/api/v1/member/withdrawal`, {
+                    fetch(`/api/v1/user/withdrawal`, {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json"

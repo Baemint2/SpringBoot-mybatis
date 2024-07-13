@@ -23,7 +23,7 @@ class CategoryServiceTest {
     }
 
     private void printCategory(CategoryDto categoryDto, String indent) {
-        System.out.println(indent + "- " + categoryDto.getCategoryName());
+        System.out.println(indent + "- " + categoryDto.getCateName());
         List<CategoryDto> subCategories = categoryDto.getSubCategories();
         for (CategoryDto subCategory : subCategories) {
             printCategory(subCategory, indent + " ");

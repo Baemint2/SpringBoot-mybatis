@@ -5,7 +5,7 @@ import com.moz1mozi.mybatis.cart.service.CartService;
 import com.moz1mozi.mybatis.category.mapper.CategoryMapper;
 import com.moz1mozi.mybatis.image.mapper.ImageMapper;
 import com.moz1mozi.mybatis.user.mapper.UserMapper;
-import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.service.UserService;
 import com.moz1mozi.mybatis.product.mapper.ProductMapper;
 import com.moz1mozi.mybatis.product.service.ProductService;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ class CartControllerTest {
     private ProductService productService;
 
     @MockBean
-    private MemberService memberService;
+    private UserService userService;
 
     @MockBean
     private CartMapper cartMapper;

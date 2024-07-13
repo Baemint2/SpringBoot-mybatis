@@ -5,7 +5,7 @@ import com.moz1mozi.mybatis.user.dto.FindUserDto;
 import com.moz1mozi.mybatis.user.dto.UserDto;
 import com.moz1mozi.mybatis.user.mapper.UserMapper;
 import com.moz1mozi.mybatis.user.dto.PasswordChangeDto;
-import com.moz1mozi.mybatis.user.service.MemberService;
+import com.moz1mozi.mybatis.user.service.UserService;
 import com.moz1mozi.mybatis.user.dto.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -24,14 +24,14 @@ import static org.mockito.ArgumentMatchers.any;
 
 @Slf4j
 @SpringBootTest
-class MemberServiceTest {
+class UserServiceTest {
 
 
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
-    private MemberService memberService;
+    private UserService userService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,7 +48,7 @@ class MemberServiceTest {
                 .userRole(Role.BUYER)
                 .build();
         log.info(user.getUserPw());
-       memberService.insertMember(user, null);
+       userService.insertMember(user, null);
         UserDto savedMember = userMapper.findByUsername(user.getUserName()).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
         assertNotNull(savedMember);
         assertEquals(user.getUserName(), savedMember.getUserName());
@@ -65,7 +65,7 @@ class MemberServiceTest {
                 .userRole(Role.SELLER)
                 .build();
 
-        UserDto byUsername = memberService.findByUsername(user.getUserName());
+        UserDto byUsername = userService.findByUsername(user.getUserName());
         assertEquals(user.getUserName(), byUsername.getUserName());
     }
 
@@ -74,7 +74,7 @@ class MemberServiceTest {
         String username = "tester100";
         String currentPassword = "1234";
         String encodedPassword = passwordEncoder.encode(currentPassword);
-        UserDto existingMember = memberService.findByUsername(username);
+        UserDto existingMember = userService.findByUsername(username);
         assertThat(passwordEncoder.matches(currentPassword, existingMember.getUserPw())).isTrue();
         System.out.println(encodedPassword);
 
@@ -88,7 +88,7 @@ class MemberServiceTest {
                 .confirmPassword(newPassword)
                 .build();
         log.info("현재 유저의 비밀번호: {}, 현재 비밀번호 : {}, 이것도 현재 비밀번호 : {}",existingMember.getUserPw() , passwordChangeDto.getCurrentPassword(), passwordChangeDto.getConfirmPassword());
-        memberService.changePassword(username, passwordChangeDto);
+        userService.changePassword(username, passwordChangeDto);
 
         UserDto updatedUser = userMapper.findByUsername(username).orElseThrow();
         assertThat(passwordEncoder.matches(newPassword, updatedUser.getUserPw())).isTrue();
@@ -101,7 +101,7 @@ class MemberServiceTest {
                 .userEmail(email)
                 .build();
 
-        String username = memberService.findByUsernameEmail(findUserDto);
+        String username = userService.findByUsernameEmail(findUserDto);
         assertNotNull(username);
     }
 
@@ -113,7 +113,7 @@ class MemberServiceTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> {
-            memberService.findByUsernameEmail(findUserDto);
+            userService.findByUsernameEmail(findUserDto);
         });
     }
 
@@ -121,9 +121,9 @@ class MemberServiceTest {
     void 닉네임변경_성공_테스트() {
         String username = "emozi";
         String nickname = "이모히지";
-        memberService.updateNickname(username, nickname);
+        userService.updateNickname(username, nickname);
 
-        UserDto user = memberService.findByUsername(username);
+        UserDto user = userService.findByUsername(username);
         assertEquals(nickname, user.getUserNickname());
     }
 
@@ -132,12 +132,12 @@ class MemberServiceTest {
         // 테스트를 위한 초기 닉네임 설정
         String username = "emozi";
         String nickname = "이모지히";
-        memberService.updateNickname(username, nickname); // 중복되지 않는 닉네임으로 초기 설정
+        userService.updateNickname(username, nickname); // 중복되지 않는 닉네임으로 초기 설정
 
         // 중복 닉네임으로 변경 시도
         String duplicateNickname = "이모지히"; // 이전 단계에서 이미 사용된 닉네임
         assertThrows(CustomException.class, () -> {
-            memberService.updateNickname(username, duplicateNickname);
+            userService.updateNickname(username, duplicateNickname);
         });
     }
 }

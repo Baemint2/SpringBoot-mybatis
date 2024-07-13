@@ -103,9 +103,9 @@
 
     <select id="findUserIdByAddressId"
             parameterType="UserDto">
-        SELECT SA.ADDRESS_ID, u.user_name, u.user_mobile, u.user_id
+        SELECT sa.address_id, u.user_name, u.user_mobile, u.user_id
         FROM User u
-        INNER JOIN SHIPPING_ADDRESS_T SA ON u.user_id = SA.user_id
+        INNER JOIN ShippingAddress sa ON u.user_id = sa.user_id
         WHERE u.user_id = #{userId};
     </select>
 

@@ -43,7 +43,7 @@ const wishlist = {
                 row.innerHTML = `
             <td>
                 <a href="/product/detail/${item.prodId}" class="wishlist-item-link">
-                    <img src="${item.imageDto.storedUrl}" alt="${item.prodName}" class="img-thumbnail" style="width: 100px; height: 100px;">
+                    <img src="${item.imageDto.piStoredUrl}" alt="${item.prodName}" class="img-thumbnail" style="width: 100px; height: 100px;">
                 </a>
             </td>
             <td>

@@ -20,11 +20,11 @@ export const emailVerify = {
         console.log(email);
 
         if(action === "verify-user") {
-            apiUrl = "/api/v1/member/verify-user";
+            apiUrl = "/api/v1/user/verify-user";
             requestBody = {
-                email: email,
-                nickname: document.querySelector(".nickname").value,
-                username: document.querySelector(".username")?.value,
+                userEmail: email,
+                userNickname: document.querySelector(".nickname").value,
+                userName: document.querySelector(".username")?.value,
            }
         }
         fetch(apiUrl, {

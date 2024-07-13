@@ -35,7 +35,7 @@
                     <tbody>
                     <!-- 서버에서 받은 상품 데이터로 반복 -->
                     <tr th:each="myItem : ${myItems}" th:data-product-id="${myItem.prodId}"
-                        th:data-member-id="${myItem.userId}"
+                        th:data-user-id="${myItem.userId}"
                         th:data-product-name="${myItem.prodName}"
                         th:data-quantity="${myItem.totalQuantity}"
                         th:data-price="${myItem.totalPrice}" class="stockContainer">
