@@ -44,10 +44,10 @@ public class AdminService {
 
         validateMemberData(user, userMapper, false);
 
-        String profileImageUrl = null;
+        String userProfileImageUrl = null;
         if(profileImage != null && !profileImage.isEmpty()) {
             String storedFileName = imageService.storeProfileImage(profileImage);
-            profileImageUrl = "/members/" + storedFileName;
+            userProfileImageUrl = "/members/" + storedFileName;
         }
 
         Role role = mapStringToRole(user.getUserRole().getDisplayName());
@@ -60,7 +60,7 @@ public class AdminService {
                 .userNickname(user.getUserNickname())
                 .userEmail(user.getUserEmail())
                 .userMobile(user.getUserMobile())
-                .userProfileImagePath(profileImageUrl)
+                .userProfileImagePath(userProfileImageUrl)
                 .userCreatedAt(Date.from(Instant.now()))
                 .userRole(role)
                 .build();

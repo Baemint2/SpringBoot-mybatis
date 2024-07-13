@@ -12,8 +12,8 @@ export const cartToOrder = {
             const checkedItems = Array.from(checkboxes).map(checkbox => {
                 const row = checkbox.closest('.stockContainer');
                 return {
-                    memberId: row.getAttribute('data-member-id'),
-                    productId: row.getAttribute('data-product-id'),
+                    userId: row.getAttribute('data-member-id'),
+                    prodId: row.getAttribute('data-product-id'),
                     productName: row.getAttribute('data-product-name'),
                     quantity: row.getAttribute('data-quantity'),
                     price: row.getAttribute('data-price')
@@ -28,9 +28,9 @@ export const cartToOrder = {
             // 폼에 동적으로 데이터를 추가
             checkedItems.forEach(item => {
                 console.log(item);
-                form.appendChild(this.createHiddenInput('memberId', item.memberId));
-                form.appendChild(this.createHiddenInput(`productId`, item.productId));
-                form.appendChild(this.createHiddenInput(`productName`, item.productName));
+                form.appendChild(this.createHiddenInput('userId', item.userId));
+                form.appendChild(this.createHiddenInput(`prodId`, item.prodId));
+                form.appendChild(this.createHiddenInput(`productName`, item.prodName));
                 form.appendChild(this.createHiddenInput(`quantity`, item.quantity));
                 form.appendChild(this.createHiddenInput(`price`, item.price));
             });

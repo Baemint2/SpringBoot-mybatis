@@ -13,31 +13,31 @@ public interface CartMapper {
 
     int insertCartItem(CartDto cartDto);
 
-    List<CartDetailDto> findMyCartItems(Long memberId);
+    List<CartDetailDto> findMyCartItems(Long userId);
 
     //전체 값
-    TotalCartDto getTotalPrice(Long memberId);
+    TotalCartDto getTotalPrice(Long userId);
 
-    CartDto selectCartItemById(Long cartItemId);
+    CartDto selectCartItemById(Long carId);
 
-    void increaseCartItemQuantity(@Param("productId") Long productId, @Param("quantity") Integer quantity);
-    void decreaseCartItemQuantity(@Param("productId") Long productId, @Param("quantity") Integer quantity);
+    void increaseCartItemQuantity(@Param("prodId") Long prodId, @Param("cartQuantity") Integer cartQuantity);
+    void decreaseCartItemQuantity(@Param("prodId") Long prodId, @Param("cartQuantity") Integer cartQuantity);
 
 
     // 상품 수량 여부 확인
-    Integer findQuantity(Long memberId, Long productId);
+    Integer findQuantity(Long userId, Long prodId);
 
     // 장바구니에서 제거
-    int deleteCartItem(Long cartItemId);
+    int deleteCartItem(Long cartId);
 
     // 장바구니에서 여러 상품 제거
-    int deleteCartItems(List<Long> cartItemIds);
+    int deleteCartItems(List<Long> cartIds);
 
     // 상품 존재 여부 확인
-    boolean existsById(Long cartItemId);
+    boolean existsById(Long cartId);
 
     // 주문 화면으로 이동
-    List<CartDetailDto> findCartItemsByIds(List<Long> cartItemsIds);
+    List<CartDetailDto> findCartItemsByIds(List<Long> cartIds);
 }
 
 

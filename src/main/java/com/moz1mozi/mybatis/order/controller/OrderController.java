@@ -39,13 +39,13 @@ public class OrderController {
 
     @PostMapping("/order/detail")
     public String processOrderDetail(
-            @RequestParam(value = "memberId") Long memberId,
-            @RequestParam(value = "productId", required = false) String[] productIds,
+            @RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "prodId", required = false) String[] productIds,
             @RequestParam(value = "productName", required = false) String[] productNames,
             @RequestParam(value = "quantity", required = false) String[] quantities,
             @RequestParam(value = "price", required = false) String[] prices,
             Model model) {
-        ShippingAddressDto address = shippingAddressService.getDefaultAddress(memberId);
+        ShippingAddressDto address = shippingAddressService.getDefaultAddress(userId);
         model.addAttribute("productIds", productIds);
         model.addAttribute("productNames", productNames);
         model.addAttribute("quantities", quantities);

@@ -12,10 +12,10 @@ import java.util.Date;
 @Builder
 @Getter
 public class CartDto {
-    private Long cartItemId;
-    private Long memberId;
-    private Long productId;
-    private Integer quantity;
-    private Integer price;
-    private Date dataAdded;
+    private Long cartId;
+    private Long userId;
+    private Long prodId;
+    private Integer cartQuantity;
+    private Integer cartPrice;
+    private Date cartDateAdded;
 }

@@ -15,7 +15,7 @@
         <div class="container mt-4">
             <h2 class="mb-4">장바구니</h2>
             <form id="order-form" th:action="@{/order/detail}" method="post">
-                <input type="hidden" name="memberId" th:value="${loggedUser.memberId}">
+                <input type="hidden" name="userId" th:value="${loggedUser.userId}">
                 <table class="table">
                     <thead th:if="${emptyCartMessage}" class="alert alert-warning text-center" role="alert">
                     <tr>
@@ -34,30 +34,30 @@
                     </thead>
                     <tbody>
                     <!-- 서버에서 받은 상품 데이터로 반복 -->
-                    <tr th:each="myItem : ${myItems}" th:data-product-id="${myItem.productId}"
-                        th:data-member-id="${myItem.memberId}"
+                    <tr th:each="myItem : ${myItems}" th:data-product-id="${myItem.prodId}"
+                        th:data-member-id="${myItem.userId}"
                         th:data-product-name="${myItem.prodName}"
                         th:data-quantity="${myItem.totalQuantity}"
                         th:data-price="${myItem.totalPrice}" class="stockContainer">
                         <td>
-                            <input type="checkbox" th:value="${myItem.productId}" th:name="'productIds'" th:data-cart-item-id="${myItem.cartItemId}">
+                            <input type="checkbox" th:value="${myItem.prodId}" th:name="'productIds'" th:data-cart-item-id="${myItem.cartId}">
                         </td>
-                        <td><img th:src="${myItem.storedUrl}" alt="상품 이미지" class="img-thumbnail"
+                        <td><img th:src="${myItem.piStoredUrl}" alt="상품 이미지" class="img-thumbnail"
                                  style="width: 60px; height: 60px;"></td>
                         <td th:text="${myItem.prodName}">상품명</td>
                         <td>
                             <button class="btn btn-secondary btn-sm increase-btn" th:data-count="1">+</button>
                             <span class="quantity" th:text="${myItem.totalQuantity}"></span>
-                            <input type="hidden" th:name="'quantity_' + ${myItem.productId}" th:value="${myItem.totalQuantity}">
+                            <input type="hidden" th:name="'quantity_' + ${myItem.prodId}" th:value="${myItem.totalQuantity}">
                             <button class="btn btn-secondary btn-sm decrease-btn" th:data-count="-1">-</button>
                             <button class="change-stock">변경</button>
                         </td>
                         <td class="price">가격: <span class="formattedPrice" th:text="${myItem.totalPrice}"></span>원
-                        <input type="hidden" th:name="'price_' + ${myItem.productId}" th:value="${myItem.totalPrice}">
+                        <input type="hidden" th:name="'price_' + ${myItem.prodId}" th:value="${myItem.totalPrice}">
                         </td>
                         <td>
                             <button class="btn btn-danger btn-sm delete-cart-item-btn"
-                                    th:data-cart-item-id="${myItem.cartItemId}">삭제
+                                    th:data-cart-item-id="${myItem.cartId}">삭제
                             </button>
                         </td>
                     </tr>

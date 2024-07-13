@@ -87,7 +87,7 @@ function createProductCard(product) {
     productElement.classList.add('col-md-4');
 
     const anchor = document.createElement('a');
-    anchor.href = `/product/detail/${product.productId}`; // 여기에 클라이언트 측 URL을 사용하세요.
+    anchor.href = `/product/detail/${product.prodId}`; // 여기에 클라이언트 측 URL을 사용하세요.
     anchor.classList.add('card-link'); // 필요에 따라 스타일링을 위한 클래스를 추가할 수 있습니다.
 
     console.log(product)

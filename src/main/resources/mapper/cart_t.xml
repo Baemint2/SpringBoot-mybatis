@@ -5,87 +5,115 @@
 <mapper namespace="com.moz1mozi.mybatis.cart.mapper.CartMapper">
     <insert id="insertCartItem"
             parameterType="CartDto">
-        <selectKey keyProperty="cartItemId" resultType="long" order="AFTER">
+        <selectKey keyProperty="cartId" resultType="long" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO CART (MEMBER_ID, PRODUCT_ID, QUANTITY, PRICE, DATE_ADDED)
-        VALUES (#{memberId}, #{productId}, #{quantity}, #{price}, now())
+        INSERT INTO CART (
+                user_id
+              , prod_id
+              , cart_quantity
+              , cart_price
+              , cart_date_added )
+              VALUES (
+                #{userId}
+              , #{prodId}
+              , #{cartQuantity}
+              , #{cartPrice}
+              , now())
     </insert>
 
     <select id="findMyCartItems"
             resultType="CartDetailDto">
-        SELECT
-        C.CART_ITEM_ID,
-        C.PRODUCT_ID,
-        P.PROD_NAME,
-        PI.STORED_URL,
-        SUM(QUANTITY) AS TOTAL_QUANTITY,
-        SUM(PRICE * QUANTITY) AS TOTAL_PRICE,
-        MAX(DATE_ADDED) AS LAST_ADDED
-        FROM CART C
-        LEFT JOIN PRODUCT_T P ON C.PRODUCT_ID = P.PRODUCT_ID
-        LEFT JOIN PRODUCT_IMAGE PI ON P.PRODUCT_ID = PI.PRODUCT_ID
-        LEFT JOIN User M ON C.MEMBER_ID = M.MEMBER_ID
-        WHERE C.MEMBER_ID = #{memberId}
-        GROUP BY C.CART_ITEM_ID,C.PRODUCT_ID, P.PROD_NAME, PI.STORED_URL;
+        SELECT c.cart_id, c.prod_id,
+               p.prod_name,
+               pi.pi_stored_url,
+               SUM(cart_quantity) AS TOTAL_QUANTITY,
+               SUM(cart_price * cart_quantity) AS TOTAL_PRICE,
+               MAX(cart_date_added) AS LAST_ADDED
+        FROM Cart c
+        LEFT JOIN Product p ON c.prod_id = p.prod_id
+        LEFT JOIN ProductImage PI ON p.prod_id = pi.prod_id
+        LEFT JOIN User u ON c.user_id = u.user_id
+        WHERE 1 = 1
+          AND c.user_id = #{userId}
+        GROUP BY c.cart_id, c.prod_id, p.prod_name, pi.pi_stored_url;
     </select>
+
     <select id="getTotalPrice"
             resultType="TotalCartDto">
-        SELECT SUM(PRICE * QUANTITY) AS TOTAL_PRICE
-        FROM CART
-        WHERE MEMBER_ID = #{memberId};
+        SELECT SUM(cart_price * cart_quantity) AS TOTAL_PRICE
+        FROM Cart c
+        WHERE 1 = 1
+          AND c.user_id = #{userId};
     </select>
+
     <update id="increaseCartItemQuantity">
-        UPDATE CART
-        SET QUANTITY = QUANTITY + #{quantity}
-        WHERE PRODUCT_ID = #{productId};
+        UPDATE Cart c
+           SET c.cart_quantity = cart_quantity + #{cartQuantity}
+         WHERE 1 = 1
+           AND c.prod_id = #{prodId};
     </update>
 
     <update id="decreaseCartItemQuantity">
-        UPDATE CART
-        SET QUANTITY = QUANTITY + #{quantity}
-        WHERE PRODUCT_ID = #{productId} AND QUANTITY > 0;
+        UPDATE Cart c
+           SET c.cart_quantity = c.cart_quantity + #{cartQuantity}
+         WHERE 1 = 1
+           AND c.prod_id = #{prodId}
+           AND cart_quantity > 0;
     </update>
 
     <select id="findQuantity" resultType="Integer" parameterType="Map">
-        select QUANTITY
-        from CART
-        where MEMBER_ID = #{memberId} and PRODUCT_ID = #{productId};
+        SELECT c.cart_quantity
+          FROM Cart c
+         WHERE 1 = 1
+           AND c.user_id = #{userId}
+           AND c.prod_id = #{prodId};
     </select>
 
     <delete id="deleteCartItem">
-        delete from CART where CART_ITEM_ID = #{cartItemId};
+        DELETE
+          FROM Cart c
+         WHERE 1 = 1
+           AND c.cart_id = #{cartId};
     </delete>
 
     <delete id="deleteCartItems">
-        DELETE FROM CART WHERE CART_ITEM_ID IN
-        <foreach collection="cartItemIds" item="cartItemId" open="(" separator="," close=")">
-            #{cartItemId}
+        DELETE
+          FROM Cart c
+         WHERE 1 = 1
+           AND c.cart_id IN
+        <foreach collection="cartIds" item="cartId" open="(" separator="," close=")">
+            #{cartId}
         </foreach>
     </delete>
 
     <!-- 필요한 거 똑같이 상품 id,    -->
     <select id="findCartItemsByIds"
             resultType="CartDetailDto">
-        SELECT P.PROD_NAME, P.PROD_PRICE, I.STORED_URL, W.MEMBER_ID, P.PRODUCT_ID
-        FROM WISHLIST_T W
-        INNER JOIN PRODUCT_T P ON W.PRODUCT_ID = P.PRODUCT_ID
-        LEFT JOIN PRODUCT_IMAGE I ON P.PRODUCT_ID = I.PRODUCT_ID
-        WHERE W.MEMBER_ID = #{member_id}
+        SELECT p.prod_name, p.prod_price, p.product_id,
+               pi.pi_stored_url,
+               w.user_id,
+          FROM Wishlist w
+         INNER JOIN Product p ON w.prod_id = p.prod_id
+          LEFT JOIN ProductImage pi ON p.prod_id = pi.prod_id
+         WHERE 1 = 1
+           AND w.user_id = #{userId}
     </select>
 
     <select id="selectCartItemById"
             resultType="CartDto">
-        SELECT QUANTITY, PRODUCT_ID, CART_ITEM_ID
-          FROM CART
-         WHERE CART_ITEM_ID = #{cartItemId}
+        SELECT c.cart_quantity, PRODUCT_ID, CART_ITEM_ID
+          FROM Cart c
+         WHERE 1 = 1
+           AND CART_ITEM_ID = #{cartItemId}
     </select>
 
     <select id="existsById"
             parameterType="Long"
             resultType="Boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
-          FROM CART
-         WHERE CART_ITEM_ID = #{cartItemId}
+          FROM Cart c
+         WHERE 1 = 1
+           AND c.cart_id = #{cartId}
     </select>
 </mapper>

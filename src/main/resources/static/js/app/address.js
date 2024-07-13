@@ -123,9 +123,9 @@ const address = {
       },
 
       loadAddresses: function () {
-        const memberId = document.querySelector(".memberId").value
-        console.log(memberId);
-        fetch(`/api/v1/address/${memberId}/addresses`, {method: "GET"})
+        const userId = document.querySelector(".userId").value
+        console.log(userId);
+        fetch(`/api/v1/address/${userId}/addresses`, {method: "GET"})
             .then(response => {
                 if (response.ok) {
                     return response.json();

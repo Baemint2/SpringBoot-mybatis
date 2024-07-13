@@ -34,11 +34,11 @@ public class CartController {
     public String myCart(Model model, Principal principal) {
         String username = principal.getName();
         UserDto loggedUser = memberService.findByUsername(username);
-        Long memberId = loggedUser.getUserId();
-        log.info("로그인한 멤버 : {}", memberId);
+        Long userId = loggedUser.getUserId();
+        log.info("로그인한 멤버 : {}", userId);
         model.addAttribute("loggedUser", loggedUser);
 
-        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
+        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(userId);
         if (itemsByMemberId.isEmpty()) {
             model.addAttribute("emptyCartMessage", "장바구니가 비어있습니다.");
         } else {
@@ -53,12 +53,12 @@ public class CartController {
     public ResponseEntity<?> addCartItems(@RequestBody CartDto cartDto, Principal principal) {
         try {
             String username = principal.getName();
-            Long memberId = memberService.findByUsername(username).getUserId();
-            int updateStock = productService.addToCartAndUpdateStockQuantity(cartDto.getProductId(), cartDto.getQuantity());
-            Integer cartItemId = cartService.addOrUpdateCartItem(memberId, cartDto.getProductId(), cartDto.getQuantity(), cartDto.getPrice());
+            Long userId = memberService.findByUsername(username).getUserId();
+            int updateStock = productService.addToCartAndUpdateStockQuantity(cartDto.getProdId(), cartDto.getCartQuantity());
+            Integer cartId = cartService.addOrUpdateCartItem(userId, cartDto.getProdId(), cartDto.getCartQuantity(), cartDto.getCartPrice());
 
-            return ResponseEntity.ok().body(Map.of("cartItemId", cartItemId,
-                    "productId", cartDto.getProductId(),
+            return ResponseEntity.ok().body(Map.of("cartId", cartId,
+                    "prodId", cartDto.getProdId(),
                     "updatedStock", updateStock));
         } catch (OutOfStockException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -69,24 +69,24 @@ public class CartController {
     @GetMapping("/api/v1/cart")
     public ResponseEntity<?> getCartTotal(Principal principal) {
         String username = principal.getName();
-        Long memberId = memberService.findByUsername(username).getUserId();
+        Long userId = memberService.findByUsername(username).getUserId();
 
-        TotalCartDto totalPrice = cartService.getTotalPrice(memberId);
+        TotalCartDto totalPrice = cartService.getTotalPrice(userId);
         return ResponseEntity.ok(totalPrice);
     }
 
     // 장바구니 상품 삭제
-    @DeleteMapping("/api/v1/cart/{cartItemId}")
-    public ResponseEntity<Long> deleteCartItem(@PathVariable Long cartItemId) {
-        cartService.deleteCartAndUpdateStock(cartItemId);
-        return ResponseEntity.ok(cartItemId);
+    @DeleteMapping("/api/v1/cart/{cartId}")
+    public ResponseEntity<Long> deleteCartItem(@PathVariable Long cartId) {
+        cartService.deleteCartAndUpdateStock(cartId);
+        return ResponseEntity.ok(cartId);
     }
 
     // 장바구니 상품 선택 삭제 (여러개 가능)
-    @DeleteMapping("/api/v1/cart/item/{cartItemIds}")
-    public ResponseEntity<?> deleteCartItems(@PathVariable String cartItemIds) {
+    @DeleteMapping("/api/v1/cart/item/{cartIds}")
+    public ResponseEntity<?> deleteCartItems(@PathVariable String cartIds) {
 
-        boolean deleted = cartService.deleteCartItems(cartItemIds);
+        boolean deleted = cartService.deleteCartItems(cartIds);
         if(!deleted) {
             return ResponseEntity.badRequest().body("특정 아이템이 유효하지 않습니다.");
         }

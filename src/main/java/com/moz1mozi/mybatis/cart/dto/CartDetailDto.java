@@ -12,12 +12,12 @@ import java.util.Date;
 @Builder
 @Getter
 public class CartDetailDto {
-    private Long productId;
-    private Long cartItemId;
-    private Long memberId;
+    private Long prodId;
+    private Long cartId;
+    private Long userId;
     private String prodName;
     private int totalQuantity;
     private int totalPrice; // 문자열 대신 정수나 실수 타입 사용
-    private String storedUrl; //
+    private String piStoredUrl; //
     private Date lastAdded;
 }

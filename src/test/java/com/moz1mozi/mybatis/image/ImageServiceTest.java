@@ -29,9 +29,9 @@ class ImageServiceTest {
 
         ProductDto productDto = ProductDto.builder()
                 .prodName("모지화장품")
-                .prod_description("안녕하세요 첫 출시 해봤습니다.")
+                .prodDescription("안녕하세요 첫 출시 해봤습니다.")
                 .prodPrice(5000)
-                .stockQuantity(5)
+                .prodStockQuantity(5)
                 .createdAt(Date.from(Instant.now()))
                 .build();
 //        Long prodId = productService.insertProduct(productDto);

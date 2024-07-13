@@ -97,14 +97,14 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto getMemberId(Long memberId) {
-        return userMapper.findByUserId(memberId)
+    public UserDto getMemberId(Long userId) {
+        return userMapper.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getMemberAddress(Long memberId) {
-        return Optional.ofNullable(userMapper.findUserIdByAddressId(memberId))
+    public List<Long> getMemberAddress(Long userId) {
+        return Optional.ofNullable(userMapper.findUserIdByAddressId(userId))
                 .orElseThrow(() -> new CustomException("addressNotFound","배송지가 존재하지 않습니다."));
     }
 

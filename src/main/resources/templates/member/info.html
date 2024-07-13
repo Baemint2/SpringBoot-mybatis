@@ -18,8 +18,8 @@
         <div class="member-profile">
             <div class="container my-5 info-container">
                 <form id="profile-form" method="post" enctype="multipart/form-data">
-                    <img th:if="${loggedUser.profileImagePath == null}" src="/images/anonymous.png" class="profile-img">
-                    <img th:if="${loggedUser.profileImagePath != null}" th:src="${loggedUser.profileImagePath}" class="profile-img">
+                    <img th:if="${loggedUser.userProfileImagePath == null}" src="/images/anonymous.png" class="profile-img">
+                    <img th:if="${loggedUser.userProfileImagePath != null}" th:src="${loggedUser.userProfileImagePath}" class="profile-img">
                     <div id="update-img">변경</div>
                     <input type="file" id="file-input" name="profileImage" class="form-control">
                     <button type="button" id="btn-update-profile">프로필 업데이트</button>
@@ -28,12 +28,12 @@
                     <tbody>
                     <tr>
                         <th>사용자 ID</th>
-                        <td><p th:text="${loggedUser.username}" id="info-username"></p></td>
+                        <td><p th:text="${loggedUser.userName}" id="info-username"></p></td>
                     </tr>
                     <tr>
                         <th>닉네임</th>
                         <td>
-                            <span id="nickname-span" th:text="${loggedUser.nickname}"></span>
+                            <span id="nickname-span" th:text="${loggedUser.userNickname}"></span>
                             <button type="button" id="btn-change-nickname">변경</button>
                             <div class="error-message" style="display: block;"></div>
                         </td>
@@ -41,7 +41,7 @@
                     <tr>
                         <th>이메일</th>
                         <td>
-                            <input type="email" id="email" name="email" th:value="${loggedUser.email}">
+                            <input type="email" id="email" name="email" th:value="${loggedUser.userEmail}">
                             <button type="button" id="btn-change-email">변경</button>
                         </td>
                     </tr>
@@ -72,8 +72,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <form id="addressForm">
-                                            <input type="hidden" class="username" th:value="${loggedUser.username}">
-                                            <input type="hidden" class="memberId" th:value="${loggedUser.memberId}">
+                                            <input type="hidden" class="username" th:value="${loggedUser.userNickname}">
+                                            <input type="hidden" class="userId" th:value="${loggedUser.userId}">
                                             <input type="hidden" class="addressId">
                                             <div id="addressList" class="addressList"></div>
                                             <div class="address-reg">
@@ -201,7 +201,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="passwordForm">
-                        <input type="hidden" class="username" th:value="${loggedUser.username}">
+                        <input type="hidden" class="username" th:value="${loggedUser.userName}">
                         <div class="mb-3">
                             <label for="modal-current-pass" class="col-form-label">현재 비밀번호:</label>
                             <input type="password" class="form-control currentPassword" id="modal-current-pass">
@@ -245,7 +245,7 @@
             <span class="close">❌</span>
             <p>정말로 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
             <div class="modal-footer">
-                <input type="text" id="username" th:value="${loggedUser.username}">
+                <input type="text" id="username" th:value="${loggedUser.userName}">
                 <input type="password" id="password" class="password-error" placeholder="비밀번호를 입력해주세요">
             </div>
             <div id="password-error" style="display: none"></div>

@@ -30,19 +30,19 @@ class CartServiceTest {
     @Autowired
     private CartMapper cartMapper;
 
-    public static final Long memberId = 18L;
+    public static final Long userId = 18L;
     @Test
     void 장바구니등록_테스트() {
 
         CartDto cartDto = CartDto.builder()
-                .memberId(memberId)
-                .productId(27L)
-                .quantity(3)
-                .price(1000000)
-                .dataAdded(Date.from(Instant.now()))
+                .userId(userId)
+                .prodId(27L)
+                .cartQuantity(3)
+                .cartPrice(1000000)
+                .cartDateAdded(Date.from(Instant.now()))
                 .build();
 
-        Integer results = cartService.addCartItem(cartDto, memberId);
+        Integer results = cartService.addCartItem(cartDto, userId);
         assertNotNull(results);
     }
 
@@ -50,13 +50,13 @@ class CartServiceTest {
     void 내장바구니() {
 
         memberService.findByUsername("emozi");
-        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
+        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(userId);
         assertNotNull(itemsByMemberId);
     }
     @Test
     void 내장바구니_실패() {
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> cartService.getCartItemsByMemberId(memberId));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> cartService.getCartItemsByMemberId(userId));
         String exceptionMessage = "장바구니가 비어 있습니다.";
         String message = exception.getMessage();
         assertTrue(message.contains(exceptionMessage));
@@ -64,7 +64,7 @@ class CartServiceTest {
 
     @Test
     void 내장바구니_실패_() {
-        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(memberId);
+        List<CartDetailDto> itemsByMemberId = cartService.getCartItemsByMemberId(userId);
         assertTrue(itemsByMemberId.isEmpty());
     }
 

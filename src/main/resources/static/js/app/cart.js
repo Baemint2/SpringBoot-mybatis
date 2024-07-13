@@ -13,9 +13,9 @@ const cart = {
         })
 
     },
-    updateProductQuantityOnPage: function(productId, updatedQuantity) {
+    updateProductQuantityOnPage: function(prodId, updatedQuantity) {
         // 모든 productContainer 요소를 가져옴
-        const productContainers = document.querySelectorAll(`.productContainer[data-product-id="${productId}"]`);
+        const productContainers = document.querySelectorAll(`.productContainer[data-product-id="${prodId}"]`);
         productContainers.forEach(container => {
             // 각 컨테이너 내에서 재고를 표시하는 요소를 찾음
             const stockElement = container.querySelector('.stock');
@@ -27,9 +27,9 @@ const cart = {
     },
     addItems: function () {
         const data = {
-            productId: document.getElementById("productId").value,
-            quantity: document.getElementById("quantity").value,
-            price: document.querySelector(".formattedPrice").innerText.replace(/\D/g, ''),
+            prodId: document.getElementById("prodId").value,
+            cartQuantity: document.getElementById("quantity").value,
+            cartPrice: document.querySelector(".formattedPrice").innerText.replace(/\D/g, ''),
         }
         console.log(data.price)
         fetch('/api/v1/cart', {
@@ -39,10 +39,10 @@ const cart = {
         })
             .then(response => response.json())
             .then(data => {
-                if(data.cartItemId) {
+                if(data.cartId) {
                     console.log(data);
                     alert("장바구니에 추가되었습니다.");
-                    this.updateSingleStockQuantity(data.productId); // 여기서 productId를 직접 사용
+                    this.updateSingleStockQuantity(data.prodId); // 여기서 prodId를 직접 사용
                 } else if(data.error) {
                     alert(data.error);
                 }
@@ -52,9 +52,9 @@ const cart = {
             });
     },
     // 개별 제품의 재고 정보를 업데이트하는 함수
-    updateSingleStockQuantity: function (productId) {
-        console.log(`Updating stock for product ID: ${productId}`); // 로그 추가
-        fetch(`/api/v1/product/${productId}/stock`)
+    updateSingleStockQuantity: function (prodId) {
+        console.log(`Updating stock for product ID: ${prodId}`); // 로그 추가
+        fetch(`/api/v1/product/${prodId}/stock`)
             .then(response => response.json())
             .then(stock => {
                 const selector = `.container .stock`;
@@ -62,7 +62,7 @@ const cart = {
                 if (stockElement) {
                     stockElement.innerHTML = `<strong class="mr-3" ">Quantity: ${stock}</strong>`;
                 } else {
-                    console.error(`Stock element not found for product ID: ${productId}`);
+                    console.error(`Stock element not found for product ID: ${prodId}`);
                 }
             })
             .catch(error => console.error('Error fetching available stock:', error));
@@ -113,7 +113,7 @@ const cart = {
             button.addEventListener('click', function (evt) {
                 evt.preventDefault();
                 const stockContainer = this.closest('.stockContainer');
-                const productId = stockContainer.getAttribute('data-product-id');
+                const prodId = stockContainer.getAttribute('data-product-id');
                 const newQuantityElement = stockContainer.querySelector('.quantity');
                 const newQuantity = parseInt(newQuantityElement.textContent);
                 const currentQuantity = parseInt(newQuantityElement.getAttribute('data-current-quantity'))
@@ -124,7 +124,7 @@ const cart = {
                 console.log("newQuantity:", newQuantity, "currentQuantity:", currentQuantity, "adjustment:", adjustment);
 
                 const stockUpdateData = {
-                    productId: productId,
+                    prodId: prodId,
                     adjustment: adjustment,
                     isIncrease: adjustment > 0
                 };
@@ -153,16 +153,16 @@ const cart = {
       document.querySelectorAll(".delete-cart-item-btn").forEach(button => {
           button.addEventListener("click", function (evt) {
               evt.preventDefault();
-              const cartItemId = this.getAttribute('data-cart-item-id');
+              const cartId = this.getAttribute('data-cart-item-id');
               console.log(this.getAttribute('data-cart-item-id'));
-              cart.deleteCartItem(cartItemId);
+              cart.deleteCartItem(cartId);
           })
       })
     },
 
-    deleteCartItem: function (cartItemId) {
-        console.log(`삭제 될 상품 ID: ${cartItemId}`);
-        fetch(`/api/v1/cart/${cartItemId}`, {
+    deleteCartItem: function (cartId) {
+        console.log(`삭제 될 상품 ID: ${cartId}`);
+        fetch(`/api/v1/cart/${cartId}`, {
             method: "DELETE",
             headers: {"Content-Type" : "application/json"}
         }).then(response => {
@@ -170,7 +170,7 @@ const cart = {
                 throw new Error("네트워크 에러가 발생했습니다.")
             }
             alert("상품이 삭제되었습니다.")
-            const buttonElement = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+            const buttonElement = document.querySelector(`[data-cart-item-id="${cartId}"]`);
             console.log(buttonElement)
             if(buttonElement) {
                 const rowElement = buttonElement.closest('.stockContainer');
@@ -201,8 +201,8 @@ const cart = {
         }).then(response => {
             if(response.ok) {
                 alert("선택한 상품이 삭제되었습니다.")
-                cartItems.forEach(cartItemId => {
-                    const buttonElement = document.querySelector(`input[data-cart-item-id="${cartItemId}"]`)
+                cartItems.forEach(cartId => {
+                    const buttonElement = document.querySelector(`input[data-cart-item-id="${cartId}"]`)
                     if(buttonElement) {
                         const rowElement = buttonElement.closest('.stockContainer');
                         if(rowElement) {

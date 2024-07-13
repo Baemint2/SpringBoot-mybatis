@@ -32,7 +32,7 @@ const admin = {
             data.forEach(member => {
                 const row = `
                     <tr>
-                        <td>${member.memberId}</td>
+                        <td>${member.userId}</td>
                         <td>${member.username}</td>
                         <td>${member.email}</td>
                         <td>${this.formatDate(member.createdAt)}</td>

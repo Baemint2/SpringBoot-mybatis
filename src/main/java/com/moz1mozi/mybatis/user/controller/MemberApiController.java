@@ -36,8 +36,8 @@ public class MemberApiController {
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@Valid @RequestPart("member") UserDto memberDto,
                                                       @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
-        Long memberId = memberService.insertMember(memberDto, file);
-        log.info("회원가입 = {}", memberId);
+        Long userId = memberService.insertMember(memberDto, file);
+        log.info("회원가입 = {}", userId);
         return ResponseEntity.ok(Map.of("message", "회원가입이 성공적으료 완료되었습니다."));
     }
 
