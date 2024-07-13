@@ -23,8 +23,8 @@ class ShippingAddressMapperTest {
 
     @Test
     void 배송지_목록조회() {
-        long memberId = 12L;
-        List<ShippingAddressDto> result = shippingAddressMapper.getShippingAddressByMemberId(memberId);
+        long userId = 12L;
+        List<ShippingAddressDto> result = shippingAddressMapper.getShippingAddressByMemberId(userId);
         assertThat(result.get(0).getRecipientName()).isEqualTo("혬찌");
         assertThat(result.get(1).getRecipientName()).isEqualTo("엄복동");
         assertThat(result.get(0).getMobile()).isEqualTo("01012345678");

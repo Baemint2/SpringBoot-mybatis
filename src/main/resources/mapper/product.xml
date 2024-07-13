@@ -85,8 +85,8 @@
     </select>
 
     <select id="getProductByNo" resultMap="ProductMap">
-        SELECT p.prod_id, m.username, i.pi_stored_url, p.prod_name,
-               p.prod_description, p.prod_price, p.prod_stock_quantity, m.user_nickname,
+        SELECT p.prod_id, u.user_name, i.pi_stored_url, p.prod_name,
+               p.prod_description, p.prod_price, p.prod_stock_quantity, u.user_nickname,
                C.CATEGORY_NAME
         FROM Product p
         LEFT JOIN ProductImage i on p.prod_id = i.prod_id
@@ -105,13 +105,13 @@
     </select>
     <update id="updateProduct"
             parameterType="ProductDto">
-        UPDATE PRODUCT_T P
-           SET PROD_NAME = #{prodName},
-               PROD_PRICE = #{prodPrice},
-               DESCRIPTION = #{description},
-               STOCK_QUANTITY = #{stockQuantity},
-               CATEGORY_ID = #{cateId}
-         WHERE P.PRODUCT_ID = #{productId};
+        UPDATE Product p
+           SET p.prod_name = #{prodName},
+               p.prod_price = #{prodPrice},
+               p.prod_description = #{prodDescription},
+               p.prod_stock_quantity = #{prodStockQuantity},
+               p.cate_id = #{cateId}
+         WHERE p.prod_id = #{prodId};
     </update>
 
     <!--검색 기능 추가-->
@@ -174,9 +174,9 @@
 
     <!-- 재고 계산 -->
     <select id="getStockByProductId" parameterType="Long" resultType="int">
-        SELECT P.STOCK_QUANTITY
+        SELECT p.prod_stock_quantity
         FROM Product p
-        LEFT JOIN CART C ON p.prod_id = C.PRODUCT_ID
+        LEFT JOIN Cart C ON p.prod_id = c.prod_id
         WHERE p.prod_id = #{prodId}
         GROUP BY p.prod_id;
     </select>
@@ -184,7 +184,7 @@
     <select id="getActualStockByProductId"
             parameterType="long"
             resultType="int">
-        SELECT STOCK_QUANTITY
+        SELECT p.prod_stock_quantity
         FROM Product p
         WHERE p.prod_id = #{prodId}
     </select>

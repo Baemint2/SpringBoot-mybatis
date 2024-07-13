@@ -39,9 +39,9 @@ public class ShippingAddressController {
     }
 
     //배송지 목록 조회
-    @GetMapping("/api/v1/address/{memberId}/addresses")
-    public ResponseEntity<List<ShippingAddressDto>> getAllAddresses(@PathVariable Long memberId) {
-        UserDto member = memberService.getMemberId(memberId);
+    @GetMapping("/api/v1/address/{userId}/addresses")
+    public ResponseEntity<List<ShippingAddressDto>> getAllAddresses(@PathVariable Long userId) {
+        UserDto member = memberService.getMemberId(userId);
         List<ShippingAddressDto> addresses = shippingAddressService.getAllAddresses(member.getUserId());
         return ResponseEntity.ok(addresses);
     }

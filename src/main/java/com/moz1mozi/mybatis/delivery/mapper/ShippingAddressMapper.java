@@ -9,18 +9,18 @@ import java.util.List;
 @Mapper
 public interface ShippingAddressMapper {
 
-    Long insertShippingAddress(@Param("memberId") Long memberId, @Param("address") ShippingAddressDto shippingAddressDto);
+    Long insertShippingAddress(@Param("userId") Long userId, @Param("address") ShippingAddressDto shippingAddressDto);
 
     // 배송지 목록 조회
-    List<ShippingAddressDto> getShippingAddressByMemberId(Long memberId);
+    List<ShippingAddressDto> getShippingAddressByMemberId(Long userId);
 
     // 배송지 단일 조회
     ShippingAddressDto getShippingAddressById(Long addressId);
 
     // 기본 배송지 조회
-    ShippingAddressDto getDefaultAddressByMemberId(Long memberId);
+    ShippingAddressDto getDefaultAddressByMemberId(Long userId);
 
-    List<Long> getAddressIdByMemberId(Long memberId);
+    List<Long> getAddressIdByMemberId(Long userId);
 
     // 배송지 수정
     int updateShippingAddressById(ShippingAddressDto shippingAddressDto);

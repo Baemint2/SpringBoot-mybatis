@@ -21,7 +21,7 @@ public interface ProductMapper {
     int deleteProduct(Long prodId);
 
     // 상품 상세 조회
-    List<ProductDetailDto> getProductByNo(Long productId);
+    List<ProductDetailDto> getProductByNo(Long prodId);
 
     //상품 목록 조회
     List<ProductListDto> findAllProducts();

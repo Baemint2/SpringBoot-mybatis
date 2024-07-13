@@ -58,14 +58,14 @@ const product = {
         }).catch(error => console.log("Fetch error: ", error));
     },
     productUpdate: function () {
-        const productId = document.getElementById("productId").value
+        const prodId = document.getElementById("prodId").value
         const data = {
             prodName: document.getElementById("prodName").value,
             description: document.getElementById("description").value,
             prodPrice: document.getElementById("prodPrice").value,
             stockQuantity: document.getElementById("stockQuantity").value,
             categoryId: document.getElementById("mediumCategory").value,
-            productId: productId
+            prodId: prodId
 
         }
         const formData = new FormData();
@@ -77,13 +77,13 @@ const product = {
         }
         console.log(data)
         console.log(formData)
-        fetch(`/api/v1/product/update/${productId}`, {
+        fetch(`/api/v1/product/update/${prodId}`, {
             method: 'PUT',
             body: formData,
         }).then(response => {
             if (response.ok) {
                 alert("글이 수정되었습니다.")
-                // window.location.href = `/product/detail/${productId}`
+                // window.location.href = `/product/detail/${prodId}`
             } else {
                 return response.json()
             }
@@ -106,7 +106,7 @@ const product = {
         }).catch(error => console.log("Fetch error: ", error));
     },
     productDelete: function () {
-        const prodId = document.getElementById('productId').value;
+        const prodId = document.getElementById('prodId').value;
         console.log(prodId)
         fetch(`/api/v1/product/remove/${prodId}`, {
             method: 'DELETE',

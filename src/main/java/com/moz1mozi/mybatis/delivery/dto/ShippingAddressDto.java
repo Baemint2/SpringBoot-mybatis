@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class ShippingAddressDto {
     private long addressId;
-    private long memberId;
+    private long userId;
     private String recipientName;
     private String mobile;
     private String zipcode;

@@ -25,8 +25,8 @@
                 </select>
             </div>
         </div>
-        <input type="hidden" id="productId" th:value="${product.productId}">
-        <img th:src="${product.imageDto.storedUrl}" class="card-img-top" th:alt="${productByNo[0].prodName}" style="width: 200px; height: 200px;">
+        <input type="hidden" id="prodId" th:value="${product.prodId}">
+        <img th:src="${product.imageDto.piStoredUrl}" class="card-img-top" th:alt="${productByNo[0].prodName}" style="width: 200px; height: 200px;">
     </div>
 
     <div>
@@ -57,7 +57,7 @@
 </form>
 <button type="button" class="btn btn-primary" id="btn-modify">수정완료</button>
 <button type="button" class="btn btn-danger" id="btn-remove">삭제</button>
-<a th:href="@{|/product/detail/${productByNo[0].productId}|}">취소</a>
+<a th:href="@{|/product/detail/${productByNo[0].prodId}|}">취소</a>
 <script src="/js/app/category.js"></script>
 <script src="/js/app/product.js"></script>
 </body>

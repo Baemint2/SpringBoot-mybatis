@@ -45,13 +45,13 @@ public class ProductService {
 
         productDto.setSellerId(sellerId);
         productMapper.insertProduct(productDto);
-        long productId = productDto.getProdId(); // 상품 ID를 조회하거나, insertProduct 메서드 내에서 ProductDto에 상품 ID를 설정
+        long prodId = productDto.getProdId(); // 상품 ID를 조회하거나, insertProduct 메서드 내에서 ProductDto에 상품 ID를 설정
         // 이미지 리스트가 존재하는 경우, 각 이미지 정보를 저장
         if(files != null && !files.isEmpty()) {
-            imageService.uploadFile(files, productId);
+            imageService.uploadFile(files, prodId);
         }
 
-        return productId;
+        return prodId;
     }
 
     public int deleteProduct(Long prodId) {
@@ -63,8 +63,8 @@ public class ProductService {
     }
 
     // 상품 상세
-    public List<ProductDetailDto> getProductByNo(Long productId) {
-        return Optional.ofNullable(productMapper.getProductByNo(productId))
+    public List<ProductDetailDto> getProductByNo(Long prodId) {
+        return Optional.ofNullable(productMapper.getProductByNo(prodId))
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
 
     }
@@ -112,8 +112,8 @@ public class ProductService {
     }
 
     // 판매자 권한 비교
-    public boolean isUserSellerOfProduct(String username, Long productId) {
-        String sellerUsername = productMapper.findSellerUsernameByProductId(productId);
+    public boolean isUserSellerOfProduct(String username, Long prodId) {
+        String sellerUsername = productMapper.findSellerUsernameByProductId(prodId);
 
         return username.equals(sellerUsername);
     }
@@ -128,11 +128,11 @@ public class ProductService {
 
     @Transactional
     // 장바구니 제품 추가
-    public int addToCartAndUpdateStockQuantity(Long productId, int quantity) {
-        int stock = productMapper.getActualStockByProductId(productId);
+    public int addToCartAndUpdateStockQuantity(Long prodId, int quantity) {
+        int stock = productMapper.getActualStockByProductId(prodId);
         if(stock >= quantity) {
             int newStockQuantity = stock - quantity;
-            updateStockQuantity(productId, newStockQuantity);
+            updateStockQuantity(prodId, newStockQuantity);
             return newStockQuantity;
         } else {
             throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
@@ -142,33 +142,33 @@ public class ProductService {
     }
 
     @Transactional
-    public void completeOrderAndUpdateStockQuantity(Long productId, int quantity) {
-        int stock = productMapper.getStockByProductId(productId);
+    public void completeOrderAndUpdateStockQuantity(Long prodId, int quantity) {
+        int stock = productMapper.getStockByProductId(prodId);
         if(stock >= quantity) {
-            updateStockQuantity(productId, stock - quantity);
+            updateStockQuantity(prodId, stock - quantity);
         } else {
             throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
         }
     }
 
     @Transactional
-    public int getStockByProductId(Long productId) {
-        return productMapper.getStockByProductId(productId);
+    public int getStockByProductId(Long prodId) {
+        return productMapper.getStockByProductId(prodId);
     }
 
     // 상품 재고 증가
     @Transactional
-    public void increaseStockQuantity(Long productId, int quantity) {
-        int currentStock = productMapper.getStockByProductId(productId);
+    public void increaseStockQuantity(Long prodId, int quantity) {
+        int currentStock = productMapper.getStockByProductId(prodId);
         int newStockQuantity = currentStock - quantity;
-        updateStockQuantity(productId, newStockQuantity);
+        updateStockQuantity(prodId, newStockQuantity);
     }
 
     // 재고 감소
     @Transactional
-    public void decreaseStockQuantity(Long productId, int quantity) {
+    public void decreaseStockQuantity(Long prodId, int quantity) {
         log.info("재고감소 메소드 호출 되나요?");
-        int currentStock = productMapper.getStockByProductId(productId);
+        int currentStock = productMapper.getStockByProductId(prodId);
         log.info("현재 재고 = {}", currentStock);
         if(currentStock < quantity) {
             throw new OutOfStockException("stock", "해당 상품의 재고가 부족합니다");
@@ -176,15 +176,15 @@ public class ProductService {
         int newStockQuantity = currentStock - quantity;
         log.info("수정된 재고 = {}", newStockQuantity);
 
-        updateStockQuantity(productId, newStockQuantity);
+        updateStockQuantity(prodId, newStockQuantity);
     }
 
     @Transactional
     // 재고 수량 업데이트
-    public void updateStockQuantity(Long productId, int adjustment) {
+    public void updateStockQuantity(Long prodId, int adjustment) {
         log.info("재고 수량 업데이트 되나요?");
         StockUpdateDto stockUpdateDto = StockUpdateDto.builder()
-                .prodId(productId)
+                .prodId(prodId)
                 .adjustment(adjustment)
                 .build();
         log.info("{} {}", stockUpdateDto.getProdId(), stockUpdateDto.getAdjustment());
@@ -193,16 +193,16 @@ public class ProductService {
 
 
     @Transactional
-    public void adjustStockQuantity(Long productId, int adjustment, boolean isIncrease) {
-        log.info("{} {} {}", productId, adjustment, isIncrease);
+    public void adjustStockQuantity(Long prodId, int adjustment, boolean isIncrease) {
+        log.info("{} {} {}", prodId, adjustment, isIncrease);
         if(isIncrease) {
             // 수량 증가 시 카트 + 1 / 상품 재고 -1
-            cartMapper.increaseCartItemQuantity(productId, adjustment);
-            increaseStockQuantity(productId, adjustment);
+            cartMapper.increaseCartItemQuantity(prodId, adjustment);
+            increaseStockQuantity(prodId, adjustment);
         } else {
             // 수량 감소 시 카트 -1 / 상품 재고 + 1
-            cartMapper.decreaseCartItemQuantity(productId, adjustment);
-            decreaseStockQuantity(productId, adjustment);
+            cartMapper.decreaseCartItemQuantity(prodId, adjustment);
+            decreaseStockQuantity(prodId, adjustment);
         }
     }
 

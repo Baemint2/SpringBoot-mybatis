@@ -42,7 +42,7 @@ class ProductServiceTest {
     private ImageService imageService;
 
     @Test
-    void 상품등록테스트() {
+    void 상품등록테스트() throws IOException {
         ProductDto productDto = ProductDto.builder()
                 .prodName("모지화장품")
                 .prodDescription("안녕하세요 첫 출시 해봤습니다.")
@@ -52,13 +52,14 @@ class ProductServiceTest {
                 .createdAt(Date.from(Instant.now()))
                 .build();
 
-//        Long result = productService.insertProduct(productDto);
-//        assertEquals(1, result);
+        Long result = productService.insertProduct(productDto, null, "moz1mozi");
+        assertEquals(result, result);
     }
 
     @Test
+    @Transactional
     void 상품삭제() {
-        int deleteCount = productService.deleteProduct(1L);
+        int deleteCount = productService.deleteProduct(34L);
         assertEquals(1, deleteCount);
     }
     @Test
@@ -76,7 +77,7 @@ class ProductServiceTest {
                 new ImageDto(0, 0, "originalFileName1.jpg", "storedFileName1.jpg", "storedUrl1", null, null),
                 new ImageDto(0, 0, "originalFileName2.jpg", "storedFileName2.jpg", "storedUrl2", null, null)
         );
-//        Long productId = productService.insertProduct(productDto, imageDtoList);
+//        Long prodId = productService.insertProduct(productDto, imageDtoList);
         // 여기에서 필요한 경우 추가적인 검증 로직을 구현할 수 있습니다.
         // 예: 삽입된 상품 및 이미지 정보를 조회하여 예상된 결과와 일치하는지 확인
     }
@@ -88,13 +89,13 @@ class ProductServiceTest {
         assertThat(products).isNotNull();
         assertThat(products.size()).isGreaterThan(0);
 
-        assertThat(products.get(0).getProdName()).isEqualTo("모지화장품");
+        assertThat(products.get(0).getProdName()).isEqualTo("수수정된 상품");
     }
 
     @Test
     void 상품조회_테스트_성공() {
-        Long productId = 18L;
-        List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
+        Long prodId = 18L;
+        List<ProductDetailDto> productByNo = productService.getProductByNo(prodId);
         assertNotNull(productByNo);
     }
 
@@ -102,8 +103,8 @@ class ProductServiceTest {
     @Test
     // 존재하지 않는 memberID로 조회
     void 상품조회_테스트_실패() {
-        Long productId = 99L;
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> productService.getProductByNo(productId));
+        Long prodId = 99L;
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> productService.getProductByNo(prodId));
         String exceptionMessage = "해당 상품이 존재하지 않습니다.";
         String message = exception.getMessage();
         assertTrue(message.contains(exceptionMessage));
@@ -142,7 +143,7 @@ class ProductServiceTest {
     @Test
     void 상품검색_상품명_테스트() throws ExecutionException, InterruptedException {
         ProductSearchDto productSearchDto = ProductSearchDto.builder()
-                .cateId(6L)
+                .cateId(7L)
                 .page(1)  // 페이지 번호 지정
                 .pageSize(10)  // 페이지 크기 지정
                 .build();
@@ -153,33 +154,32 @@ class ProductServiceTest {
     }
 
     @Test
-    @Rollback(value=false )
+    @Rollback(value=false)
     void 재고증가_테스트() {
-        Long productId = 2L;
+        Long prodId = 32L;
         int quantityToAdd = 10;
 
-        int initialStock = productService.getStockByProductId(productId);
+        int initialStock = productService.getStockByProductId(prodId);
         System.out.println(initialStock);
-        productService.adjustStockQuantity(productId, quantityToAdd, true);
+        productService.adjustStockQuantity(prodId, quantityToAdd, true);
 
-        int updatedStock = productService.getStockByProductId(productId);
+        int updatedStock = productService.getStockByProductId(prodId);
         System.out.println(updatedStock);
-        int expectedStock = initialStock + quantityToAdd;
+        int expectedStock = initialStock - quantityToAdd;
         assertEquals(expectedStock, updatedStock);
     }
 
     @Test
-    @Transactional
     @Rollback(value = false)
     void 재고감소_테스트() {
-        Long productId = 2L;
+        Long prodId = 32L;
         int quantityToDecrease = 10;
 
-        int initialStock = productService.getStockByProductId(productId);
+        int initialStock = productService.getStockByProductId(prodId);
         System.out.println(initialStock);
-        productService.adjustStockQuantity(productId, quantityToDecrease, false);
+        productService.adjustStockQuantity(prodId, quantityToDecrease, false);
 
-        int updatedStock = productService.getStockByProductId(productId);
+        int updatedStock = productService.getStockByProductId(prodId);
         System.out.println(updatedStock);
         int expectedStock = initialStock - quantityToDecrease;
         assertEquals(expectedStock, updatedStock);

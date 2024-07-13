@@ -23,35 +23,35 @@ public class ShippingAddressService {
 
     @Transactional
     public void addAddress(String username, ShippingAddressDto shippingAddressDto) {
-        Long memberId = Optional.ofNullable(memberService.getMemberIdByUsername(username))
+        Long userId = Optional.ofNullable(memberService.getMemberIdByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
 
-        shippingAddressMapper.insertShippingAddress(memberId, shippingAddressDto);
+        shippingAddressMapper.insertShippingAddress(userId, shippingAddressDto);
     }
 
     @Transactional(readOnly = true)
-    public List<Long> getAddressIdByMemberId(Long memberId) {
-        return shippingAddressMapper.getAddressIdByMemberId(memberId);
+    public List<Long> getAddressIdByMemberId(Long userId) {
+        return shippingAddressMapper.getAddressIdByMemberId(userId);
     }
 
     @Transactional(readOnly = true)
-    public List<ShippingAddressDto> getAllAddresses(Long memberId) {
+    public List<ShippingAddressDto> getAllAddresses(Long userId) {
 
-        return Optional.ofNullable(memberId)
+        return Optional.ofNullable(userId)
                 .map(shippingAddressMapper::getShippingAddressByMemberId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 존재하지 않습니다."));
     }
 
     @Transactional(readOnly = true)
-    public ShippingAddressDto getAddress(Long memberId) {
+    public ShippingAddressDto getAddress(Long userId) {
 
-        return Optional.ofNullable(shippingAddressMapper.getShippingAddressById(memberId))
+        return Optional.ofNullable(shippingAddressMapper.getShippingAddressById(userId))
                     .orElseThrow(() -> new CustomException("addressNotFound","배송지가 존재하지 않습니다."));
     }
 
     @Transactional(readOnly = true)
-    public ShippingAddressDto getDefaultAddress(Long memberId) {
-        return Optional.ofNullable(shippingAddressMapper.getDefaultAddressByMemberId(memberId))
+    public ShippingAddressDto getDefaultAddress(Long userId) {
+        return Optional.ofNullable(shippingAddressMapper.getDefaultAddressByMemberId(userId))
                 .orElseThrow(() -> new CustomException("addressNotFound","기본 배송지가 존재하지 않습니다."));
     }
 

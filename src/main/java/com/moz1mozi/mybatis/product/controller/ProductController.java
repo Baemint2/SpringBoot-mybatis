@@ -45,25 +45,25 @@ public class ProductController {
         return "product/product-insert";
     }
 
-    @GetMapping("/product/detail/{productId}")
-    public String productDetail(@PathVariable Long productId,
+    @GetMapping("/product/detail/{prodId}")
+    public String productDetail(@PathVariable Long prodId,
                                 Model model,
                                 Principal principal) {
         if(principal != null) {
             String currentUsername = principal.getName();
             UserDto loggedUser = memberService.findByUsername(currentUsername);
             model.addAttribute("loggedUser", loggedUser);
-            Long memberId = loggedUser.getUserId();
-            boolean isLiked = wishListService.isLiked(memberId, productId);
+            Long userId = loggedUser.getUserId();
+            boolean isLiked = wishListService.isLiked(userId, prodId);
             model.addAttribute("isLiked", isLiked);
 
 
-            List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
+            List<ProductDetailDto> productByNo = productService.getProductByNo(prodId);
             model.addAttribute("productByNo", productByNo);
 
 
             if (!productByNo.isEmpty()) {
-                boolean isOwner = productService.isUserSellerOfProduct(currentUsername, productId);
+                boolean isOwner = productService.isUserSellerOfProduct(currentUsername, prodId);
                 boolean isAdmin = productService.isCurrentUserAdmin();
                 model.addAttribute("isOwner", isOwner);
                 model.addAttribute("isAdmin", isAdmin);
@@ -71,7 +71,7 @@ public class ProductController {
             }
         } else {
             model.addAttribute("isLiked", false);
-            List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
+            List<ProductDetailDto> productByNo = productService.getProductByNo(prodId);
             model.addAttribute("productByNo", productByNo);
             model.addAttribute("isOwner", false);
             model.addAttribute("isAdmin", false);
@@ -79,10 +79,10 @@ public class ProductController {
         return "product/product-detail";
     }
 
-    @GetMapping("/product/modify/{productId}")
-    public String productModify(@PathVariable Long productId,
+    @GetMapping("/product/modify/{prodId}")
+    public String productModify(@PathVariable Long prodId,
                                 Model model) {
-        List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
+        List<ProductDetailDto> productByNo = productService.getProductByNo(prodId);
         model.addAttribute("productByNo", productByNo);
 
         return "product/product-modify";
@@ -99,22 +99,22 @@ public class ProductController {
         }
         log.info("카테고리 ID : {}", productDto.getCateId());
         String username = authentication.getName();
-        Long productId = productService.insertProduct(productDto, files, username);
-        log.info("상품등록 = {}", productId);
-        return ResponseEntity.ok(Map.of("productId", productId));
+        Long prodId = productService.insertProduct(productDto, files, username);
+        log.info("상품등록 = {}", prodId);
+        return ResponseEntity.ok(Map.of("prodId", prodId));
     }
 
     // 제품 상세
-    @GetMapping("/api/v1/product/detail/{productId}")
-    public ResponseEntity<List<ProductDetailDto>> getProductDetail(@PathVariable Long productId) {
-        List<ProductDetailDto> productByNo = productService.getProductByNo(productId);
+    @GetMapping("/api/v1/product/detail/{prodId}")
+    public ResponseEntity<List<ProductDetailDto>> getProductDetail(@PathVariable Long prodId) {
+        List<ProductDetailDto> productByNo = productService.getProductByNo(prodId);
         return ResponseEntity.ok(productByNo);
     }
 
     // 제품 수정
-    @PutMapping("/api/v1/product/update/{productId}")
+    @PutMapping("/api/v1/product/update/{prodId}")
     public ResponseEntity<?> updateProduct(
-            @PathVariable Long productId,
+            @PathVariable Long prodId,
             @RequestPart("product") String productJson,
             @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) throws IOException {
@@ -130,16 +130,16 @@ public class ProductController {
             return ResponseEntity.badRequest().body(validationErrors);
         }
         // 업데이트 로직 수행
-        Long updateProductId = productService.updateProduct(productId, productUpdateDto, files);
-        log.info("result : {}", updateProductId);
-        return ResponseEntity.ok(updateProductId);
+        Long updateprodId = productService.updateProduct(prodId, productUpdateDto, files);
+        log.info("result : {}", updateprodId);
+        return ResponseEntity.ok(updateprodId);
     }
 
     // 상품 삭제
-    @DeleteMapping("/api/v1/product/remove/{productId}")
-    public ResponseEntity<Long> removeProduct(@PathVariable Long productId) {
-        productService.deleteProduct(productId);
-        return ResponseEntity.ok(productId);
+    @DeleteMapping("/api/v1/product/remove/{prodId}")
+    public ResponseEntity<Long> removeProduct(@PathVariable Long prodId) {
+        productService.deleteProduct(prodId);
+        return ResponseEntity.ok(prodId);
     }
 
     //    상품 검색
@@ -159,9 +159,9 @@ public class ProductController {
     }
 
     // 남은 재고
-    @GetMapping("/api/v1/product/{productId}/stock")
-    public ResponseEntity<Integer> getStockByProductId(@PathVariable Long productId) {
-        int stock = productService.getStockByProductId(productId);
+    @GetMapping("/api/v1/product/{prodId}/stock")
+    public ResponseEntity<Integer> getStockByProdId(@PathVariable Long prodId) {
+        int stock = productService.getStockByProductId(prodId);
         return ResponseEntity.ok(stock);
     }
 

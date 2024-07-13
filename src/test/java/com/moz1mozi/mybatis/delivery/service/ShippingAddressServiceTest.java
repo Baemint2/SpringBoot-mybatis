@@ -35,10 +35,10 @@ class ShippingAddressServiceTest {
         long addressId = 1L;
         String username = "mary";
         UserDto user = memberService.findByUsername(username);
-        log.info("memberId: {}", user.getUserId());
+        log.info("userId: {}", user.getUserId());
         ShippingAddressDto addressDto = ShippingAddressDto.builder()
                 .addressId(addressId)
-                .memberId(user.getUserId())
+                .userId(user.getUserId())
                 .recipientName("김말이")
                 .mobile("01012345678")
                 .zipcode("04006")

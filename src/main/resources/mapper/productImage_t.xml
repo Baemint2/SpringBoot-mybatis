@@ -26,7 +26,7 @@
 
     <select id="findByProductId"
             resultType="ImageDto">
-        select i.pi.stored_url
+        select i.pi_stored_url
         FROM ProductImage i
         LEFT JOIN Product p ON p.prod_id = i.prod_id
         WHERE i.prod_id = #{prodId};
