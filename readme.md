@@ -16,6 +16,9 @@
 - Spring validation
 - Spring AOP
 - Thymeleaf
+## ERD
+![쇼핑몰 (2)](https://github.com/user-attachments/assets/9dbb45c9-a2d9-4377-bb29-5d5284a9558c)
+
 ## 폴더 구조
 ```
 📦 src
