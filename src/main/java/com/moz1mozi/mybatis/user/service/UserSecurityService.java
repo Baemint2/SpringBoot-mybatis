@@ -26,23 +26,19 @@ import java.util.List;
 @Slf4j
 public class UserSecurityService implements UserDetailsService {
 
-    private final UserMapper userMapper;
+    private final UserService userService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDto byUsername = userMapper.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        UserDto userDto = userService.findByUsername(username);
 
-        log.info("byUsername : {}", byUsername.toString());
-        log.info("username = {}", byUsername.getUserName());
-        log.info("password = {}" , byUsername.getUserPw());
-
-        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + byUsername.getUserRole().getDisplayName());
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + userDto.getUserRole().getDisplayName());
         List<GrantedAuthority> authorities = Collections.singletonList(authority);
-        return new User(byUsername.getUserName(), byUsername.getUserPw(), authorities);
+        return new CustomUserDetails(userDto, authorities);
 
     }
 
     @Transactional
+    // 일회용 세션 만들기
     public void authenticateUserAfterReset(String username, HttpSession session) {
         UserDetails userDetails = loadUserByUsername(username);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
