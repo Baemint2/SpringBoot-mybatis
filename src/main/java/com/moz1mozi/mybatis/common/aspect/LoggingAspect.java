@@ -20,7 +20,7 @@ public class LoggingAspect {
     }
 
 
-    @Around("execution(* com.moz1mozi.mybatis..*.*(..))")
+    @Around("execution(* com.moz1mozi.mybatis..*.*(..)) && !within(com.moz1mozi.mybatis.common.filter.JwtAuthorizationFilter)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 
         log.debug("[메소드 시작] {}", formatSignature(joinPoint));
