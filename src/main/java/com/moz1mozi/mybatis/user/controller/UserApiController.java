@@ -1,6 +1,6 @@
 package com.moz1mozi.mybatis.user.controller;
 
-import com.moz1mozi.mybatis.email.service.AuthenticationService;
+import com.moz1mozi.mybatis.email.service.EmailVerificationService;
 import com.moz1mozi.mybatis.email.service.EmailService;
 import com.moz1mozi.mybatis.user.dto.FindUserDto;
 import com.moz1mozi.mybatis.user.dto.UserDto;
@@ -31,7 +31,7 @@ public class UserApiController {
 
     private final UserService userService;
     private final EmailService emailService;
-    private final AuthenticationService authenticationService;
+    private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@Valid @RequestPart("user") UserDto memberDto,
@@ -87,7 +87,7 @@ public class UserApiController {
         if(!userExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "일치하는 회원 정보가 없습니다."));
         }
-        authenticationService.sendAndSaveVerificationCode(findUserDto.getUserEmail());
+        emailVerificationService.sendAndSaveVerificationCode(findUserDto.getUserEmail());
         return ResponseEntity.ok().body(Map.of("message", "인증 코드가 발송되었습니다."));
     }
 

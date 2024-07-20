@@ -2,7 +2,7 @@ package com.moz1mozi.mybatis.email.controller;
 
 import com.moz1mozi.mybatis.email.dto.EmailSendDto;
 import com.moz1mozi.mybatis.email.dto.EmailVerificationDto;
-import com.moz1mozi.mybatis.email.service.AuthenticationService;
+import com.moz1mozi.mybatis.email.service.EmailVerificationService;
 import com.moz1mozi.mybatis.email.service.EmailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmailApiController {
 
-    private final AuthenticationService authenticationService;
+    private final EmailVerificationService emailVerificationService;
     private final EmailService emailService;
 
     @PostMapping("/api/v1/email/send-verification-code")
@@ -28,7 +28,7 @@ public class EmailApiController {
     public ResponseEntity<?> sendVerificationCode(@Valid @RequestBody EmailSendDto emailSendDto) {
         String email = emailSendDto.getEmail();
         try {
-            authenticationService.sendAndSaveVerificationCode(email);
+            emailVerificationService.sendAndSaveVerificationCode(email);
             return ResponseEntity.ok().body(Map.of("message", "인증번호가 전송되었습니다."));
         } catch (Exception ex) {
             log.error("인증번호 전송 중 오류 발생: {}", ex.getMessage());
@@ -45,7 +45,7 @@ public class EmailApiController {
         log.info("인증 코드 검증 요청: email = {}, code = {}", email, code);
 
         try {
-            boolean isCodeValid = authenticationService.verifyCode(email, code);
+            boolean isCodeValid = emailVerificationService.verifyCode(email, code);
             if (isCodeValid) {
                 log.info("인증 성공: email={}", email);
                 return ResponseEntity.ok().body(Map.of("message", "인증 성공"));

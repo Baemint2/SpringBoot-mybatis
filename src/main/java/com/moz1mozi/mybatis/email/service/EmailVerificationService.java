@@ -15,7 +15,7 @@ import static com.moz1mozi.mybatis.common.utils.RandomCodeUtils.generateVerifica
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
+public class EmailVerificationService {
 
     private final EmailVerificationMapper emailVerificationMapper;
     private final EmailService emailService;
