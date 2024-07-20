@@ -52,20 +52,16 @@ public class SecurityConfig {
     SecurityFilterChain userFilterChain(HttpSecurity http, RememberMeServices rememberMeServices) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(config -> config
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/v1/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/admin")).hasRole("관리자")
                                 .anyRequest().permitAll())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/**"))
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/member/**"))
-                )
                 .formLogin(login -> login
-                        .loginPage("/user/login")
-                        .loginProcessingUrl("/user/login") // 로그인 처리 URL (폼 제출 경로)
-                        .successHandler(customSuccessHandler))
+                        .loginPage("/user/login"))// 로그인 처리 URL (폼 제출 경로)
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")
