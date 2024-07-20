@@ -47,6 +47,11 @@ public interface UserMapper {
     // 프로필 이미지 변경
     void updateProfileImage(@Param("userName") String userName, @Param("userProfileImagePath")String profileImage);
 
+    // 리프레쉬 토큰 업데이트
+    void updateRefreshToken(@Param("refreshToken") String refreshToken, @Param("userId") Long userId);
+
+    // 리프레쉬 토큰 삭제
+
     // 중복 검사
     boolean existsByEmail(String email);
     boolean existsByUsername(String userName);

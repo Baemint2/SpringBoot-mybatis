@@ -45,7 +45,7 @@
     <select id="findByUsername"
             parameterType="UserDto">
         SELECT u.user_name, u.user_pw, u.user_email, u.user_nickname,
-               u.user_mobile, u.user_profile_image_path, u.user_role, u.user_id
+               u.user_mobile, u.user_profile_image_path, u.user_role, u.user_id, u.refresh_token
           FROM User u
          WHERE u.user_name = #{userName}
     </select>
@@ -153,4 +153,11 @@
         FROM User u
         WHERE u.user_email = #{userEmail};
     </select>
+
+    <!-- 리프레시 토큰 삽입 -->
+    <update id="updateRefreshToken">
+        UPDATE User u
+           SET u.refresh_token = #{refreshToken}
+         WHERE u.user_id = #{userId}
+    </update>
 </mapper>

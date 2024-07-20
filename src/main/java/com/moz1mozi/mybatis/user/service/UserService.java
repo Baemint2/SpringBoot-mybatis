@@ -168,6 +168,12 @@ public class UserService {
         }
     }
 
+    // 리프레쉬 토큰 업데이트
+    @Transactional
+    public void updateRefreshToken(String refreshToken, Long userId) {
+        userMapper.updateRefreshToken(refreshToken, userId);
+    }
+
     //사용자명 중복 검사
     public boolean usernameDuplicate(String username) {
         return userMapper.existsByUsername(username);

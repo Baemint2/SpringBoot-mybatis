@@ -20,6 +20,8 @@ public class UserDto {
         private Date userCreatedAt;
         private Date userModifiedAt;
         private Role userRole;
+        private String accessToken;
+        private String refreshToken;
 
         @Override
         public String toString() {
@@ -35,6 +37,8 @@ public class UserDto {
                         ", userCreatedAt=" + userCreatedAt +
                         ", userModifiedAt=" + userModifiedAt +
                         ", userRole=" + userRole +
+                        ", accessToken='" + accessToken + '\'' +
+                        ", refreshToken='" + refreshToken + '\'' +
                         ", addressId=" + addressId +
                         '}';
         }
