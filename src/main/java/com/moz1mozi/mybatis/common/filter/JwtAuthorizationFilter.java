@@ -114,6 +114,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
 
     private boolean isExcludedPath(String requestURI) {
-        return requestURI.equals("/api/auth/login/v1");
+        return requestURI.equals("/api/auth/login/v1") || requestURI.equals("/");
     }
 }

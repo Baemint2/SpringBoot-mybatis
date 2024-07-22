@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -27,6 +24,7 @@ public class AuthController {
     private final UserSecurityService securityService;
     private final JwtUtil jwtUtil;
 
+    // 로그인
     @PostMapping("/login/v1")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         log.info("로그인 요청 수신: {}", loginRequest.getUsername());
@@ -39,6 +37,31 @@ public class AuthController {
                 return ResponseEntity.ok(userDto);
             }
             return ResponseEntity.status(401).body("로그인 실패");
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@CookieValue("refreshToken") String refreshToken) {
+
+        log.info("refresh Token: {}", refreshToken);
+
+        if(!jwtUtil.validateToken(refreshToken)) {
+            return ResponseEntity.status(401).body("검증된 토큰이 아닙니다.");
+        }
+
+        String username = jwtUtil.getUsernameFromToken(refreshToken);
+        UserDetails userDetails = securityService.loadUserByUsername(username);
+
+        if(userDetails instanceof CustomUserDetails customUserDetails) {
+            String newAccessToken = jwtUtil.createAccessToken(customUserDetails);
+            log.info("refreshToken: {}", refreshToken);
+            log.info("newAccessToken: {}", newAccessToken);
+
+            customUserDetails.getUserDto().setAccessToken(newAccessToken);
+
+            return ResponseEntity.ok(customUserDetails.getUserDto());
+        }
+
+        return ResponseEntity.status(401).body("Invalid refresh token");
     }
 
     private void setTokensAndCookies(String accessToken, String refreshToken, HttpServletResponse response) {
