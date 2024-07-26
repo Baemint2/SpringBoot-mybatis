@@ -52,7 +52,6 @@ function fetchAndDisplayPosts(page) {
         .then(response => response.json())
         .then(data => {
             updateTableContent(data.products); // 상품 내용 업데이트
-            console.log(data)
             updatePagination(data.totalPages, page, currentSearchConditions, pageSize); // 페이지네이션 업데이트
             history.pushState({
                 page: page,
@@ -90,17 +89,15 @@ function createProductCard(product) {
     anchor.href = `/product/detail/${product.prodId}`; // 여기에 클라이언트 측 URL을 사용하세요.
     anchor.classList.add('card-link'); // 필요에 따라 스타일링을 위한 클래스를 추가할 수 있습니다.
 
-    console.log(product)
-    console.log(product.imageDto)
-    console.log(product.categoryDto)
     const formattedNumber = new Intl.NumberFormat('ko-KR').format(product.prodPrice);
-    const categoryName = product.categoryDto?.categoryName || '카테고리 없음';
+    const categoryName = product.categoryDto?.cateName || '카테고리 없음';
+    const userNickname = product.userDto?.userNickname || '닉네임 없음';
     anchor.innerHTML = `
         <div class="card mb-3">
             <img src="${product.imageDto.piStoredUrl}" class="card-img-top" alt="${product.prodName}">
             <div class="card-body">
                 <small>[${categoryName}]</small>
-                <h5 class="card-title">${product.userDto.userNickname}</h5>
+                <h5 class="card-title">${userNickname}</h5>
                 <p class="card-text">${product.prodName}</p>
                 <p class="card-text">${formattedNumber}원</p>
             </div>
@@ -137,8 +134,6 @@ function updatePagination(totalPages, currentPage, searchConditions, pageSize) {
 function createPaginationButton(isActive, pageNumber, text, container, isCurrentPage, searchConditions, pageSize) {
     const li = document.createElement("li");
     li.className = `page-item ${!isActive ? 'disabled' : ''} ${isCurrentPage ? 'active' : ''}`;
-
-    console.log(searchConditions);
 
     const link = document.createElement('a');
     link.className = 'page-link';
@@ -180,7 +175,6 @@ function changeSearchType() {
 document.getElementById("searchButton").addEventListener("click", function () {
     updateSearchConditions();
     fetchAndDisplayPosts(1);
-    console.log(currentSearchConditions.productName);
 });
 
 function updateSearchConditions() {
@@ -246,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.onpopstate = function (event) {
         if(event.state) {
-            console.log(event.state);
             const { page, prodName, userNickname, startPrice, endPrice, pageSize, category } = event.state;
             currentSearchConditions = { prodName, userNickname, startPrice, endPrice, pageSize, category };
             fetchAndDisplayPosts(page);
