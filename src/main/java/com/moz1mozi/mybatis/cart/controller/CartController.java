@@ -30,7 +30,7 @@ public class CartController {
 
     private final UserService userService;
 
-    @GetMapping("/member/cart")
+    @GetMapping("/user/cart")
     public String myCart(Model model, Principal principal) {
         String username = principal.getName();
         UserDto loggedUser = userService.findByUsername(username);

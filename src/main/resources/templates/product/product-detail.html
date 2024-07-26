@@ -23,11 +23,11 @@
                     <p class="nickname" th:text="${productByNo[0].userDto.userNickname}">by Brand</p>
                     <h2 class="price" id="prodPrice">가격: <span class="formattedPrice">[[${productByNo[0].prodPrice}]]</span>원
                     </h2>
-                    <p class="description" th:text="${productByNo[0].prodDescription}">Product description goes here. It's a
+                    <p class="prodDescription" th:text="${productByNo[0].prodDescription}">Product description goes here. It's a
                         brief introduction about the product features and qualities.</p>
                     <div class="my-4">
                         <div class="d-flex align-items-center stock">
-                            <strong class="mr-3">Quantity: [[${productByNo[0].prodStockQuantity}]]</strong>
+                            <strong class="mr-3">수량: [[${productByNo[0].prodStockQuantity}]]</strong>
                         </div>
                         <div>
                             <input type="number" id="quantity" value="1" min="1" class="form-control w-25">

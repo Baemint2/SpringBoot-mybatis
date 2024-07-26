@@ -40,9 +40,9 @@
         <div class="error-message" id="prodName-error" style="display: none"></div>
     </div>
     <div>
-        <label for="description" class="form-label">상품설명</label>
-        <textarea id="description" class="form-control" name="description" th:text="${productByNo[0].description}"></textarea>
-        <div class="error-message" id="description-error" style="display: none"></div>
+        <label for="prodDescription" class="form-label">상품설명</label>
+        <textarea id="prodDescription" class="form-control" name="prodDescription" th:text="${productByNo[0].prodDescription}"></textarea>
+        <div class="error-message" id="prodDescription-error" style="display: none"></div>
     </div>
     <div>
         <label for="prodPrice" class="form-label">상품가격</label>
@@ -50,9 +50,9 @@
         <div class="error-message" id="prodPrice-error" style="display: none"></div>
     </div>
     <div>
-        <label for="stockQuantity" class="form-label">상품수량</label>
-        <input type="text" id="stockQuantity" class="form-control" name="stockQuantity" th:value="${productByNo[0].stockQuantity}">
-        <div class="error-message" id="stockQuantity-error" style="display: none"></div>
+        <label for="prodStockQuantity" class="form-label">상품수량</label>
+        <input type="text" id="prodStockQuantity" class="form-control" name="prodStockQuantity" th:value="${productByNo[0].prodStockQuantity}">
+        <div class="error-message" id="prodStockQuantity-error" style="display: none"></div>
     </div>
 </form>
 <button type="button" class="btn btn-primary" id="btn-modify">수정완료</button>

@@ -15,9 +15,9 @@ const product = {
     productSave: function () {
         const data = {
             prodName: document.getElementById("prodName").value,
-            prodDescription: document.getElementById("description").value,
+            prodDescription: document.getElementById("prodDescription").value,
             prodPrice: document.getElementById("prodPrice").value,
-            prodStockQuantity: document.getElementById("stockQuantity").value,
+            prodStockQuantity: document.getElementById("prodStockQuantity").value,
             cateId: document.getElementById("mediumCategory").value
         }
         console.log(data)
@@ -61,10 +61,10 @@ const product = {
         const prodId = document.getElementById("prodId").value
         const data = {
             prodName: document.getElementById("prodName").value,
-            description: document.getElementById("description").value,
+            prodDescription: document.getElementById("prodDescription").value,
             prodPrice: document.getElementById("prodPrice").value,
-            stockQuantity: document.getElementById("stockQuantity").value,
-            categoryId: document.getElementById("mediumCategory").value,
+            prodStockQuantity: document.getElementById("prodStockQuantity").value,
+            cateId: document.getElementById("mediumCategory").value,
             prodId: prodId
 
         }
@@ -83,7 +83,7 @@ const product = {
         }).then(response => {
             if (response.ok) {
                 alert("글이 수정되었습니다.")
-                // window.location.href = `/product/detail/${prodId}`
+                window.location.href = `/product/detail/${prodId}`
             } else {
                 return response.json()
             }
