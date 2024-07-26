@@ -116,7 +116,9 @@ const cart = {
                 const prodId = stockContainer.getAttribute('data-product-id');
                 const newQuantityElement = stockContainer.querySelector('.quantity');
                 const newQuantity = parseInt(newQuantityElement.textContent);
-                const currentQuantity = parseInt(newQuantityElement.getAttribute('data-current-quantity'))
+                console.log(newQuantity);
+                // 수정해야하는 위치
+                const currentQuantity = parseInt(stockContainer.getAttribute('data-quantity'))
                 console.log("현재 수량 : " + currentQuantity)
                 const adjustment = newQuantity - currentQuantity; // 실제 변경해야 할 수량 계산
                 console.log("변경될 수량 : " + adjustment)
