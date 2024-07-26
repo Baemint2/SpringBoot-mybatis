@@ -47,4 +47,14 @@ public class AuthenticationService {
         return userDetails;
     }
 
+    public void logout(String username) {
+        UserDetails userDetails = securityService.loadUserByUsername(username);
+
+        if(userDetails instanceof CustomUserDetails customUserDetails) {
+            Long userId = customUserDetails.getUserDto().getUserId();
+            userService.deleteRefreshToken(userId);
+        } else {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다.");
+        }
+    }
 }

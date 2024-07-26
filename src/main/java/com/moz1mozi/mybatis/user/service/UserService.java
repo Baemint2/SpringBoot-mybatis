@@ -73,6 +73,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDto findByUsername(String username) {
+        log.info("호출: {}", username);
         return userMapper.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자가 없습니다."));
     }
@@ -172,6 +173,12 @@ public class UserService {
     @Transactional
     public void updateRefreshToken(String refreshToken, Long userId) {
         userMapper.updateRefreshToken(refreshToken, userId);
+    }
+
+    // 리프레쉬 토큰 삭제
+    @Transactional
+    public void deleteRefreshToken(Long userId) {
+        userMapper.removeRefreshToken(userId);
     }
 
     //사용자명 중복 검사

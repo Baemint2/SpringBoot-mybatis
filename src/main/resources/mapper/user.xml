@@ -160,4 +160,11 @@
            SET u.refresh_token = #{refreshToken}
          WHERE u.user_id = #{userId}
     </update>
+
+    <!-- 리프레시 토큰 삭제 -->
+    <update id="removeRefreshToken">
+        UPDATE User u
+           SET u.refresh_token = null
+         WHERE u.user_id = #{userId}
+    </update>
 </mapper>

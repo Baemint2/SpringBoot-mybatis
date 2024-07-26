@@ -2,6 +2,7 @@ package com.moz1mozi.mybatis.auth.controller;
 
 import com.moz1mozi.mybatis.auth.domain.LoginRequest;
 import com.moz1mozi.mybatis.auth.service.AuthenticationService;
+import com.moz1mozi.mybatis.common.utils.CookieUtil;
 import com.moz1mozi.mybatis.common.utils.JwtUtil;
 import com.moz1mozi.mybatis.user.dto.UserDto;
 import com.moz1mozi.mybatis.user.service.CustomUserDetails;
@@ -11,8 +12,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import static com.moz1mozi.mybatis.common.utils.CookieUtil.deleteCookie;
 
 @Slf4j
 @RestController
@@ -27,8 +32,8 @@ public class AuthController {
     // 로그인
     @PostMapping("/login/v1")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        log.info("로그인 요청 수신: {}", loginRequest.getUsername());
-            UserDetails userDetails = authenticationService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        log.info("로그인 요청 수신: {}", loginRequest.getUserName());
+            UserDetails userDetails = authenticationService.login(loginRequest.getUserName(), loginRequest.getUserPw());
         log.info("로그인 성공: {}", userDetails.getUsername());
 
             if(userDetails instanceof CustomUserDetails) {
@@ -37,6 +42,18 @@ public class AuthController {
                 return ResponseEntity.ok(userDto);
             }
             return ResponseEntity.status(401).body("로그인 실패");
+    }
+
+    // 로그아웃
+    @PostMapping("/logout/v1")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        authenticationService.logout(auth.getName());
+        deleteCookie(response, "accessToken");
+        deleteCookie(response, "refreshToken");
+
+        log.info("로그아웃 성공: 쿠키 삭제");
+        return ResponseEntity.ok("로그아웃 성공");
     }
 
     @PostMapping("/refresh")

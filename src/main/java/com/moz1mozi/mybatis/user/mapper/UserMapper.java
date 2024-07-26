@@ -51,6 +51,7 @@ public interface UserMapper {
     void updateRefreshToken(@Param("refreshToken") String refreshToken, @Param("userId") Long userId);
 
     // 리프레쉬 토큰 삭제
+    void removeRefreshToken(Long userId);
 
     // 중복 검사
     boolean existsByEmail(String email);

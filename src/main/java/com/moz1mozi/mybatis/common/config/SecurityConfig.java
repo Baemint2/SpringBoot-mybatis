@@ -1,5 +1,9 @@
 package com.moz1mozi.mybatis.common.config;
 
+import com.moz1mozi.mybatis.auth.service.AuthenticationService;
+import com.moz1mozi.mybatis.common.CustomLogoutSuccessHandler;
+import com.moz1mozi.mybatis.common.filter.JwtAuthorizationFilter;
+import com.moz1mozi.mybatis.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +20,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -49,7 +54,7 @@ public class SecurityConfig {
 
 
     @Bean
-    SecurityFilterChain userFilterChain(HttpSecurity http, RememberMeServices rememberMeServices) throws Exception {
+    SecurityFilterChain userFilterChain(HttpSecurity http, RememberMeServices rememberMeServices, JwtAuthorizationFilter jwtAuthorizationFilter, UserService userService, AuthenticationService authenticationService) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
@@ -64,13 +69,13 @@ public class SecurityConfig {
                         .loginPage("/user/login"))// 로그인 처리 URL (폼 제출 경로)
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true))
+                        .logoutSuccessHandler(new CustomLogoutSuccessHandler(userService, authenticationService)))
                 .exceptionHandling(exception -> exception
                         .accessDeniedPage("/accessDenied"))
                 .rememberMe(rememberMe -> rememberMe.rememberMeParameter("remember-me")
                         .rememberMeServices(rememberMeServices)
-                        .useSecureCookie(false));
+                        .useSecureCookie(false))
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
