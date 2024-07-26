@@ -102,10 +102,10 @@
 
     <select id="selectCartItemById"
             resultType="CartDto">
-        SELECT c.cart_quantity, PRODUCT_ID, CART_ITEM_ID
+        SELECT c.cart_quantity, c.prod_id, c.cart_id
           FROM Cart c
          WHERE 1 = 1
-           AND CART_ITEM_ID = #{cartItemId}
+           AND c.cart_id = #{cartId}
     </select>
 
     <select id="existsById"

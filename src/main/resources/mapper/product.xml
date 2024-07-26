@@ -21,7 +21,7 @@
             <result property="piStoredUrl" column="pi_stored_url"/>
         </association>
         <association property="categoryDto" javaType="CategoryDto">
-            <id property="categoryId" column="CATEGORY_ID"/>
+            <id property="cateId" column="cate_id"/>
             <result property="cateName" column="cate_name"/>
         </association>
     </resultMap>

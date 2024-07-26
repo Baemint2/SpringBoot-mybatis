@@ -62,7 +62,7 @@
           FROM ShippingAddress sa
          WHERE 1 = 1
            AND sa.user_id = #{userId}
-           AND DEFAULT_ADDRESS = 'Y'
+           AND sa.sa_default = 'Y'
     </select>
 
     <update id="updateShippingAddressById"
